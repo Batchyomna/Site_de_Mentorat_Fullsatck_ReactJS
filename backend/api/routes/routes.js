@@ -103,6 +103,17 @@ router.post('/sign-in', (req, res) => {
       res.status(500).send('Il y a une erreur de serveur')
     }
   });
+// ------------3.API/get/apprenti/:id
+router.get('/apprenti/:id', async (req, res) => {
+    try {
+     connection.query(`SELECT * FROM apprenti WHERE id_apprenti = ${req.params.id}`, function(err, result){
+         if (err) throw err
+        res.status(200).json(result[0]); 
+     })
+    } catch (err) {
+      console.log(err);
+    }
+  });
 //----------3. API/post/admin/non-valid/:id_mentor
 //----------------- GET /mentors
 router.get('/mentors', (req, res) => {
