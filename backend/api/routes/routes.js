@@ -62,7 +62,25 @@ router.post('/sign-up', function (req, res) {
 //--------3. API/post/sign-in
 router.post('/sign-in', (req, res) => {
     try {
-        if(req.body.statut === 'mentor') {
+        if(req.body.statut === 'admin'){
+            connection.query("SELECT * FROM admin", function (err, alladmins, fields) {
+                let admin = alladmins.filter(elem => elem.mail_admin === req.body.mail)
+                if (admin.length > 0) {
+                 bcrypt.compare(req.body.mdp, admin[0].mdp_admin).then(function (result) {
+                       if (result == true) {
+                       const token = generateAccessToken( admin[0].id_admin, admin[0].mail_admin, 'admin');
+                       res.status(200).json(token);  //You are authrised
+                       console.log('vous êtes bien un admin');
+                       } else {
+                       res.status(401).send("Vous avez oublié votre mot de pass?")
+                       }
+                   })
+               } else {
+                 res.status(404).send("Ce compte nous est inconnu")
+               }
+           })
+
+        }else if(req.body.statut === 'mentor') {
             connection.query("SELECT * FROM mentor", function (err, allMentors, fields) {
                  let mentor = allMentors.filter(elem => elem.mail_mentor === req.body.mail)
                  if (mentor.length > 0) {
@@ -114,8 +132,7 @@ router.get('/apprenti/:id', async (req, res) => {
       console.log(err);
     }
   });
-//----------3. API/post/admin/non-valid/:id_mentor
-//----------------- GET /mentors
+//-----------------3.API/ GET /mentors
 router.get('/mentors', (req, res) => {
     //Select all the mentors
     connection.query("SELECT * FROM mentor", function (err, result, fields) {
@@ -123,6 +140,39 @@ router.get('/mentors', (req, res) => {
       res.send(result);
     });
   });
+  //-------------3.API/post/admin
+  router.post('/new-admin', (req, res)=>{
+      try{
+            bcrypt.hash(req.body.mdp, saltRounds).then(function (hashPW) {
+                const sql = `INSERT INTO admin (mail_admin, mdp_admin) VALUES ('${req.body.mail}', '${hashPW}')`;
+                connection.query(sql)
+                res.status(201).send('vos coordonnées comme admin sont inscrits')
+            })
+        }catch(err){
+            console.log(err);
+        }
+    })
+//-------------3.API/delete/admin/non-valid/:idMentor
+router.delete('/admin/non-valid/:idMentor', (req, res)=>{
+    try{ 
+        connection.query(`DELETE FROM mentor WHERE id_mentor ='${req.params.idMentor}'`, function (err, result) {
+        if (err) throw err
+        res.status(400).send('Il y a une erreur');
+        console.log("Number of records deleted: " + result.affectedRows);
+        res.status(200).send("Le mentor est bien supprimé")
+        })
+    }catch(err){
+      console.log(err);
+    }
+})
+//----------------3.API/post/admin/valid/:idMentor
+router.put('/admin/valid/:idMentor', (req, res)=>{
+    try{
+     connection.query(`UPDATE mentor SET statut_mentor = true WHERE id_mentor = '${req.params.idMentor}'`);
+     res.status(200).send("Le mentor est valid maintentant");
+    }catch(err){
+     console.log(err);
+    }
+})
 
-
-  module.exports = router;
+module.exports = router;
