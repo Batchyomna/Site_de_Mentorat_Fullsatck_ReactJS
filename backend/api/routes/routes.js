@@ -191,4 +191,73 @@ router.post('/new-competence', (req, res)=>{
     console.log(err);
   }
 })
+// ------------3.API/get/mentor/:id
+router.get('/mentor/:id', async (req, res) => {
+  try {
+   connection.query(`SELECT * FROM mentor WHERE id_mentor = ${req.params.id}`, function(err, result){
+       if (err) throw err
+      res.status(200).json(result[0]); 
+   })
+  } catch (err) {
+    console.log(err);
+  }
+});
+// ------------3.API/get/all/competences
+router.get('/all/competences', async (req, res) => {
+  try {
+   connection.query('SELECT * FROM competence', function(err, result){
+       if (err) throw err
+      res.status(200).json(result); 
+   })
+  } catch (err) {
+    console.log(err);
+  }
+});
+// ------------3.API/get/domaine/:domaine
+router.get('/domaine/:domaine', async (req, res) => {
+  try {
+   connection.query(`SELECT * FROM competence WHERE domaine = '${req.params.domaine}'`, function(err, result){
+       if (err) throw err
+      res.status(200).json(result); 
+   })
+  } catch (err) {
+    console.log(err);
+  }
+});
+// ------------3.API/get/all/domaines
+router.get('/all/domaines', async (req, res) => {
+  try {
+   connection.query(`SELECT domaine FROM competence`, function(err, result){
+       if (err) throw err
+      res.status(200).json(result); 
+   })
+  } catch (err) {
+    console.log(err);
+  }
+});
+ //-------------3.API/post/new-session
+ router.post('/new-session', (req, res)=>{
+  try{
+      const sql = `INSERT INTO session (id_competence, prochaine_session) VALUES ('${req.body.id_competence}', '${req.body.prochaine_session}')`;
+      connection.query(sql)
+      res.status(201).send('votre prochaine session est bien inscrits')
+    }catch(err){
+      console.log(err);
+    }
+})
+// ------------3.API/get/sessions_des_competences
+router.get('/sessions_des_competences', async (req, res) => {
+  try {
+    lastResult = []
+    let compsIds = Object.values(req.body)
+      connection.query(`SELECT * FROM session WHERE id_competence IN (${compsIds})`, (err,result) =>{
+        if(err) throw err
+        console.log(result)
+        res.status(200).json(result);
+
+      })
+  } catch (err) {
+    console.log(err);
+  }
+});
 module.exports = router;
