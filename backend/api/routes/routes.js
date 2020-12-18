@@ -42,14 +42,14 @@ router.post('/sign-up', function (req, res) {
       bcrypt.hash(req.body.mdp, saltRounds).then(function (hashPW) {
         if(req.body.statut === 'mentor')
         {
-            const sql = `INSERT INTO mentor (nom_mentor, prenom_mentor, mail_mentor, mdp_mentor, photo_mentor, nom_SIREN, statut_mentor) VALUES ('${req.body.nom}', '${req.body.prenom}', '${req.body.mail}', '${hashPW}', '${req.body.photo}', '${req.body.nom_SIREN}', false)`;
-            connection.query(sql)
-            res.status(201).send('vos coordonnées comme mentor sont inscrits')
+          const sql = `INSERT INTO mentor (nom_mentor, prenom_mentor, mail_mentor, mdp_mentor, photo_mentor, nom_SIREN, statut_mentor) VALUES ('${req.body.nom}', '${req.body.prenom}', '${req.body.mail}', '${hashPW}', '${req.body.photo}', '${req.body.nom_SIREN}', false)`;
+          connection.query(sql)
+          res.status(201).send('vos coordonnées comme mentor sont inscrits')
         }else if(req.body.statut === 'apprenti')
         {
-            const sql = `INSERT INTO apprenti (nom_apprenti, prenom_apprenti, mail_apprenti, mdp_apprenti, photo_apprenti) VALUES ('${req.body.nom}', '${req.body.prenom}', '${req.body.mail}', '${hashPW}', '${req.body.photo}')`;
-            connection.query(sql)
-            res.status(201).send('vos coordonnées comme apprenti sont inscrits')
+          const sql = `INSERT INTO apprenti (nom_apprenti, prenom_apprenti, mail_apprenti, mdp_apprenti, photo_apprenti) VALUES ('${req.body.nom}', '${req.body.prenom}', '${req.body.mail}', '${hashPW}', '${req.body.photo}')`;
+          connection.query(sql)
+          res.status(201).send('vos coordonnées comme apprenti sont inscrits')
         }
       })
     
@@ -133,11 +133,11 @@ router.get('/apprenti/:id', async (req, res) => {
     }
   });
 //-----------------3.API/ GET /mentors
-router.get('/mentors', (req, res) => {
+router.get('/all/mentors', (req, res) => {
     //Select all the mentors
     connection.query("SELECT * FROM mentor", function (err, result, fields) {
       if (err) throw err;
-      res.send(result);
+      res.status(200).send(result);
     });
   });
   //-------------3.API/post/admin
@@ -174,5 +174,21 @@ router.put('/admin/valid/:idMentor', (req, res)=>{
      console.log(err);
     }
 })
-
+//--------------3.API/GET/apprenti
+router.get('/all/apprentis', (req, res) => {
+  connection.query("SELECT * FROM apprenti", function (err, result, fields) {
+    if (err) throw err;
+    res.status(200).json(result);
+  });
+});
+//----------3. API/post/new-competence
+router.post('/new-competence', (req, res)=>{
+  try{
+    const sql = `INSERT INTO competence (id_mentor, titre, domaine, frequence, duree, premiere_date, description, reserve) VALUES ('${req.body.id_mentor}', '${req.body.titre}', '${req.body.domaine}', '${req.body.frequence}', '${req.body.duree}', '${req.body.premiere_date}', '${req.body.description}', false)`;
+    connection.query(sql)
+    res.status(201).send('votre compétence comme mentor est bien inscrit')
+  }catch(err){
+    console.log(err);
+  }
+})
 module.exports = router;
