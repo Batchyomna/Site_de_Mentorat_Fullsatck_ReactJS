@@ -7,9 +7,9 @@ class Home extends Component {
                 <h1>Bienvenue sur notre platform de MENTORAT</h1>
                 <div className='intro'>
                 <p>
-                  Entrez pour découvrir les compétences qui vous intéresse.
-                    
-                     prenez votre carrière en main.
+                  Entrez pour découvrir les compétences qui vous intéresse.<br/>
+                  Formez-vous à distance.<br/>
+                  Prenez de l'aide dans le domaine d'informatique.
                 </p>
                 </div>
             </div>

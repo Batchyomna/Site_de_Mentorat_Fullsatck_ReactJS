@@ -5,23 +5,22 @@
 }
 .header {
   width: 100%;
-  padding-left: 20px;
   background-color:#43658B;
-  height: 15vh;
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   font-size: 24px;
-  color: #43658B;
+  
   font-family: 'DM Serif Display', serif;
 }
 .logo {
   color:#ED6663 ;
   text-decoration: underline;
-  width: 336px;
+  flex: 20%;
   font-family: 'Mr Dafoe', cursive;
-  font-size: 70px;
+  font-size: 60px;
   cursor: pointer;
 }
 .menu{
@@ -29,14 +28,18 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  
 }
-.menu :hover{ 
+.menu :hover{
   color: #ED6663;
 }
-.header-link{
-  background-color: #ED6663;
+
+.menu :active{
+  color: #ED6663;
 }
+/* .header-link{
+  flex: 5%;
+  background-color: #ED6663;
+} */
 
 
 
@@ -61,28 +64,71 @@
   font-family: 'DM Serif Display', serif;
 }
 .social-net{
-  width: 10%;
+  width: 30%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
 
 }
 .social-net a{
+
   background-color: #ED6663;
   color: #43658B;
+  padding: 2px;
+}
+
+/* <link rel="stylesheet" media="screen and (max-width: 600px)" href="smallscreen.css"> */
+
+@media screen and (max-width: 575px) {
+  .header{
+height: auto;
+font-size: 18px;
+  }
+ .logo {
+  font-size: 40px;
+  }
+  .footer{
+    flex-direction: column;
+  }
+  .social-net{
+    width: 100%;
+  }
+  .social-net a{
+   width:50%;
+   justify-content: space-around ;
+   background-color: transparent;
+   color: #ED6663
+  
+  }
+}
+
+@media screen and (min-width: 576px) and (max-width: 800px){
+  .header{
+    height: auto;
+    font-size: 15px;
+  }
+  .logo {
+      font-size: 30px;
+      flex:22%;
+  }
+  .menu{
+    flex: 60%;
+  }
+  .footer{
+    flex-direction: column;
+  }
+  .social-net{
+    width: 100%;
+  }
+  .social-net a{
+    width: 50%;
+    background-color: transparent;
+    color: #ED6663;
+    padding:0;
+  }
 }
 
 
-
-/* @media (prefers-reduced-motion: no-preference) {
- 
-} */
-
-
-
-.App-link {
-  color: #61dafb;
-}
 
 @keyframes App-logo-spin {
   from {
