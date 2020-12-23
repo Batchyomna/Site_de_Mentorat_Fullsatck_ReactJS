@@ -4,12 +4,11 @@ class Footer extends Component {
     render() {
         return (
             <div className="footer">
-                
-                    <a href="https://www.facebook.com/">facebook</a>
-                    <a href="https://www.linkedin.com/">linkedin</a>
-                
+                <div className="social-net">
+                   <a href="https://www.facebook.com/">facebook</a>
+                   <a href="https://www.linkedin.com/">linkedin</a>  
+                </div>
                 <div>© Yomna BATCH 2020</div>
-              
             </div>
         );
     }

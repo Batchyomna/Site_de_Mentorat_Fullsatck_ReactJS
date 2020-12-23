@@ -48,7 +48,7 @@
 
 .footer{
   width: 100%;
-  height: 5vh;
+  height: 8vh;
   background-color: #43658B;
   color: #ED6663;
   position: absolute;
@@ -56,7 +56,24 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
+  font-size: 15px;
+  font-family: 'DM Serif Display', serif;
 }
+.social-net{
+  width: 10%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+.social-net a{
+  background-color: #ED6663;
+  color: #43658B;
+}
+
+
+
 /* @media (prefers-reduced-motion: no-preference) {
  
 } */
