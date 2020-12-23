@@ -1,22 +1,22 @@
 export const signInMentor = (user) => ({
     type: "SIGNIN_MENTOR",
-    name: user.name,
-    photo: user.picture_profil,
-    mail: user.email,
-    id: user.id,
-    token: user.token,
+    prenom_mentor: user.name,
+    photo_mentor: user.photo,
+    mail_mentor: user.mail,
+    id_mentor: user.id,
+    token_mentor: user.token,
    
 })
 export const signOutMentor = () => ({
     type: "SIGNOUT_MENTOR",
-    name : null,
-    photo: null,
-    mail: null,
-    id:null,
-    token:null
+    prenom_mentor:null,
+    photo_mentor : null,
+    mail_mentor: null,
+    id_mentor:null,
+    token_mentor: null,
 })
 export const changeUserData = (data) => ({
-    type: "CHANGEDATA_USER",
+    type: "CHANGEDATA_mENTOR",
     payload : data
    
 })

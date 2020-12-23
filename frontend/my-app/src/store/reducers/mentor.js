@@ -1,32 +1,27 @@
 const initialStates = {
-    prenom:null,
-    photo : null,
-    email: null,
-    id:null,
-    token: null,
+    prenom_mentor:null,
+    photo_mentor : null,
+    mail_mentor: null,
+    id_mentor:null,
+    token_mentor: null,
  
 };
 
 const mentorReducer = (state = initialStates, action) => {
   switch (action.type) {
-    case "SIGNIN_USER":
+    case "SIGNIN_MENTOR":
       return {
-        ...state,
-        prenom: action.prenom,
-        photo: action.photo,
-        email: action.email,
-        id: action.id,
-        token: action.token,
+        ...state,   
     
       }
-      case "SIGNOUT_USER":
+      case "SIGNOUT_mENTOR":
         return{
           ...state,
-          prenom: action.prenom,
-          photo: action.photo,
-          email: action.email,
-          id: action.id,
-          token: action.token, 
+          prenom_mentor:null,
+          photo_mentor : null,
+          mail_mentor: null,
+          id_mentor:null,
+          token_mentor: null,
         }
 
     default:

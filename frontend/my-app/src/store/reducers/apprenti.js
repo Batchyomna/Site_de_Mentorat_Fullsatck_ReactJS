@@ -1,9 +1,9 @@
 const initialStates = {
-    prenom:null,
-    photo : null,
-    mail: null,
-    id:null,
-    token: null,
+    prenom_apprenti:null,
+    photo_apprenti : null,
+    mail_apprenti: null,
+    id_apprenti:null,
+    token_apprenti: null,
  
 };
 
@@ -12,21 +12,11 @@ const apprentiReducer = (state = initialStates, action) => {
     case "SIGNIN_USER":
       return {
         ...state,
-        prenom: action.prenom,
-        photo: action.photo,
-        mail: action.mail,
-        id: action.id,
-        token: action.token,
     
       }
       case "SIGNOUT_USER":
         return{
           ...state,
-          prenom: action.prenom,
-          photo: action.photo,
-          mail: action.mail,
-          id: action.id,
-          token: action.token, 
         }
 
     default:
