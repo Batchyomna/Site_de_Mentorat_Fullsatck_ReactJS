@@ -8,7 +8,7 @@ class Footer extends Component {
                    <a href="https://www.facebook.com/">facebook</a>
                    <a href="https://www.linkedin.com/">linkedin</a>  
                 </div>
-                <div>© Yomna BATCH 2020</div>
+                <div>© Yomna BATCH 2020-2021</div>
             </div>
         );
     }

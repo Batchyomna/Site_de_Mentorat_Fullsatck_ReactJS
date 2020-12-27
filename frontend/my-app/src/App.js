@@ -25,14 +25,14 @@ class App extends Component {
             <Route exact={true} path="/mentor/profil"> {this.props.token_mentor ? <ProfilMentor/> : <Redirect to="/"/>}</Route>
             <Route exact={true} path="/mentor/vos-competence"> {this.props.token_mentor ? <MentorCompetence/>: <Redirect to="/"/>} </Route>
             <Route exact={true} path="/apprenti/profil"> {(this.props.token_apprenti) ? (<ProfilApprenti/>) :( <Redirect to="/"/>)}</Route>
-             <Route exact={true} path="/apprenti/vos-competence"> {(this.props.token_apprenti) ? <ApprentiCompetence/> :( <Redirect to="/"/>)} </Route>
-             <Route exact={true} path="/contact"><Contact/></Route>
-             <Route exact={true}  path="/nos-copmetences"> <NosCompetences/></Route>
-             <Route exact={true}  path="/nos-competences/:id" ><Competence/> </Route>
+            <Route exact={true} path="/apprenti/vos-competence"> {(this.props.token_apprenti) ? <ApprentiCompetence/> :( <Redirect to="/"/>)} </Route>
+            <Route exact={true} path="/contact"><Contact/></Route>
+            <Route exact={true}  path="/nos-copmetences"> <NosCompetences/></Route>
+            <Route exact={true}  path="/nos-competences/:id" ><Competence/> </Route>
             <Route exact={true} path="/" component={Home} />
             <Route exact={true} path="/se-connecter/sign-in" component={SignIn} />
             <Route exact={true} path="/se-connecter/sign-up" component={SignUp} />
-            <Route  path="*" ><div className="container">404 NOT FOUND</div></Route>
+            <Route path="*" ><div className="container">404 NOT FOUND</div></Route>
           </Switch>
           <Footer/>
         </Router>

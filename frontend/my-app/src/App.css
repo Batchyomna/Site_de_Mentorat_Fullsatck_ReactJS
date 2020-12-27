@@ -1,19 +1,16 @@
 #root{
   text-align: center;
-
-
+  font-family: 'DM Serif Display', serif;
 }
 .header {
   width: 100%;
   background-color:#43658B;
-
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   font-size: 24px;
-  
-  font-family: 'DM Serif Display', serif;
+  font-style: italic;
 }
 .logo {
   color:#ED6663 ;
@@ -36,10 +33,42 @@
 .menu :active{
   color: #ED6663;
 }
-/* .header-link{
-  flex: 5%;
-  background-color: #ED6663;
-} */
+.container{
+  margin: 5% !important;
+  flex-wrap: wrap;
+}
+/* SignUp, SignIn */
+.label{
+  font-style: normal;
+  color: #43658B;
+}
+.inTheLabel{
+  font-style: italic;
+  color: #875959 !important;
+  background-color: #FFA372 !important;
+  font-size: 10px;
+}
+.greenMessage{
+  font-size: 30px;
+  color: green;
+}
+.myButtons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:space-around;
+  margin: 3%;
+}
+.oneButton{
+  background-color: #ED6663 !important;
+  color: #43658B !important;
+ 
+  font-style: italic;
+}
+.smallMessage{
+  color: #875959;
+  font-style: italic;
+}
 
 
 
@@ -47,8 +76,7 @@
 
 
 
-
-
+/* footer */
 .footer{
   width: 100%;
   height: 8vh;
@@ -61,7 +89,7 @@
   justify-content: space-around;
   align-items: center;
   font-size: 15px;
-  font-family: 'DM Serif Display', serif;
+  font-style: italic;
 }
 .social-net{
   width: 30%;
@@ -71,7 +99,6 @@
 
 }
 .social-net a{
-
   background-color: #ED6663;
   color: #43658B;
   padding: 2px;
@@ -81,24 +108,31 @@
 
 @media screen and (max-width: 575px) {
   .header{
-height: auto;
-font-size: 18px;
+  height: auto;
+  font-size: 18px;
   }
- .logo {
-  font-size: 40px;
+  .logo {
+    font-size: 40px;
   }
   .footer{
-    flex-direction: column;
+      flex-direction: column;
+      position: relative;
   }
   .social-net{
-    width: 100%;
+      width: 100%;
   }
   .social-net a{
-   width:50%;
-   justify-content: space-around ;
-   background-color: transparent;
-   color: #ED6663
-  
+    width:50%;
+    justify-content: space-around ;
+    background-color: transparent;
+    color: #ED6663
+  }
+  .myButtons{
+  flex-direction: column;
+  justify-content:space-between
+  }
+  .container{
+      margin: auto !important;
   }
 }
 
@@ -108,14 +142,15 @@ font-size: 18px;
     font-size: 15px;
   }
   .logo {
-      font-size: 30px;
-      flex:22%;
+    font-size: 30px;
+    flex:22%;
   }
   .menu{
     flex: 60%;
   }
   .footer{
     flex-direction: column;
+     margin-top: 3%;
   }
   .social-net{
     width: 100%;
@@ -125,6 +160,10 @@ font-size: 18px;
     background-color: transparent;
     color: #ED6663;
     padding:0;
+  }
+ 
+  .container{
+    margin: auto !important;
   }
 }
 
