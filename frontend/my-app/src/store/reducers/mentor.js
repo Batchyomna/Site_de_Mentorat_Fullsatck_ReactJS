@@ -4,6 +4,7 @@ const initialStates = {
     mail_mentor: null,
     id_mentor:null,
     token_mentor: null,
+    competences: []
  
 };
 
@@ -14,7 +15,7 @@ const mentorReducer = (state = initialStates, action) => {
         ...state,   
     
       }
-      case "SIGNOUT_mENTOR":
+      case "SIGNOUT_MENTOR":
         return{
           ...state,
           prenom_mentor:null,
@@ -22,6 +23,12 @@ const mentorReducer = (state = initialStates, action) => {
           mail_mentor: null,
           id_mentor:null,
           token_mentor: null,
+        }
+      case "FILL_M_COMPETENCES":
+        return{
+          ...state,
+          competences: [...state.competencescompetences, action.payload]
+
         }
 
     default:

@@ -14,4 +14,8 @@ export const signOutApprenti = () => ({
     id_apprenti:null,
     token_apprenti: null,
 })
+export const apprentiCompetences = (competences) => ({
+    type: "FILL_A_COMPETENCES",
+    payload: competences,
+})
 

@@ -11,7 +11,7 @@ class Header extends Component {
   render() {
     return(
         <Navbar expand="sm" className="header">
-        <span href="/" className="logo">Go Together</span>
+        <a href="http://localhost:3000" className="logo">Go Together</a>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
         {this.props.token_mentor ?  

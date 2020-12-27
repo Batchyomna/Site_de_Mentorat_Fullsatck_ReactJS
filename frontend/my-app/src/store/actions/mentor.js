@@ -15,6 +15,10 @@ export const signOutMentor = () => ({
     id_mentor:null,
     token_mentor: null,
 })
+export const mentorCompetences = (competences) => ({
+    type: "FILL_M_COMPETENCES",
+    payload: competences,
+})
 export const changeUserData = (data) => ({
     type: "CHANGEDATA_mENTOR",
     payload : data
