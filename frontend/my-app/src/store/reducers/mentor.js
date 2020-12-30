@@ -12,7 +12,12 @@ const mentorReducer = (state = initialStates, action) => {
   switch (action.type) {
     case "SIGNIN_MENTOR":
       return {
-        ...state,   
+        ...state, 
+        prenom_mentor:action.prenom_mentor,
+        photo_mentor : action.photo_mentor,
+        mail_mentor: action.mail_mentor,
+        id_mentor:action.id_mentor,
+        token_mentor: action.token_mentor,  
     
       }
       case "SIGNOUT_MENTOR":

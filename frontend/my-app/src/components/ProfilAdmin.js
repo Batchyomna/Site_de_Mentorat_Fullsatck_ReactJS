@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class ProfilApprenti extends Component {
+class ProfilAdmin extends Component {
     render() {
         return (
             <div>
-                Apprenti
+                Admin
             </div>
         );
     }
 }
 
-export default ProfilApprenti;
+export default ProfilAdmin;

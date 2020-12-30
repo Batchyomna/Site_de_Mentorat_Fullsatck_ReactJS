@@ -1,10 +1,10 @@
 export const signInMentor = (user) => ({
     type: "SIGNIN_MENTOR",
-    prenom_mentor: user.name,
-    photo_mentor: user.photo,
-    mail_mentor: user.mail,
-    id_mentor: user.id,
-    token_mentor: user.token,
+    prenom_mentor: user.prenom_mentor,
+    photo_mentor: user.photo_mentor,
+    mail_mentor: user.mail_mentor,
+    id_mentor: user.id_mentor,
+    token_mentor: user.token_mentor,
    
 })
 export const signOutMentor = () => ({
@@ -20,7 +20,7 @@ export const mentorCompetences = (competences) => ({
     payload: competences,
 })
 export const changeUserData = (data) => ({
-    type: "CHANGEDATA_mENTOR",
+    type: "CHANGEDATA_MENTOR",
     payload : data
    
 })

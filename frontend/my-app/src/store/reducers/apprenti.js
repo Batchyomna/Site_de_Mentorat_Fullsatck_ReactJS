@@ -9,14 +9,24 @@ const initialStates = {
 
 const apprentiReducer = (state = initialStates, action) => {
   switch (action.type) {
-    case "SIGNIN_USER":
+    case "SIGNIN_APPRENTI":
       return {
         ...state,
+        prenom_apprenti:action.prenom_apprenti,
+        photo_apprenti : action.photo_apprenti,
+        mail_apprenti: action.mail_apprenti,
+        id_apprenti:action.id_apprenti,
+        token_apprenti: action.token_apprenti, 
     
       }
-      case "SIGNOUT_USER":
+      case "SIGNOUT_APPRENTI":
         return{
           ...state,
+          prenom_apprenti:null,
+          photo_apprenti : null,
+          mail_apprenti: null,
+          id_apprenti:null,
+          token_apprenti: null,
         }
 
     default:

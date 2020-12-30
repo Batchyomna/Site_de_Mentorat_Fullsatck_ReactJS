@@ -4,9 +4,9 @@ import {connect} from 'react-redux'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Header from './components/Header'
 import Footer from './components/Footer'
-import ProfilApprenti from './components/ProfilApprenti'
+// import ProfilApprenti from './components/ProfilApprenti'
 import ApprentiCompetence from './components/ApprentiCompetence'
-import ProfilMentor from './components/ProfilMentor'
+import Profil from './components/Profil'
 import MentorCompetence from './components/MentorCompetence'
 import Home from './components/Home'
 import NosCompetences from './components/NosCompetences'
@@ -22,9 +22,9 @@ class App extends Component {
         <Router>
           <Header />
           <Switch>
-            <Route exact={true} path="/mentor/profil"> {this.props.token_mentor ? <ProfilMentor/> : <Redirect to="/"/>}</Route>
+            <Route exact={true} path="/profil"> {this.props.token_mentor || this.props.token_apprenti|| this.props.token_admin ? <Profil/> : <Redirect to="/"/>}</Route>
             <Route exact={true} path="/mentor/vos-competence"> {this.props.token_mentor ? <MentorCompetence/>: <Redirect to="/"/>} </Route>
-            <Route exact={true} path="/apprenti/profil"> {(this.props.token_apprenti) ? (<ProfilApprenti/>) :( <Redirect to="/"/>)}</Route>
+            {/* <Route exact={true} path="/apprenti/profil"> {(this.props.token_apprenti) ? (<ProfilApprenti/>) :( <Redirect to="/"/>)}</Route> */}
             <Route exact={true} path="/apprenti/vos-competence"> {(this.props.token_apprenti) ? <ApprentiCompetence/> :( <Redirect to="/"/>)} </Route>
             <Route exact={true} path="/contact"><Contact/></Route>
             <Route exact={true}  path="/nos-copmetences"> <NosCompetences/></Route>
@@ -44,5 +44,7 @@ class App extends Component {
 const mapStateToProps = (state) => ({
   token_mentor: state.mentorReducer.token_mentor,
   token_apprenti: state.apprentiReducer.token_apprenti,
+  token_admin: state.adminReducer.token_admin,
+
 })
 export default connect(mapStateToProps)(App);

@@ -69,7 +69,7 @@ router.post('/sign-in', (req, res) => {
                  bcrypt.compare(req.body.mdp, admin[0].mdp_admin).then(function (result) {
                        if (result == true) {
                        const token = generateAccessToken( admin[0].id_admin, admin[0].mail_admin, 'admin');
-                       res.status(200).json(token);  //You are authrised
+                       res.status(200).json({token: token, id: admin[0].id_admin });  //You are authrised
                        console.log('vous êtes bien un admin');
                        } else {
                        res.status(401).send("Vous avez oublié votre mot de pass?")
@@ -87,7 +87,7 @@ router.post('/sign-in', (req, res) => {
                   bcrypt.compare(req.body.mdp, mentor[0].mdp_mentor).then(function (result) {
                         if (result == true) {
                         const token = generateAccessToken( mentor[0].id_mentor, mentor[0].mail_mentor, 'mentor');
-                        res.status(200).json(token);  //You are authrised
+                        res.status(200).json({token: token, id:mentor[0].id_mentor });  //You are authrised
                         console.log('vous êtes bien un mentor');
                         } else {
                         res.status(401).send("Vous avez oublié votre mot de pass?")
@@ -105,14 +105,14 @@ router.post('/sign-in', (req, res) => {
                   bcrypt.compare(req.body.mdp, apprenti[0].mdp_apprenti).then(function (result) {
                         if (result == true) {
                         const token = generateAccessToken( apprenti[0].id_apprenti, apprenti[0].mail_apprenti, 'apprenti');
-                        res.status(200).json(token);  //You are authrised
+                        res.status(200).json({token: token, id: apprenti[0].id_apprenti });  //You are authrised
                         console.log('vous êtes bien un apprenti');
                         } else {
                         res.status(401).send("Vous avez oublié votre mot de pass?")
                         }
                     })
                 } else {
-                  res.status(404).send("Ce compte nous est inconnu")
+                  res.status(404).send("Ce compte est inconnu")
                 }
             })
         }

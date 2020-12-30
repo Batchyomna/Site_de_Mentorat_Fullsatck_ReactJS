@@ -7,6 +7,7 @@ import  { Redirect } from 'react-router-dom'
 
 import {signInMentor, mentorCompetences} from '../store/actions/mentor'
 import {signInApprenti, apprentiCompetences} from '../store/actions/apprenti'
+import { signInAdmin} from '../store/actions/admin'
 class SignIn extends Component {
     constructor() {
         super();
@@ -19,9 +20,10 @@ class SignIn extends Component {
         }
     }
     render() {
-        if (this.state.signinFlag) {
+        if(this.props.token_mentor || this.props.token_apprenti || this.props.token_admin){
+          return  <Redirect to={'/profil'}/>
+        }else if (this.state.signinFlag) {
             return (
-               
                 <div className="container">
                      <h2>Se Connecter</h2>
                     <span className="greenMessage">{this.state.message}<br /></span>
@@ -52,7 +54,6 @@ class SignIn extends Component {
                            <Button className="oneButton" type="submit" onClick={this.goToSignIn.bind(this)}>Sign in</Button>
                             <p className="smallMessage">Si vous n'avez pas encore un compte, entrez ici pour le créer</p>
                             <Button className="oneButton" type="submit" onClick={this.goToSignUp.bind(this)} >Sign up</Button>
-                            
                         </div>
                     </Form>
                 </div>
@@ -76,46 +77,43 @@ class SignIn extends Component {
         })
     }
 
-async goToSignIn(e) {
-    e.preventDefault();
-    try {
-        let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
-        console.log(result);
-        if (result.status === 200) {
-            if(this.state.statut === "mentor"){
-                this.props.signInMentor(result.data)
-            }else if(this.state.statut ===" apprenti"){
-                this.props.signInApprenti()
-            }else if(this.state.statut === 'admin'){
-                console.log("tis un admin"); // DOOOOOOOONT Foreget de add it
+    async goToSignIn(e) {
+        e.preventDefault();
+        try {
+            let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
+            console.log('qui a fait signin?',result);
+            if (result.status === 200) {
+                if(this.state.statut === "mentor"){
+                    this.props.signInMentor({token_mentor:result.data.token, id_mentor: result.data.id, mail_mentor:this.state.mail })
+                }else if(this.state.statut === "apprenti"){
+                    this.props.signInApprenti({token_apprenti:result.data.token, id_apprenti: result.data.id, mail_apprenti:this.state.mail})
+                }else if(this.state.statut === 'admin'){
+                    this.props.signInAdmin({token_admin:result.data.token, id_admin: result.data.id, mail_admin:this.state.mail})
+                }
             }
+        } catch (error) {
             this.setState({
                 mail: '',
                 mdp: '',
                 statut: '',
+                message: 'Excusez-nous mais vous devez réessayer'
             })
-         
+            console.error(error);
         }
-    } catch (error) {
-        this.setState({
-            mail: '',
-            mdp: '',
-            statut: '',
-
-        })
-        console.error(error);
     }
 }
-}
 const mapStateToProps = (state) => ({
-    token: state.usersReducer.token,
-  });
+    token_mentor: state.mentorReducer.token_mentor,
+    token_apprenti: state.apprentiReducer.token_apprenti,
+    token_admin: state.adminReducer.token_admin,
+});
   
-  const mapDispatchToProps = {
+const mapDispatchToProps = {
     signInMentor,
     signInApprenti,
+    signInAdmin,
     mentorCompetences,
     apprentiCompetences,
-  }
+}
   
-  export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
