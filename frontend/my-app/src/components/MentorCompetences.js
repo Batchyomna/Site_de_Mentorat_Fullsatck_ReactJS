@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class NosCompetences extends Component {
+class MentorCompetences extends Component {
     render() {
         return (
             <div>
-                NOOOOOO
+                mentor competence
             </div>
         );
     }
 }
 
-export default NosCompetences;
+export default MentorCompetences;

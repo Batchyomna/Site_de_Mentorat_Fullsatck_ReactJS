@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import ProfilApprenti from './ProfilApprenti'
 import ProfilMentor from './ProfilMentor'
 import ProfilAdmin from './ProfilAdmin'
+import { Redirect } from 'react-router';
 
 
 class Profil extends Component {
@@ -23,7 +24,7 @@ class Profil extends Component {
                     <ProfilAdmin/>
                 )
                 : 
-                null
+                <Redirect to="/"/>
                 }
             </div>
         );

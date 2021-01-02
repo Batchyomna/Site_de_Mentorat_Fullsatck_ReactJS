@@ -21,7 +21,7 @@ class SignIn extends Component {
     }
     render() {
         if(this.props.token_mentor || this.props.token_apprenti || this.props.token_admin){
-          return  <Redirect to={'/profil'}/>
+          return  <Redirect to={'/user/profil'}/>
         }else if (this.state.signinFlag) {
             return (
                 <div className="container">
@@ -81,7 +81,6 @@ class SignIn extends Component {
         e.preventDefault();
         try {
             let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
-            console.log('qui a fait signin?',result);
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){
                     this.props.signInMentor({token_mentor:result.data.token, id_mentor: result.data.id, mail_mentor:this.state.mail })
