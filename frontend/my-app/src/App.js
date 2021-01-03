@@ -11,7 +11,7 @@ import NosCompetences from './components/NosCompetences'
 import Contact from './components/Contact'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
-// import Competence from './components/Competence'
+import Competence from './components/Competence'
 
 class App extends Component {
   render() {
@@ -24,7 +24,7 @@ class App extends Component {
             <Route exact={true} path="/user/vos-competences"> {this.props.token_mentor || this.props.token_apprenti ? <VosCompetences/>: <Redirect to="/"/>} </Route>
             <Route exact={true} path="/contact"><Contact/></Route>
             <Route exact={true}  path="/nos-copmetences"> <NosCompetences/></Route>
-            {/* <Route exact={true}  path="/nos-competences/:id" ><Competence/> </Route> */}
+            <Route exact={true}  path="/nos-competences/:id" ><Competence/> </Route>
             <Route exact={true} path="/" component={Home} />
             <Route exact={true} path="/se-connecter/sign-in" component={SignIn} />
             <Route exact={true} path="/se-connecter/sign-up" component={SignUp} />

@@ -34,7 +34,10 @@
   color: #ED6663;
 }
 .container{
-  margin: 5% !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  margin-bottom: 10% ;
+  margin-top: 5%;
   flex-wrap: wrap;
 }
 h2{
@@ -75,8 +78,34 @@ h2{
   font-style: italic;
  
 }
+/* Nos Competences */
+#imageNosCopms{  
+  background-color: #003557;
+}
+.allComps{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5%;
+}
+.oneComp{
+  padding: 1%;
+}
+.oneComp:nth-child(2n+1):nth-child(2n+1){
+  background-color: rgba(237,102,99,.8);
+  border-radius: 5px;
 
-
+}
+.taken{
+  color: red;
+  text-decoration: line-through;
+}
+.lire{
+  text-decoration: underline;
+ font-style: italic;
+ cursor: pointer;
+}
 
 
 
@@ -84,18 +113,20 @@ h2{
 
 /* footer */
 .footer{
+  /* position: absolute;
+  bottom: 0px; */
   width: 100%;
   height: 8vh;
   background-color: #43658B;
-  color: #ED6663;
-  position: absolute;
-  bottom: 0px;
+  color:#ED6663 ;
+  
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   font-size: 15px;
   font-style: italic;
+  clear: both;
 }
 .social-net{
   width: 30%;
@@ -139,9 +170,11 @@ h2{
   justify-content:space-between
   }
   .container{
-      margin: auto !important;
+    margin: auto !important;
   }
- 
+  .allComps{
+  flex-direction: column;
+  }
 }
 
 @media screen and (min-width: 576px) and (max-width: 800px){
@@ -169,19 +202,8 @@ h2{
     color: #ED6663;
     padding:0;
   }
- 
   .container{
     margin: auto !important;
   }
 }
 
-
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
