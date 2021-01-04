@@ -117,6 +117,16 @@ h2{
  font-style: italic;
  cursor: pointer;
 }
+/* --------One Competence */
+.photAndDescription{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-around;
+   align-items: center;
+   margin-top: 2%;
+   margin-bottom: 2%;
+   background-color: #FFA372; 
+}
 
 
 
@@ -189,7 +199,9 @@ h2{
   .oneComp{
     flex: 1 1 100%;
   }
-  
+  .photAndDescription{
+    flex-direction: column;
+  }
 }
 
 @media screen and (min-width: 576px) and (max-width: 800px){

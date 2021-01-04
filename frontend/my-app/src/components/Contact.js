@@ -19,7 +19,7 @@ class Contact extends Component {
         return (
             <div className="container">
                 <h2>Contactez nous</h2>
-                <span className="greenMessage">{this.state.reponse}<br /></span>
+                <span className="greenMessage">{this.state.reponse}</span><br/>
                 <p className="smallMessage">Vous avez des questions? Ecrivez-nous et nous vous répondrons le plus vite possible</p>
                 <Form>
                     <Row>
@@ -68,7 +68,8 @@ class Contact extends Component {
           port: 465,
           secure: true,
           auth:{
-              
+            user: 'kh.yomna@gmail.com',
+            pass: 'Google2moi'
           }
 
         });
@@ -78,15 +79,14 @@ class Contact extends Component {
           to: 'kh.yomna@gmail.com',
           subject: 'test',
           text: 'HELOOOOOO YOMNA!'
-        };
-        console.log('my options',mailOptions);
-        
+        };        
         transporter.sendMail(mailOptions, function(error, data){
           if (error) {
+              console.log("AAAAAAAAAAAAAAAAAAAA");
             console.log(error);
           } else {
               this.setState({
-                  reponse: 'Votre message a bien envoyé'
+                  reponse: 'Votre message est bien envoyé'
               })
             console.log('Email sent: ' + data.response);
           }

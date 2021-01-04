@@ -293,7 +293,7 @@ router.get('/competence-et-session', (req,res)=>{
         res.status(200).json(result)
       })
     }else if(req.body.statut === 'mentor'){
-      connection.query(`SELECT a.id_mentor, b.*, c.date_session from mentor as a LEFT join competence as b ON a.id_mentor = b.id_mentor LEFT JOIN session as c ON b.id_competence = c.id_competence WHERE a.id_mentor = '${req.body.id}'`, (erreur, result)=>{
+      connection.query(`SELECT a.id_mentor, b.*, c.date_session FROM mentor as a LEFT join competence as b ON a.id_mentor = b.id_mentor LEFT JOIN session as c ON b.id_competence = c.id_competence WHERE a.id_mentor = '${req.body.id}'`, (erreur, result)=>{
         if (erreur) throw erreur   
         res.status(200).json(result)
       });
@@ -302,9 +302,9 @@ router.get('/competence-et-session', (req,res)=>{
     console.log(err);
   }
 })
-router.get('/one-competneces/:id', (req,res)=>{
+router.get('/one-competence/:id', (req,res)=>{
   try{
-    connection.query(`SELECT * FROM session WHERE id_competence= ${req.params.id}`, (err,result) =>{
+    connection.query(`SELECT a.*, b.photo_mentor, b.nom_mentor FROM competence as a LEFT JOIN mentor as b ON a.id_mentor = b.id_mentor WHERE id_competence= ${req.params.id}`, (err,result) =>{
       if (err) throw err
       res.status(200).json(result)
     })
