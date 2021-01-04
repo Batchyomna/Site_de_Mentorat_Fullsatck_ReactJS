@@ -86,12 +86,16 @@ h2{
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
   margin: 5%;
 }
 .oneComp{  /*----flex: [flex-grow] [flex-shrink] [flex-basis]----*/
   flex: 33%;
   padding: 1%;
+}
+.oneComp:nth-child(2n){
+  border: 1px solid #FFA372;
+  color: #875959;
+  border-radius: 5px;
 }
 .oneComp:nth-child(2n+1){
   background-color:  #FFA372;
@@ -181,6 +185,9 @@ h2{
   }
   .allComps{
   flex-direction: column;
+  }
+  .oneComp{
+    flex: 1 1 100%;
   }
   
 }

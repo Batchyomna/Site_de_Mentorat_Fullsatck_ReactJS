@@ -13,7 +13,7 @@ class Header extends Component {
   render() {
     return(
         <Navbar expand="sm" className="header">
-        <a href="http://localhost:3000" className="logo">Go Together</a>
+        <a href="/" className="logo">Go Together</a>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
         {this.props.token_mentor ?  
@@ -61,7 +61,7 @@ class Header extends Component {
        ( 
             <Nav  className="mr-auto menu">
               <Link to="/">Accueil</Link>
-              <Link to="/nos-copmetences"  >Nos Compétences</Link>
+              <Link to="/nos-competences"  >Nos Compétences</Link>
               <Link to="/contact" >Contact</Link>
               <Link to="/se-connecter/sign-up" >Se Connecter</Link>
             </Nav>

@@ -52,7 +52,6 @@ router.post('/sign-up', function (req, res) {
           res.status(201).send('vos coordonnées comme apprenti sont inscrits')
         }
       })
-    
     } catch (err) {
       res.status(400).send('Il y a des errors')
       console.log(err);
@@ -227,7 +226,7 @@ router.get('/domaine/:domaine', async (req, res) => {
 // ------------3.API/get/all/domaines
 router.get('/all/domaines', async (req, res) => {
   try {
-   connection.query(`SELECT domaine FROM competence`, function(err, result){
+   connection.query(`SELECT domaine, id_competence FROM competence`, function(err, result){
        if (err) throw err
       res.status(200).json(result); 
    })
@@ -299,6 +298,17 @@ router.get('/competence-et-session', (req,res)=>{
         res.status(200).json(result)
       });
     }
+  }catch(err){
+    console.log(err);
+  }
+})
+router.get('/one-competneces/:id', (req,res)=>{
+  try{
+    connection.query(`SELECT * FROM session WHERE id_competence= ${req.params.id}`, (err,result) =>{
+      if (err) throw err
+      res.status(200).json(result)
+    })
+
   }catch(err){
     console.log(err);
   }

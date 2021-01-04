@@ -12,12 +12,14 @@ class Contact extends Component {
         sujet:'',
         mail: '',
         message:'',
+        reponse: ''
         }
     }
     render() {
         return (
             <div className="container">
                 <h2>Contactez nous</h2>
+                <span className="greenMessage">{this.state.reponse}<br /></span>
                 <p className="smallMessage">Vous avez des questions? Ecrivez-nous et nous vous répondrons le plus vite possible</p>
                 <Form>
                     <Row>
@@ -62,22 +64,31 @@ class Contact extends Component {
     sendEmail() {  //Simple Mail Transfer Protocol
         const transporter = nodemailer.createTransport({
           service: 'gmail',
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
+          auth:{
+              
+          }
+
         });
         
         const mailOptions = {
-          from: 'khalilsleaby@hotmail.com',
+          from: this.state.mail,
           to: 'kh.yomna@gmail.com',
           subject: 'test',
           text: 'HELOOOOOO YOMNA!'
         };
         console.log('my options',mailOptions);
         
-        transporter.sendMail(mailOptions, function(error, info){
+        transporter.sendMail(mailOptions, function(error, data){
           if (error) {
             console.log(error);
           } else {
-            alert('Votre message est bien envoyé')
-            console.log('Email sent: ' + info.response);
+              this.setState({
+                  reponse: 'Votre message a bien envoyé'
+              })
+            console.log('Email sent: ' + data.response);
           }
         });  
     }

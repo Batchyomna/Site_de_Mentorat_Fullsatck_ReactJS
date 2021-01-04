@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import { Form } from "react-bootstrap";
-import  { Redirect } from 'react-router-dom'
-
 class NosCompetences extends Component {
     constructor() {
         super();
@@ -10,67 +8,58 @@ class NosCompetences extends Component {
             allCompetences: [],
             allDomaine: [],
             domaineSelected: '',
-            flagOneComp: false,
             id_Comp: null
         }
     }
     render() {
-        if (!this.state.flagOneComp) {
-            return (
-                <div className="container">
-                    <div id="imageNosCopms">
-                        <img src="https://images.unsplash.com/photo-1589828994379-7a8869c4f519?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8cGFwZXIlMjBhcnJvd3xlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="mentor" width="40%" />
-                    </div>
-                    <Form>
-                        <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaineSelected" className="inTheLabel">
-                            <option value="" className="inTheLabel">Choisissez un domaine</option>
-                            {this.state.allDomaine.length !== 0 ? this.state.allDomaine.map((elem) => {
-                                return <option value={elem} className="inTheLabel">{elem}</option>
-
-                            })
-                                : null}
-                        </Form.Control>
-                    </Form>
-
-                    <div className="allComps">
-                        {this.state.allCompetences.length > 0 ? this.state.allCompetences.map((item) => {
-                            return (
-                                <div key={item.id_competence} className="oneComp">
-                                    {item.reserve ?
-                                    <b className="token">indisponsible</b>
-                                     :
-                                     <b className="nontoken">disponsible</b>
-                                     }
-                                    <h4>{item.titre}</h4>
-                                    <b>Domaine:</b> <p className="smallMessage">{item.domaine}</p>
-                                    <b>Durée: </b><p className="smallMessage">{item.duree}</p>
-                                    <p className="lire" onClick={this.readMore.bind(this, item.id_competence)}>Lire plus</p>
-
-                                </div>
-                            )
-
-                        }
-                        )
-                        : <div> else </div>
-                        }
-                    </div>
+        return (
+            <div className="container">
+                <div id="imageNosCopms">
+                    <img src="https://images.unsplash.com/photo-1589828994379-7a8869c4f519?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8cGFwZXIlMjBhcnJvd3xlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="mentor" width="40%" />
                 </div>
-            );
-        }else{
-            return <Redirect to={`/nos-competences/${this.state.id_Comp}`}/>
-        }
+                <Form>
+                    <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaineSelected" className="inTheLabel" onClick={this.selectDomaine.bind(this)}>
+                        <option value="" className="inTheLabel">Choisissez un domaine</option>
+                        {this.state.allDomaine.length !== 0 ?
+                            this.state.allDomaine.map((elem) => {
+                            return <option value={elem.domaine} className="inTheLabel" key={elem.id_competence}>{elem.domaine}</option>
+                        })
+                        : null}
+                    </Form.Control>
+                </Form>
 
+                <div className="allComps">
+                    {this.state.allCompetences.length > 0 ? this.state.allCompetences.map((item) => {
+                        return (
+                            <div key={item.id_competence} className="oneComp">
+                                {item.reserve ?
+                                <b className="token">indisponsible</b>
+                                    :
+                                    <b className="nontoken">disponsible</b>
+                                    }
+                                <h4>{item.titre}</h4>
+                                <b>Domaine:</b> <p className="smallMessage">{item.domaine}</p>
+                                <b>Durée: </b><p className="smallMessage">{item.duree}</p>
+                                <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt=" cliquez ici pour plus de détails">Lire plus</a>
+                            </div>
+                        )
+                    })
+                    :<div> Il n'a y pas des compétences </div>
+                    }
+                </div>
+            </div>
+        )
     }
 
     async componentDidMount() {
         try {
             let result = await axios.get('http://localhost:8000/all/competences')
             if (result.status === 200) {
-                for (let i in result.data) {
-                    this.state.allCompetences.push(result.data[i])
-                }
-                console.log(this.state.allCompetences[0].description);
                 this.setState({ allCompetences: result.data })
+            }
+            let resutDomaine = await axios.get('http://localhost:8000/all/domaines')
+            if(resutDomaine.status === 200){
+                this.setState({ allDomaine: resutDomaine.data});
             }
         } catch (err) {
             console.error(err)
@@ -87,6 +76,16 @@ class NosCompetences extends Component {
             flagOneComp: true,
             id_Comp: id
         })
+    }
+  async  selectDomaine(event){
+        if(event.target.value===''){
+            this.componentDidMount()
+        }else{
+            let compsOfDomaine = await axios.get(`http://localhost:8000/domaine/${this.state.domaineSelected}`)
+            if(compsOfDomaine.status === 200){
+                this.setState({ allCompetences: compsOfDomaine.data })
+            }
+        }
     }
 }
 

@@ -23,7 +23,7 @@ class App extends Component {
             <Route exact={true} path="/user/profil"> {this.props.token_mentor || this.props.token_apprenti|| this.props.token_admin ? <Profil/> : <Redirect to="/"/>}</Route>
             <Route exact={true} path="/user/vos-competences"> {this.props.token_mentor || this.props.token_apprenti ? <VosCompetences/>: <Redirect to="/"/>} </Route>
             <Route exact={true} path="/contact"><Contact/></Route>
-            <Route exact={true}  path="/nos-copmetences"> <NosCompetences/></Route>
+            <Route exact={true}  path="/nos-competences"> <NosCompetences/></Route>
             <Route exact={true}  path="/nos-competences/:id" ><Competence/> </Route>
             <Route exact={true} path="/" component={Home} />
             <Route exact={true} path="/se-connecter/sign-in" component={SignIn} />
