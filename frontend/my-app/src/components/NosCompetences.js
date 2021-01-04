@@ -37,13 +37,13 @@ class NosCompetences extends Component {
                             return (
                                 <div key={item.id_competence} className="oneComp">
                                     {item.reserve ?
-                                    <><h4 className="taken">{item.titre} </h4><b>(indisponsible)</b></>
+                                    <b className="token">indisponsible</b>
                                      :
-                                     <h4 className="nontaken">{item.titre}</h4>
+                                     <b className="nontoken">disponsible</b>
                                      }
-                                    
-                                    <h6><b>Domaine:</b> {item.domaine}</h6>
-                                    <p><b>Description: </b>{item.description}</p>
+                                    <h4>{item.titre}</h4>
+                                    <b>Domaine:</b> <p className="smallMessage">{item.domaine}</p>
+                                    <b>Durée: </b><p className="smallMessage">{item.duree}</p>
                                     <p className="lire" onClick={this.readMore.bind(this, item.id_competence)}>Lire plus</p>
 
                                 </div>
