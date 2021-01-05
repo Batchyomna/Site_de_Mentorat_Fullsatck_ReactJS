@@ -16,7 +16,8 @@ class SignIn extends Component {
             mdp: '',
             statut: '',
             signinFlag: true,
-            message: ''
+            message:'',
+            errorClasse: false
         }
     }
     render() {
@@ -26,7 +27,7 @@ class SignIn extends Component {
             return (
                 <div className="container">
                      <h2>Se Connecter</h2>
-                    <span className="greenMessage">{this.state.message}<br /></span>
+                    <span className="redMessage">{this.state.message}<br/></span>
                     <p className="smallMessage">Tout les champs sont obligatoires</p>
                     <Form>
                         <Row>
@@ -83,19 +84,24 @@ class SignIn extends Component {
             let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){
-                    this.props.signInMentor({token_mentor:result.data.token, id_mentor: result.data.id, mail_mentor:this.state.mail, photo_mentor: result.data.photo_mentor })
+                    this.props.signInMentor({token_mentor:result.data.token, id_mentor: result.data.id, mail_mentor:this.state.mail, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor  })
                 }else if(this.state.statut === "apprenti"){
-                    this.props.signInApprenti({token_apprenti:result.data.token, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti})
+                    this.props.signInApprenti({token_apprenti:result.data.token, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti})
                 }else if(this.state.statut === 'admin'){
                     this.props.signInAdmin({token_admin:result.data.token, id_admin: result.data.id, mail_admin:this.state.mail})
                 }
+            }else if(result.status === 201){
+                this.setState({message:"Vous avez oublié votre mot de pass?"})
+            }
+            if(result.status === 203){
+                this.setState({message:"On ne sait pas ce compte", errorClasse : true})
             }
         } catch (error) {
             this.setState({
                 mail: '',
                 mdp: '',
                 statut: '',
-                message: 'Excusez-nous mais vous devez réessayer'
+                message: 'Vous devrez réessayer, car il y a des problèmes de connexion'
             })
             console.error(error);
         }

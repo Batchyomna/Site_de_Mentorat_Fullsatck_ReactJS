@@ -35,7 +35,6 @@ class SignUp extends Component {
                                 <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel" />
                             </Col>
                         </Row>
-
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Adresse mail *</Form.Label>
@@ -76,7 +75,6 @@ class SignUp extends Component {
                             <Button className="oneButton" type="submit" onClick={this.goToSignUp.bind(this)} >Sign up</Button>
                             <p className="smallMessage">Vous avez déjà un compte?</p>
                             <Button className="oneButton" type="submit" onClick={this.goToSignIn.bind(this)}>Sign in</Button>
-                            
                         </div>
                     </Form>
                 </div>

@@ -9,7 +9,7 @@ class Competence extends Component {
         super();
         this.status = {
             nom_mentor: '',
-            reservé: null,
+            reserve: null,
             titre: '',
             duree: '',
             frequence: '',
@@ -22,10 +22,10 @@ class Competence extends Component {
         if(this.state){
              return (
             <div className="container">
-                  {this.state.reserve ?
-                    <b className="token">indisponsible</b>
+                  {this.state.reserve === 1 ?
+                    <p className="token">indisponsible</p>
                     :
-                    <b className="nontoken">disponsible</b>
+                    <p className="nontoken">disponsible</p>
                     }
                     <br/>
                 <h2>{this.state.titre}</h2>
@@ -39,7 +39,12 @@ class Competence extends Component {
                         <p><b>description:</b><br></br>{this.state.description || 'There is no description'}</p>
                     </div>
                 </div>
-                <Button className="oneButton" variant="primary" type="submit" >ça m'interesse</Button>
+                {
+                    this.state.reserve === 1 ? 
+                    <Button className="oneButton" variant="primary" type="submit" >ça m'interesse</Button>
+                    : 
+                    <Button className="oneButton" variant="primary" type="submit" >choisir cette compétence</Button>
+                }
             </div>
         )
         }else{
@@ -55,7 +60,7 @@ class Competence extends Component {
                 console.log(details.data);
                 this.setState({
                     nom_mentor: details.data[0].nom_mentor,
-                    reservé: details.data[0].reserve,
+                    reserve: details.data[0].reserve,
                     titre: details.data[0].titre,
                     duree: details.data[0].duree,
                     frequence: details.data[0].frequence,

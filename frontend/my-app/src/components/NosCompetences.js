@@ -33,7 +33,7 @@ class NosCompetences extends Component {
                         return (
                             <div key={item.id_competence} className="oneComp">
                                 {item.reserve ?
-                                <b className="token">indisponsible</b>
+                                    <b className="token">indisponsible</b>
                                     :
                                     <b className="nontoken">disponsible</b>
                                     }

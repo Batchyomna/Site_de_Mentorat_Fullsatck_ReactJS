@@ -70,14 +70,13 @@ router.post('/sign-in', (req, res) => {
                        res.status(200).json({token: token, id: admin[0].id_admin });  //You are authrised
                        console.log('vous êtes bien un admin');
                        } else {
-                       res.status(401).send("Vous avez oublié votre mot de pass?")
+                       res.status(201).send("Vous avez oublié votre mot de pass?")
                        }
                    })
                } else {
-                 res.status(404).send("Ce compte nous est inconnu")
+                 res.status(203).send("Ce compte nous est inconnu")
                }
            })
-
         }else if(req.body.statut === 'mentor') {
             connection.query("SELECT * FROM mentor", function (err, allMentors, fields) {
                  let mentor = allMentors.filter(elem => elem.mail_mentor === req.body.mail)
@@ -85,15 +84,14 @@ router.post('/sign-in', (req, res) => {
                   bcrypt.compare(req.body.mdp, mentor[0].mdp_mentor).then(function (result) {
                         if (result == true) {
                         const token = generateAccessToken( mentor[0].id_mentor, mentor[0].mail_mentor, 'mentor');
-                        res.status(200).json({token: token, id:mentor[0].id_mentor, photo_mentor: mentor[0].photo_mentor });  //You are authrised
+                        res.status(200).json({token: token, id:mentor[0].id_mentor, photo_mentor: mentor[0].photo_mentor, prenom_mentor: mentor[0].prenom_mentor  });  //You are authrised
                         console.log('vous êtes bien un mentor');
                         } else {
-                        res.status(401).send("Vous avez oublié votre mot de pass?")
-
-                        }
+                        res.status(201).send("Vous avez oublié votre mot de pass?")
+                      }
                     })
                 } else {
-                  res.status(404).send("Ce compte nous est inconnu")
+                  res.status(203).send("Ce compte nous est inconnu")
                 }
             })
         }else if(req.body.statut === 'apprenti') {
@@ -103,14 +101,14 @@ router.post('/sign-in', (req, res) => {
                   bcrypt.compare(req.body.mdp, apprenti[0].mdp_apprenti).then(function (result) {
                         if (result == true) {
                         const token = generateAccessToken( apprenti[0].id_apprenti, apprenti[0].mail_apprenti, 'apprenti');
-                        res.status(200).json({token: token, id: apprenti[0].id_apprenti, photo_apprenti: apprenti[0].photo_apprenti });  //You are authrised
+                        res.status(200).json({token: token, id: apprenti[0].id_apprenti, photo_apprenti: apprenti[0].photo_apprenti, prenom_apprenti: apprenti[0].prenom_apprenti });  //You are authrised
                         console.log('vous êtes bien un apprenti');
                         } else {
-                        res.status(401).send("Vous avez oublié votre mot de pass?")
+                        res.status(201).send("Vous avez oublié votre mot de pass?")
                         }
                     })
                 } else {
-                  res.status(404).send("Ce compte est inconnu")
+                  res.status(203).send("Ce compte est inconnu")
                 }
             })
         }
@@ -171,6 +169,50 @@ router.put('/admin/valid/:idMentor', (req, res)=>{
     }catch(err){
      console.log(err);
     }
+})
+//------------3. API/PUT/user/apprenti/edit-data
+router.put('/user/apprenti/edit-data/:id', (req,res)=>{
+  try{
+      let data = Object.keys(req.body)
+      if(req.body.mdp_apprenti){
+        bcrypt.hash(req.body.mdp_apprenti, saltRounds).then(function (hashPW) {
+         var query = `UPDATE apprenti SET `
+      for (let i = 0; i < data.length; i++) {
+        if(data[i] === 'mdp_apprenti'){ 
+          // console.log('AAAAA');  
+          query = query + `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvgarder mdp hashé
+      }else if(i == data.length -1){   
+            query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]
+      }else{
+        query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+      }
+        }
+      query = query + ` WHERE id_apprenti = ${req.params.id}`;
+      console.log(query);
+      connection.query(query, function (err, result) {
+        if (err) throw err;
+        res.status(200).send({msg: 'vos coodonnées sont bien changés'});
+      })
+    })
+      }else{
+        var query = `UPDATE apprenti SET `
+        for (let i = 0; i < data.length; i++) {
+          if(i == data.length -1){   
+              query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]
+        }else{
+          query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+        }
+          }
+        query = query + ` WHERE id_apprenti = ${req.params.id}`;
+        console.log(query);
+        connection.query(query, function (err, result) {
+          if (err) throw err;
+          res.status(200).send({msg: 'vos coodonnées sont bien changés'});
+      })
+    }
+  }catch(err){
+    console.log(err);
+  }
 })
 //--------------3.API/GET/apprenti
 router.get('/all/apprentis', (req, res) => {
@@ -251,7 +293,6 @@ router.get('/sessions_des_competences', async (req, res) => {
         if(err) throw err
         console.log(result)
         res.status(200).json(result);
-
       })
   } catch (err) {
     console.log(err);
@@ -281,7 +322,6 @@ router.delete('/compte', (req, res) => {
       res.status(200).end("Cet apprenti est bien supprimé")
     })
   }
-  
 });
 //---------3.API/get/competence-et-session(pour le mentor on peut ajouter AND b.reserve = true)
 router.get('/competence-et-session', (req,res)=>{
@@ -301,17 +341,18 @@ router.get('/competence-et-session', (req,res)=>{
     console.log(err);
   }
 })
+//-------------3. API/GET/
 router.get('/one-competence/:id', (req,res)=>{
   try{
     connection.query(`SELECT a.*, b.photo_mentor, b.nom_mentor FROM competence as a LEFT JOIN mentor as b ON a.id_mentor = b.id_mentor WHERE id_competence= ${req.params.id}`, (err,result) =>{
       if (err) throw err
       res.status(200).json(result)
     })
-
   }catch(err){
     console.log(err);
   }
 })
+//--------------3.API/POST/
 router.post('/contact', (req, res)=>{
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -322,13 +363,12 @@ router.post('/contact', (req, res)=>{
       user: 'kh.yomna@gmail.com',
       pass: 'Google2moi'
     }
-
   });
   const mailOptions = {
-    from: req.body.mail,
+    from: req.body.mail, 
     to:'kh.yomna@gmail.com',
-    subject: `${req.body.sujet} || ${req.body.mail} `,
-    text:`Moi c'est: ${req.body.nom},  || ${req.body.message}`  
+    subject: `${req.body.sujet} || ${req.body.nom} `,
+    text:`${req.body.message} ||...Vous devrez utiliser ce mail ( ${req.body.mail} ) pour répondre. `  
   };        
   transporter.sendMail(mailOptions, function(error, data){
     if (error) {
@@ -339,5 +379,30 @@ router.post('/contact', (req, res)=>{
        res.status(200).send({ mesg: 'Votre email est bien envoyé'})
     }
   });  
+})
+//-------3. API/GET/
+router.get('/user/history-competence/:id', (req,res)=>{
+  try{
+    connection.query(`SELECT b.titre, b.domaine, b.id_competence FROM mycompetence as a LEFT JOIN competence as b ON a.id_competence = b.id_competence
+    WHERE a.id_apprenti = ${req.params.id}`, (err, result) =>{
+      if (err) throw err
+      res.status(200).json(result)
+    })
+  }catch(err){
+    console.log(err);
+  }
+})
+//---------3. API/POST/
+router.post('/user/finish-competence', (req,res)=>{
+  try{
+    connection.query(`INSERT INTO mycompetence (id_apprenti, id_competence) VALUES ('${req.body.id_apprenti}', '${req.body.id_competence}')`, (err, result)=>{
+      if(err) throw err
+      res.status(200).send("c'est bon")
+    })
+
+
+  }catch(err){
+    console.log(err);
+  }
 })
 module.exports = router;

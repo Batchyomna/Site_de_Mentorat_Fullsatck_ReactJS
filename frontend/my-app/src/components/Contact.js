@@ -25,7 +25,7 @@ class Contact extends Component {
                             <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel" />
                         </Col>
                         <Col sm={4}>
-                            <Form.Label className="float-left label">Sujet de votre message *</Form.Label>
+                            <Form.Label className="float-left label">Sujet *</Form.Label>
                             <Form.Control value={this.state.sujet} onChange={this.setChange.bind(this)} name="sujet" placeholder="Le sujet de votre message" className="inTheLabel" />
                            </Col> 
                            <Col sm={4}>
@@ -57,11 +57,11 @@ class Contact extends Component {
        if(result.status === 200){
            console.log(result.data);
            this.setState({
-               response : 'Votre mail est bien envoyé'
+               response : 'Votre mail est bien envoyé' // marche pas à cause d'actulisation de la page
            })
        }else{
         this.setState({
-            response : 'Excusez-nous, mais il y a des problèmes'
+            response : 'Excusez-nous, mais il y a des problèmes'// marche pas à cause d'actulisation de la page
         })
            console.log(result.data.mesg);
        }
