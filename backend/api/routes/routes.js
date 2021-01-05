@@ -333,9 +333,9 @@ router.post('/contact', (req, res)=>{
   transporter.sendMail(mailOptions, function(error, data){
     if (error) {
         res.status(400).send({ mesg: 'Excusez_nous, il y a des problèmes'})
-      console.log(error);
+      console.log(error, { mesg: 'Excusez_nous, il y a des problèmes'});
     } else {
-      console.log('Email sent: ' + data.response);
+      console.log('Email sent: ' + data.response, { mesg: 'Votre email est bien envoyé'});
        res.status(200).send({ mesg: 'Votre email est bien envoyé'})
     }
   });  

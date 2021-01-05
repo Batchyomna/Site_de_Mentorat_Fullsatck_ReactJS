@@ -1,25 +1,22 @@
 import React, { Component } from 'react';
 import { Button, Form, Row, Col } from "react-bootstrap";
-
-const nodemailer = require('nodemailer');
-
+import axios from 'axios'
 class Contact extends Component {
     constructor(){
         super();
         this.state = {
-        prenom: '',
         nom: '',
         sujet:'',
         mail: '',
         message:'',
-        reponse: ''
+        response: ''
         }
     }
     render() {
         return (
             <div className="container">
                 <h2>Contactez nous</h2>
-                <span className="greenMessage">{this.state.reponse}</span><br/>
+                <span className="greenMessage">{this.state.response}</span><br/>
                 <p className="smallMessage">Vous avez des questions? Ecrivez-nous et nous vous répondrons le plus vite possible</p>
                 <Form>
                     <Row>
@@ -53,38 +50,21 @@ class Contact extends Component {
         this.setState({
             [event.target.name]: event.target.value
         });
-        console.log(this.state);
-    }
-    sendEmail() {  
-        const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          host: 'smtp.gmail.com', //Simple Mail Transfer Protocol
-          port: 465,
-          secure: true,
-          auth:{
-            user: 'kh.yomna@gmail.com',
-            pass: 'Google2moi'
-          }
+    }    
 
-        });
-        
-        const mailOptions = {
-          from: this.state.mail,
-          to: 'kh.yomna@gmail.com',
-          subject: 'test',
-          text: 'HELOOOOOO YOMNA!'
-        };        
-        transporter.sendMail(mailOptions, function(error, data){
-          if (error) {
-              console.log("AAAAAAAAAAAAAAAAAAAA");
-            console.log(error);
-          } else {
-              this.setState({
-                  reponse: 'Votre message est bien envoyé'
-              })
-            // console.log('Email sent: ' + data.response);
-          }
-        });  
+    async sendEmail() {  
+       let  result = await axios.post('http://localhost:8000/contact', {mail: this.state.mail ,sujet:this.state.sujet, nom:this.state.nom, message: this.state.message})
+       if(result.status === 200){
+           console.log(result.data);
+           this.setState({
+               response : 'Votre mail est bien envoyé'
+           })
+       }else{
+        this.setState({
+            response : 'Excusez-nous, mais il y a des problèmes'
+        })
+           console.log(result.data.mesg);
+       }
     }
 }
 
