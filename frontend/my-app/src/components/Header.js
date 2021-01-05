@@ -18,9 +18,9 @@ class Header extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
         {this.props.token_mentor ?  
           (
-              <Nav className="mr-auto menu">
-                <Link  to="/user/profil">Profil</Link>
+              <Nav className="mr-auto menu">                
                 <Link  to="/user/vos-competences">Vos Compétences</Link>
+                <Link to="/nos-competences"  >Nos Compétences</Link>
                 <Link  to="/contact">Contact</Link>
                 <Link  to="/" onClick={this.signOut.bind(this)}></Link>
                 <Link  to="/" onClick={this.signOut.bind(this)}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
@@ -28,22 +28,22 @@ class Header extends Component {
                     <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
                   </svg></Link>
                 <Link  to="/user/profil">
-                  <img height="40px" width="40px" alt="" src={this.props.photo_mentor} />
+                  <img height="55px" width="55px" alt="" src={this.props.photo_mentor} />
                 </Link>
               </Nav>
           )
       : this.props.token_apprenti ?
          ( 
               <Nav className="mr-auto menu">
-                <Link  to="/user/profil">Profil</Link>
                 <Link  to="/user/vos-competences">Vos Compétences</Link>
+                <Link to="/nos-competences"  >Nos Compétences</Link>
                 <Link  to="/contact">Contact</Link>
                 <Link  to="/" onClick={this.signOut.bind(this)}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
             <path d="M7.5 1v7h1V1h-1z"/>
             <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
           </svg></Link>
                 <Link  to="/user/profil">
-                  <img height="40px" width="40px" alt="" src={this.props.photo_apprenti} />
+                  <img height="55px" width="55px" alt="" src={this.props.photo_apprenti} />
                 </Link>
               </Nav>
          )
@@ -51,6 +51,8 @@ class Header extends Component {
       ( 
            <Nav className="mr-auto menu">
              <Link  to="/user/profil">Profil</Link>
+             <Link to="/nos-competences"  >Nos Compétences</Link>
+             <Link to="/contact" >Contact</Link>
              <Link  to="/" onClick={this.signOut.bind(this)}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
                   <path d="M7.5 1v7h1V1h-1z"/>
                   <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>

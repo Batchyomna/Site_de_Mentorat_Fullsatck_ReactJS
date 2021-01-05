@@ -83,9 +83,9 @@ class SignIn extends Component {
             let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){
-                    this.props.signInMentor({token_mentor:result.data.token, id_mentor: result.data.id, mail_mentor:this.state.mail })
+                    this.props.signInMentor({token_mentor:result.data.token, id_mentor: result.data.id, mail_mentor:this.state.mail, photo_mentor: result.data.photo_mentor })
                 }else if(this.state.statut === "apprenti"){
-                    this.props.signInApprenti({token_apprenti:result.data.token, id_apprenti: result.data.id, mail_apprenti:this.state.mail})
+                    this.props.signInApprenti({token_apprenti:result.data.token, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti})
                 }else if(this.state.statut === 'admin'){
                     this.props.signInAdmin({token_admin:result.data.token, id_admin: result.data.id, mail_admin:this.state.mail})
                 }

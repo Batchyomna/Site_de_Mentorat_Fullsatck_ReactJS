@@ -23,21 +23,15 @@ class Contact extends Component {
                 <p className="smallMessage">Vous avez des questions? Ecrivez-nous et nous vous répondrons le plus vite possible</p>
                 <Form>
                     <Row>
-                        <Col sm={6}>
-                            <Form.Label className="float-left label">Prénom *</Form.Label>
-                            <Form.Control value={this.state.prenom} onChange={this.setChange.bind(this)} name="prenom" placeholder="Saisissez votre prénom" className="inTheLabel" />
-                        </Col>
-                        <Col sm={6}>
+                        <Col sm={4}>
                             <Form.Label className="float-left label">Nom *</Form.Label>
                             <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel" />
                         </Col>
-                        </Row> 
-                        <Row>
-                        <Col sm={6}>
+                        <Col sm={4}>
                             <Form.Label className="float-left label">Sujet de votre message *</Form.Label>
                             <Form.Control value={this.state.sujet} onChange={this.setChange.bind(this)} name="sujet" placeholder="Le sujet de votre message" className="inTheLabel" />
                            </Col> 
-                           <Col sm={6}>
+                           <Col sm={4}>
                             <Form.Label className="float-left label">Adresse mail *</Form.Label>
                             <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel" />
                            </Col> 
@@ -61,10 +55,10 @@ class Contact extends Component {
         });
         console.log(this.state);
     }
-    sendEmail() {  //Simple Mail Transfer Protocol
+    sendEmail() {  
         const transporter = nodemailer.createTransport({
           service: 'gmail',
-          host: 'smtp.gmail.com',
+          host: 'smtp.gmail.com', //Simple Mail Transfer Protocol
           port: 465,
           secure: true,
           auth:{
@@ -88,7 +82,7 @@ class Contact extends Component {
               this.setState({
                   reponse: 'Votre message est bien envoyé'
               })
-            console.log('Email sent: ' + data.response);
+            // console.log('Email sent: ' + data.response);
           }
         });  
     }

@@ -2,19 +2,18 @@
 const express = require('express')
 const router = express.Router();
 
+//--- pour envoyer des mails
+const nodemailer = require('nodemailer');
 
 const connection = require('../database/connectionDB')
 // const myAuth  = require('../middleware/authentication')
 // const authSingUp = require('../middleware/authSignUp')
 // const authDelete  = require('../middleware/authDelete')
 
- const jwt = require("jsonwebtoken");
-
-
-
-//To hash a password:
+//pour securiser les password:
 const bcrypt = require('bcrypt');
 const saltRounds = 10   // cost factor, The cost factor controls how much time is needed to calculate a single BCrypt hash. 
+const jwt = require("jsonwebtoken");
 
 // parse application/x-www-form-urlencoded
 const bodyParser = require('body-parser');
@@ -86,7 +85,7 @@ router.post('/sign-in', (req, res) => {
                   bcrypt.compare(req.body.mdp, mentor[0].mdp_mentor).then(function (result) {
                         if (result == true) {
                         const token = generateAccessToken( mentor[0].id_mentor, mentor[0].mail_mentor, 'mentor');
-                        res.status(200).json({token: token, id:mentor[0].id_mentor });  //You are authrised
+                        res.status(200).json({token: token, id:mentor[0].id_mentor, photo_mentor: mentor[0].photo_mentor });  //You are authrised
                         console.log('vous êtes bien un mentor');
                         } else {
                         res.status(401).send("Vous avez oublié votre mot de pass?")
@@ -104,7 +103,7 @@ router.post('/sign-in', (req, res) => {
                   bcrypt.compare(req.body.mdp, apprenti[0].mdp_apprenti).then(function (result) {
                         if (result == true) {
                         const token = generateAccessToken( apprenti[0].id_apprenti, apprenti[0].mail_apprenti, 'apprenti');
-                        res.status(200).json({token: token, id: apprenti[0].id_apprenti });  //You are authrised
+                        res.status(200).json({token: token, id: apprenti[0].id_apprenti, photo_apprenti: apprenti[0].photo_apprenti });  //You are authrised
                         console.log('vous êtes bien un apprenti');
                         } else {
                         res.status(401).send("Vous avez oublié votre mot de pass?")
@@ -312,5 +311,33 @@ router.get('/one-competence/:id', (req,res)=>{
   }catch(err){
     console.log(err);
   }
+})
+router.post('/contact', (req, res)=>{
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com', //Simple Mail Transfer Protocol
+    port: 465,
+    secure: true,
+    auth:{
+      user: 'kh.yomna@gmail.com',
+      pass: 'Google2moi'
+    }
+
+  });
+  const mailOptions = {
+    from: req.body.mail,
+    to:'kh.yomna@gmail.com',
+    subject: `${req.body.sujet} || ${req.body.mail} `,
+    text:`Moi c'est: ${req.body.nom},  || ${req.body.message}`  
+  };        
+  transporter.sendMail(mailOptions, function(error, data){
+    if (error) {
+        res.status(400).send({ mesg: 'Excusez_nous, il y a des problèmes'})
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + data.response);
+       res.status(200).send({ mesg: 'Votre email est bien envoyé'})
+    }
+  });  
 })
 module.exports = router;
