@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import { Button } from "react-bootstrap";
+import {connect} from 'react-redux'
 
 
 
@@ -15,7 +16,8 @@ class Competence extends Component {
             frequence: '',
             photo_mentor: '',
             domaine: '',
-            description: ''
+            description: '',
+            id_mentor: null
         }
     }
     render() {
@@ -40,6 +42,9 @@ class Competence extends Component {
                     </div>
                 </div>
                 {
+                    (this.props.id_mentor === this.state.id_mentor) ?
+                    <Button className="oneButton" variant="primary" type="submit" >Modifier</Button>
+                    :
                     this.state.reserve === 1 ? 
                     <Button className="oneButton" variant="primary" type="submit" >ça m'interesse</Button>
                     : 
@@ -67,7 +72,7 @@ class Competence extends Component {
                     photo_mentor: details.data[0].photo_mentor,
                     domaine: details.data[0].domaine,
                     description : details.data[0].description,
-
+                    id_mentor: details.data[0].id_mentor
                 })
             }
         }catch(err){
@@ -75,5 +80,7 @@ class Competence extends Component {
         }
     }
 }
-
-export default Competence;
+const mapStateToProps =(state) => ({
+    id_mentor: state.mentorReducer.id_mentor
+})
+export default connect(mapStateToProps)(Competence);

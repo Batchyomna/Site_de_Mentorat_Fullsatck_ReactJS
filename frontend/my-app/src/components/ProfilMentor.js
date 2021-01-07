@@ -46,7 +46,7 @@ class ProfilMentor extends Component {
                         <Row>
                             <Col sm={12}>
                                 <Form.Label className="float-left label">Photo</Form.Label>
-                                <Form.Control value={this.state.photo_mentor} onChange={this.setChange.bind(this)} name="photo_apprenti" placeholder="URL de votre photo" className="inTheLabel"/>
+                                <Form.Control value={this.state.photo_mentor} onChange={this.setChange.bind(this)} name="photo_mentor" placeholder="URL de votre photo" className="inTheLabel"/>
                             </Col>
                         </Row>
                         <div className="myButtons">
@@ -55,11 +55,11 @@ class ProfilMentor extends Component {
                     </Form>
                 </section>
                 <section className="history">
-                <p className="smallMessage">Les compétences que vous avez déjà acquises</p>
+                <p className="smallMessage">Les compétences que vous avez ajoutées: </p>
                 {
                     this.state.items.length > 0 ?
                      (this.state.items.map(item=>(
-                         <div key={item.id_competence} className="mentorCompetence">
+                         <div key={item.id_competence} className="profilOneCompetence">
                              <h5>{item.titre}</h5>
                              <p>Dans le domaine: {item.domaine}</p>
                              <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>
@@ -79,7 +79,7 @@ class ProfilMentor extends Component {
     }
     async componentDidMount(){
         try{
-          let result = await axios.get(`http://localhost:8000/user/history-competence/${this.props.id_mentor}`)
+          let result = await axios.get(`http://localhost:8000/mentor/${this.props.id_mentor}`)
           if(result.status === 200){
               this.setState({
                   items: result.data
@@ -100,7 +100,7 @@ class ProfilMentor extends Component {
             }
             let result = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, x)
             if(result.status===200){
-              this.props.changeDatamentor({id_mentor: result.data.id_mentor, token_mentor: result.data.token_mentor, mail_mentor: result.data.mail_mentor, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor })
+              this.props.changeDataMentor({id_mentor: result.data.id_mentor, token_mentor: result.data.token_mentor, mail_mentor: result.data.mail_mentor, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor })
             }
         }catch(err){
             console.log(err);

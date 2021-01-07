@@ -55,11 +55,11 @@ class ProfilApprenti extends Component {
                     </Form>
                 </section>
                 <section className="history">
-                <p className="smallMessage">Les compétences que vous avez déjà acquises</p>
+                <p className="smallMessage">Les compétences que vous avez déjà acquises: </p>
                 {
                     this.state.items.length > 0 ?
                      (this.state.items.map(item=>(
-                         <div key={item.id_competence} className="apprentiCompetence">
+                         <div key={item.id_competence} className="profOneCompetence">
                              <h5>{item.titre}</h5>
                              <p>Dans le domaine: {item.domaine}</p>
                              <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>

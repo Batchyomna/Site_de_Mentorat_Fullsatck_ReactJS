@@ -141,19 +141,19 @@ h2{
   justify-content: space-around;
   
 }
-.apprentiCompetence{
+.profilOneCompetence{
   flex: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding: 1%;
 }
-.apprentiCompetence:nth-child(2n){
+.profilOneCompetence:nth-child(2n){
   border: 1px solid #FFA372;
   color: #875959;
   border-radius: 5px;
 }
-.apprentiCompetence:nth-child(2n+1){
+.profilOneCompetence:nth-child(2n+1){
   background-color:  #FFA372;
   color: #875959;
   border-radius: 5px;
@@ -234,6 +234,9 @@ h2{
     flex-direction: column;
     padding: 2%;
   }
+  .profilOneCompetence{
+    flex-direction: column;
+  }
 }
 
 @media screen and (min-width: 576px) and (max-width: 991px){
@@ -266,5 +269,6 @@ h2{
   .container{
     margin: auto !important;
   }
+ 
 }
 
