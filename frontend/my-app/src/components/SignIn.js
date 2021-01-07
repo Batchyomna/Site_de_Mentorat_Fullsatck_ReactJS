@@ -84,11 +84,11 @@ class SignIn extends Component {
             let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){
-                    this.props.signInMentor({token_mentor:result.data.token, id_mentor: result.data.id, mail_mentor:this.state.mail, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor  })
+                    this.props.signInMentor({token_mentor:result.data.token_mentor, id_mentor: result.data.id, mail_mentor:this.state.mail, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor  })
                 }else if(this.state.statut === "apprenti"){
-                    this.props.signInApprenti({token_apprenti:result.data.token, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti})
+                    this.props.signInApprenti({token_apprenti:result.data.token_apprenti, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti})
                 }else if(this.state.statut === 'admin'){
-                    this.props.signInAdmin({token_admin:result.data.token, id_admin: result.data.id, mail_admin:this.state.mail})
+                    this.props.signInAdmin({token_admin:result.data.token_admin, id_admin: result.data.id, mail_admin:this.state.mail})
                 }
             }else if(result.status === 201){
                 this.setState({message:"Vous avez oublié votre mot de pass?"})

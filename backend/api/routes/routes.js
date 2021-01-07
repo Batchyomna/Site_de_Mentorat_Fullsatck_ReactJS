@@ -28,11 +28,10 @@ router.use((req, res, next) => {
 });                                               // it is put here where we connect with the database and NOT in the API file
  
 //-----déclare des fonctions
-function generateAccessToken(id, mail, statut) {
+function generateAccessToken(id, mail) {
     return jwt.sign({
       id: id,
-      mail: mail,
-      statut: statut
+      mail: mail
     }, 'x_TOKEN_SECRET', { expiresIn: '1800s' });  //expires after half an hour (1800 seconds = 30 minutes)
   }
 //------------------------------------------3. API/post/sign-up-------------
@@ -66,8 +65,8 @@ router.post('/sign-in', (req, res) => {
                 if (admin.length > 0) {
                  bcrypt.compare(req.body.mdp, admin[0].mdp_admin).then(function (result) {
                        if (result == true) {
-                       const token = generateAccessToken( admin[0].id_admin, admin[0].mail_admin, 'admin');
-                       res.status(200).json({token: token, id: admin[0].id_admin });  //You are authrised
+                       const token = generateAccessToken( admin[0].id_admin, admin[0].mail_admin);
+                       res.status(200).json({token_admin: token, id: admin[0].id_admin });  //You are authrised
                        console.log('vous êtes bien un admin');
                        } else {
                        res.status(201).send("Vous avez oublié votre mot de pass?")
@@ -83,8 +82,8 @@ router.post('/sign-in', (req, res) => {
                  if (mentor.length > 0) {
                   bcrypt.compare(req.body.mdp, mentor[0].mdp_mentor).then(function (result) {
                         if (result == true) {
-                        const token = generateAccessToken( mentor[0].id_mentor, mentor[0].mail_mentor, 'mentor');
-                        res.status(200).json({token: token, id:mentor[0].id_mentor, photo_mentor: mentor[0].photo_mentor, prenom_mentor: mentor[0].prenom_mentor  });  //You are authrised
+                        const token = generateAccessToken( mentor[0].id_mentor, mentor[0].mail_mentor);
+                        res.status(200).json({token_mentor: token, id:mentor[0].id_mentor, photo_mentor: mentor[0].photo_mentor, prenom_mentor: mentor[0].prenom_mentor  });  //You are authrised
                         console.log('vous êtes bien un mentor');
                         } else {
                         res.status(201).send("Vous avez oublié votre mot de pass?")
@@ -100,8 +99,8 @@ router.post('/sign-in', (req, res) => {
                  if (apprenti.length > 0) {
                   bcrypt.compare(req.body.mdp, apprenti[0].mdp_apprenti).then(function (result) {
                         if (result == true) {
-                        const token = generateAccessToken( apprenti[0].id_apprenti, apprenti[0].mail_apprenti, 'apprenti');
-                        res.status(200).json({token: token, id: apprenti[0].id_apprenti, photo_apprenti: apprenti[0].photo_apprenti, prenom_apprenti: apprenti[0].prenom_apprenti });  //You are authrised
+                        const token = generateAccessToken( apprenti[0].id_apprenti, apprenti[0].mail_apprenti);
+                        res.status(200).json({token_apprenti: token, id: apprenti[0].id_apprenti, photo_apprenti: apprenti[0].photo_apprenti, prenom_apprenti: apprenti[0].prenom_apprenti });  //You are authrised
                         console.log('vous êtes bien un apprenti');
                         } else {
                         res.status(201).send("Vous avez oublié votre mot de pass?")
@@ -180,7 +179,7 @@ router.put('/user/apprenti/edit-data/:id', (req,res)=>{
       for (let i = 0; i < data.length; i++) {
         if(data[i] === 'mdp_apprenti'){ 
           // console.log('AAAAA');  
-          query = query + `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvgarder mdp hashé
+          query = query + `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé
       }else if(i == data.length -1){   
             query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]
       }else{
@@ -191,7 +190,11 @@ router.put('/user/apprenti/edit-data/:id', (req,res)=>{
       console.log(query);
       connection.query(query, function (err, result) {
         if (err) throw err;
-        res.status(200).send({msg: 'vos coodonnées sont bien changés'});
+        connection.query(`SELECT * FROM apprenti WHERE id_apprenti = '${req.params.id}'`,(error, result)=>{
+          if (error) throw error
+          const token =  generateAccessToken( result[0].id_apprenti, result[0].mail_apprenti);
+          res.status(200).json({id_apprenti: result[0].id_apprenti, token_apprenti: token, prenom_apprenti: result[0].prenom_apprenti, mail_apprenti: result[0].mail_apprenti, photo_apprenti: result[0].photo_apprenti});
+        })
       })
     })
       }else{
@@ -207,7 +210,61 @@ router.put('/user/apprenti/edit-data/:id', (req,res)=>{
         console.log(query);
         connection.query(query, function (err, result) {
           if (err) throw err;
-          res.status(200).send({msg: 'vos coodonnées sont bien changés'});
+          connection.query(`SELECT * FROM apprenti WHERE id_apprenti = '${req.params.id}'`,(error, result)=>{
+            if (error) throw error
+            const token =  generateAccessToken( result[0].id_apprenti, result[0].mail_apprenti);
+            res.status(200).json({id_apprenti: result[0].id_apprenti, token_apprenti: token, prenom_apprenti: result[0].prenom_apprenti, mail_apprenti: result[0].mail_apprenti, photo_apprenti: result[0].photo_apprenti});          })
+      })
+    }
+  }catch(err){
+    console.log(err);
+  }
+})
+//---------3.API/POST/ modifier les data de mentor et sauvegarder les nouveaux data
+//------------3. API/PUT/user/apprenti/edit-data
+router.put('/user/mentor/edit-data/:id', (req,res)=>{
+  try{
+      let data = Object.keys(req.body)
+      if(req.body.mdp_mentor){
+        bcrypt.hash(req.body.mdp_mentor, saltRounds).then(function (hashPW) {
+         var query = `UPDATE mentor SET `
+      for (let i = 0; i < data.length; i++) {
+        if(data[i] === 'mdp_mentor'){ 
+          query = query + `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé
+      }else if(i == data.length -1){   
+            query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
+      }else{
+        query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+      }
+        }
+      query = query + ` WHERE id_mentor = ${req.params.id}`;
+      console.log(query);
+      connection.query(query, function (err, resultat) {
+        if (err) throw err;
+        connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`,(error, result)=>{
+          if (error) throw error
+          const token =  generateAccessToken( result[0].id_mentor, result[0].mail_mentor);
+          res.status(200).json({id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_apprenti});
+        })
+      })
+    })
+      }else{
+        var query = `UPDATE mentor SET `
+        for (let i = 0; i < data.length; i++) {
+          if(i == data.length -1){   
+              query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
+        }else{
+          query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+        }
+          }
+        query = query + ` WHERE id_mentor = ${req.params.id}`;
+        console.log(query);
+        connection.query(query, function (err, resultat) {
+          if (err) throw err;
+          connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`,(error, result)=>{
+            if (error) throw error
+            const token =  generateAccessToken( result[0].id_mentor, result[0].mail_mentor);
+            res.status(200).json({id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_apprenti: result[0].photo_apprenti});          })
       })
     }
   }catch(err){
@@ -380,7 +437,7 @@ router.post('/contact', (req, res)=>{
     }
   });  
 })
-//-------3. API/GET/
+//-------3. API/GET/avoir l'histoire de chaque apprenti
 router.get('/user/history-competence/:id', (req,res)=>{
   try{
     connection.query(`SELECT b.titre, b.domaine, b.id_competence FROM mycompetence as a LEFT JOIN competence as b ON a.id_competence = b.id_competence
@@ -392,15 +449,13 @@ router.get('/user/history-competence/:id', (req,res)=>{
     console.log(err);
   }
 })
-//---------3. API/POST/
+//---------3. API/POST/ à la fin de l'engagement de compétence pour sauvegarder l'histoire de chaque apprenti
 router.post('/user/finish-competence', (req,res)=>{
   try{
     connection.query(`INSERT INTO mycompetence (id_apprenti, id_competence) VALUES ('${req.body.id_apprenti}', '${req.body.id_competence}')`, (err, result)=>{
       if(err) throw err
       res.status(200).send("c'est bon")
     })
-
-
   }catch(err){
     console.log(err);
   }

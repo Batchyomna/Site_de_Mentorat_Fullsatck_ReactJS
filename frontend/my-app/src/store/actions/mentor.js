@@ -19,8 +19,8 @@ export const mentorCompetences = (competences) => ({
     type: "FILL_M_COMPETENCES",
     payload: competences,
 })
-export const changeUserData = (data) => ({
-    type: "CHANGEDATA_MENTOR",
+export const changeDataMentor = (data) => ({
+    type: "CHANGE_DATA_MENTOR",
     payload : data
    
 })

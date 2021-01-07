@@ -28,6 +28,15 @@ const apprentiReducer = (state = initialStates, action) => {
           id_apprenti:null,
           token_apprenti: null,
         }
+      case "CHANGE_DATA_APPRENTI":
+        return{
+          ...state,
+          prenom_apprenti:action.payload.prenom_apprenti,
+          photo_apprenti : action.payload.photo_apprenti,
+          mail_apprenti: action.payload.mail_apprenti,
+          id_apprenti:action.payload.id_apprenti,
+          token_apprenti: action.payload.token_apprenti, 
+        }
 
     default:
       return state // when we want to add presistStore, it bettre to return the state like this

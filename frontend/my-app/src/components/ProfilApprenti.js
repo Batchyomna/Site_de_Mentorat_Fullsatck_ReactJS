@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
+import {changeDataApprenti} from '../store/actions/apprenti'
 
 class ProfilApprenti extends Component {
     constructor(){
@@ -11,7 +12,8 @@ class ProfilApprenti extends Component {
             nom_apprenti: '',
             mail_apprenti: '',
             mdp_apprenti: '',
-            photo_apprenti: ''
+            photo_apprenti: '',
+            items: []
         }
     }
     render() {
@@ -52,29 +54,54 @@ class ProfilApprenti extends Component {
                         </div>
                     </Form>
                 </section>
-            
+                <section className="history">
+                <p className="smallMessage">Les compétences que vous avez déjà acquises</p>
+                {
+                    this.state.items.length > 0 ?
+                     (this.state.items.map(item=>(
+                         <div key={item.id_competence} className="apprentiCompetence">
+                             <h5>{item.titre}</h5>
+                             <p>Dans le domaine: {item.domaine}</p>
+                             <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>
+                         </div>
+                     ))
+                    )
+                    :null
+                }
+                </section>
             </div>
-        );
+        )
     }
     setChange(event) {
         this.setState({
             [event.target.name]: event.target.value
         });
     }
+    async componentDidMount(){
+        try{
+          let result = await axios.get(`http://localhost:8000/user/history-competence/${this.props.id_apprenti}`)
+          if(result.status === 200){
+              this.setState({
+                  items: result.data
+              })
+          }
+        }catch(err){
+            console.log(err);
+        }
+    }
    
     async editData(){
         try{
             let x = this.state;
             for (let key in x) {
-              if (x[key] === '') {
+              if (key === 'items' || x[key] === '') {
                 delete x[key]
               }
             }
             let result = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, x)
             if(result.status===200){
-                console.log(result.data);
+              this.props.changeDataApprenti({id_apprenti: result.data.id_apprenti, token_apprenti: result.data.token_apprenti, mail_apprenti: result.data.mail_apprenti, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti })
             }
-
         }catch(err){
             console.log(err);
         }
@@ -86,4 +113,8 @@ const mapStateToProps = (state)=> ({
     id_apprenti: state.apprentiReducer.id_apprenti,
 
 })
-export default connect(mapStateToProps)(ProfilApprenti);
+const mapDispatchToProps ={
+    changeDataApprenti,
+
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilApprenti);

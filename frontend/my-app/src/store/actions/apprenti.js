@@ -18,4 +18,9 @@ export const apprentiCompetences = (competences) => ({
     type: "FILL_A_COMPETENCES",
     payload: competences,
 })
+export const changeDataApprenti = (data) => ({
+    type: "CHANGE_DATA_APPRENTI",
+    payload : data
+   
+})
 
