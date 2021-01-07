@@ -62,7 +62,7 @@ class ProfilMentor extends Component {
                          <div key={item.id_competence} className="profilOneCompetence">
                              <h5>{item.titre}</h5>
                              <p>Dans le domaine: {item.domaine}</p>
-                             <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>
+                             <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour modifier</a>
                          </div>
                      ))
                     )
