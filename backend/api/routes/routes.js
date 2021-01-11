@@ -187,7 +187,6 @@ router.put('/user/apprenti/edit-data/:id', (req, res) => {
         var query = `UPDATE apprenti SET `
         for (let i = 0; i < data.length; i++) {
           if (data[i] === 'mdp_apprenti') {
-            // console.log('AAAAA');  
             query = query + `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé
           } else if (i == data.length - 1) {
             query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]

@@ -21,7 +21,7 @@ class ProfilApprenti extends Component {
             <div className="container">
                 <h2> Bonjour {this.props.prenom_apprenti}</h2>
                 <section className="information">
-                    <p className="smallMessage">Vous voulez changer vos coordonées?</p>
+                    <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -50,7 +50,7 @@ class ProfilApprenti extends Component {
                             </Col>
                         </Row>
                         <div className="myButtons">
-                        <Button className="oneButton float-left" type="submit" onClick={this.editData.bind(this)}>Modifier</Button>
+                        <Button className="oneButton" type="submit" onClick={this.editData.bind(this)}>Modifier</Button>
                         </div>
                     </Form>
                 </section>
@@ -59,7 +59,7 @@ class ProfilApprenti extends Component {
                 {
                     this.state.items.length > 0 ?
                      (this.state.items.map(item=>(
-                         <div key={item.id_competence} className="profOneCompetence">
+                         <div key={item.id_competence} className="profilOneCompetence">
                              <h5>{item.titre}</h5>
                              <p>Dans le domaine: {item.domaine}</p>
                              <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>

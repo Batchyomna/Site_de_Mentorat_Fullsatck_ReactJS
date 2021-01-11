@@ -27,6 +27,7 @@ class NosCompetences extends Component {
                         : null}
                     </Form.Control>
                 </Form>
+                <h2>Nos Compétences</h2>
 
                 <div className="allComps">
                     {this.state.allCompetences.length > 0 ? this.state.allCompetences.map((item) => {

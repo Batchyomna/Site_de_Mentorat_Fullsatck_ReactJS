@@ -21,7 +21,7 @@ class ProfilMentor extends Component {
         <div className="container">
                 <h2> Bonjour {this.props.prenom_mentor}</h2>
                 <section className="information">
-                    <p className="smallMessage">Vous voulez changer vos coordonées?</p>
+                    <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -50,7 +50,7 @@ class ProfilMentor extends Component {
                             </Col>
                         </Row>
                         <div className="myButtons">
-                        <Button className="oneButton float-left" type="submit" onClick={this.editData.bind(this)}>Modifier</Button>
+                        <Button className="oneButton" type="submit" onClick={this.editData.bind(this)}>Modifier</Button>
                         </div>
                     </Form>
                 </section>
@@ -92,13 +92,13 @@ class ProfilMentor extends Component {
    
     async editData(){
         try{
-            let x = this.state;
-            for (let key in x) {
-              if (key === 'items' || x[key] === '') {
-                delete x[key]
+            let allStateData = this.state;
+            for (let key in allStateData) {
+              if (key === 'items' || allStateData[key] === '') {
+               delete allStateData[key]
               }
             }
-            let result = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, x)
+            let result = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
             if(result.status===200){
               this.props.changeDataMentor({id_mentor: result.data.id_mentor, token_mentor: result.data.token_mentor, mail_mentor: result.data.mail_mentor, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor })
             }

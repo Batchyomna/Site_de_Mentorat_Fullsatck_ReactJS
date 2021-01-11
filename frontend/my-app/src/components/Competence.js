@@ -45,10 +45,15 @@ class Competence extends Component {
                     (this.props.id_mentor === this.state.id_mentor) ?
                     <Button className="oneButton" variant="primary" type="submit" >Modifier</Button>
                     :
-                    this.state.reserve === 1 ? 
+                    this.state.reserve === 1 && this.state.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >ça m'interesse</Button>
-                    : 
+                    :
+                    this.state.reserve === 0 && this.state.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >choisir cette compétence</Button>
+                    : !this.state.id_apprenti  ?
+                    <p className="smallMessage">Connectez-vous <a href="/se-connecter/sign-up">ici</a> pour participer à cette compétence.</p>
+                    : null
+
                 }
             </div>
         )

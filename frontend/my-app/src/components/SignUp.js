@@ -41,7 +41,7 @@ class SignUp extends Component {
                                 <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel"/>
                             </Col>
                             <Col sm={6}>
-                                <Form.Label className="float-left label">Mot de passe *</Form.Label>
+                                 <Form.Label className="float-left label">Mot de passe *</Form.Label>
                                 <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" />
                             </Col>
                         </Row>
@@ -68,7 +68,7 @@ class SignUp extends Component {
                                     </Col>
                                 </Row>
                             )
-                            :
+                            :             
                             null
                         }
                         <div className="myButtons">
