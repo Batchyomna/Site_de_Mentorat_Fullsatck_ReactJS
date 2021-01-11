@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
-import {changeDataApprenti} from '../store/actions/apprenti'
+import {changeDataApprenti,  signOutApprenti} from '../store/actions/apprenti'
 
 class ProfilApprenti extends Component {
     constructor(){
@@ -21,6 +21,7 @@ class ProfilApprenti extends Component {
             <div className="container">
                 <h2> Bonjour {this.props.prenom_apprenti}</h2>
                 <section className="information">
+                    <span className="message">{this.state.message}</span>
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -66,9 +67,14 @@ class ProfilApprenti extends Component {
                          </div>
                      ))
                     )
-                    :null
+                    :
+                    <span className="message">Vous n'avez encore aucune compétence </span>
+
                 }
                 </section>
+                <div className="myButtons">
+                        <Button className="oneButton" type="submit" onClick={this.deleteAcount.bind(this)}>Supprimer votre compte</Button>
+                </div>
             </div>
         )
     }
@@ -92,15 +98,28 @@ class ProfilApprenti extends Component {
    
     async editData(){
         try{
-            let x = this.state;
-            for (let key in x) {
-              if (key === 'items' || x[key] === '') {
-                delete x[key]
+            let allStateData = this.state;
+            for (let key in allStateData) {
+              if (key === 'items' || allStateData[key] === '') {
+                delete allStateData[key]
               }
             }
-            let result = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, x)
-            if(result.status===200){
-              this.props.changeDataApprenti({id_apprenti: result.data.id_apprenti, token_apprenti: result.data.token_apprenti, mail_apprenti: result.data.mail_apprenti, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti })
+
+            let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData)
+            if(updateRresult.status===200){
+              this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    async deleteAcount(e){
+        e.preventDefault();
+        try{
+            let deletResult = await axios.delete(`http://localhost:8000/user/apprenti/delete-compte/${this.props.id_apprenti}`)
+            if(deletResult.status === 200){
+               console.log(deletResult);
+               this.props.signOutApprenti()
             }
         }catch(err){
             console.log(err);
@@ -115,6 +134,7 @@ const mapStateToProps = (state)=> ({
 })
 const mapDispatchToProps ={
     changeDataApprenti,
+    signOutApprenti
 
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilApprenti);

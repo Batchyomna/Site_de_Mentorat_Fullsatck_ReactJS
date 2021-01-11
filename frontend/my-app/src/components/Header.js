@@ -28,7 +28,7 @@ class Header extends Component {
                     <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
                   </svg></Link>
                 <Link  to="/user/profil">
-                  <img height="55px" width="55px" alt="" src={this.props.photo_mentor} />
+                  <img height="50px" width="50px" alt="Mentoring" src={this.props.photo_mentor} />
                 </Link>
               </Nav>
           )
@@ -43,7 +43,7 @@ class Header extends Component {
             <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
           </svg></Link>
                 <Link  to="/user/profil">
-                  <img height="55px" width="55px" alt="" src={this.props.photo_apprenti} />
+                  <img height="50px" width="50px" alt="Goal,Organisation" src={this.props.photo_apprenti} />
                 </Link>
               </Nav>
          )

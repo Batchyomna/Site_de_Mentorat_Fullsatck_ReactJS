@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
-import {changeDataMentor} from '../store/actions/mentor'
+import {changeDataMentor, signOutMentor} from '../store/actions/mentor'
 
 class ProfilMentor extends Component {
     constructor(){
@@ -13,7 +13,8 @@ class ProfilMentor extends Component {
             mail_mentor: '',
             mdp_mentor: '',
             photo_mentor: '',
-            items: []
+            items: [],
+            message: ''
         }
     }
     render() {
@@ -21,6 +22,7 @@ class ProfilMentor extends Component {
         <div className="container">
                 <h2> Bonjour {this.props.prenom_mentor}</h2>
                 <section className="information">
+                    <span className="message">{this.state.message}</span>
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -66,9 +68,13 @@ class ProfilMentor extends Component {
                          </div>
                      ))
                     )
-                    :null
+                    :
+                    <span className="message">Vous n'avez pas ajouté encore aucune compétence </span>
                 }
                 </section>
+                <div className="myButtons">
+                    <Button className="oneButton" type="submit" onClick={this.deleteAcount.bind(this)}>Supprimer votre compte</Button>
+                </div>
             </div>
         )
     }
@@ -94,13 +100,28 @@ class ProfilMentor extends Component {
         try{
             let allStateData = this.state;
             for (let key in allStateData) {
-              if (key === 'items' || allStateData[key] === '') {
+              if (key === 'items' || key === 'message'|| allStateData[key] === '') {
                delete allStateData[key]
               }
             }
             let result = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
-            if(result.status===200){
+            if(result.status === 200){
               this.props.changeDataMentor({id_mentor: result.data.id_mentor, token_mentor: result.data.token_mentor, mail_mentor: result.data.mail_mentor, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor })
+            //  this.setState({
+            //      message: 'AAAAAAAAAAAAAAAA'
+            //  })
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    async deleteAcount(e){
+        e.preventDefault()
+        try{
+            let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`)
+            if(deletResult.status === 200){
+               console.log(deletResult);
+               this.props.signOutMentor()
             }
         }catch(err){
             console.log(err);
@@ -115,6 +136,7 @@ const mapStateToProps = (state)=> ({
 })
 const mapDispatchToProps ={
     changeDataMentor,
+    signOutMentor,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilMentor);

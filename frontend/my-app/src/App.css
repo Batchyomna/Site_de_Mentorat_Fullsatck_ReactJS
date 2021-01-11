@@ -81,6 +81,9 @@ h2{
   color: #875959;
   font-style: italic;
 }
+.errorClasse{
+  border: 2px solid red !important;
+}
 /* ---------------------NosCompetences */
 #imageNosCopms{  
   background-color: #003557;
@@ -140,6 +143,10 @@ h2{
   flex-direction: column;
   justify-content: space-around;
   
+}
+.message{
+  color: #003557;
+  font-size: 30px;
 }
 .profilOneCompetence{
   flex: 100%;

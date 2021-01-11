@@ -17,7 +17,8 @@ class SignIn extends Component {
             statut: '',
             signinFlag: true,
             message:'',
-            errorClasse: false
+            errorPSW: false,
+            errorMail: false,
         }
     }
     render() {
@@ -33,18 +34,28 @@ class SignIn extends Component {
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
-                                <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel"/>
+                                {
+                                    this.state.errorMail ?
+                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="errorClasse"/>
+                                    :
+                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel"/>
+                                }
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe</Form.Label>
-                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel"/>
+                                {
+                                    this.state.errorPSW ?
+                                    <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="errorClasse"/>
+                                     :
+                                     <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel"/>
+                                }
                             </Col>
                         </Row>
                         <Row>
                             <Col sm={12}>
                                 <Form.Label className="float-left label">Votre statut</Form.Label>
                                 <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel">
-                                    <option value="" className="inTheLabel">Choisissez votre statut</option>
+                                    <option value=" " className="inTheLabel">Choisissez votre statut</option>
                                     <option value="apprenti" className="inTheLabel">Apprenti</option>
                                     <option value="mentor" className="inTheLabel">Mentor</option>
                                     <option value="admin" className="inTheLabel">Admin</option>
@@ -68,6 +79,8 @@ class SignIn extends Component {
 
     setChange(event) {
         this.setState({
+            errorPSW: false,
+            errorMail: false,
             [event.target.name]: event.target.value
         });
     }
@@ -91,12 +104,12 @@ class SignIn extends Component {
                     this.props.signInAdmin({token_admin:result.data.token_admin, id_admin: result.data.id, mail_admin:this.state.mail})
                 }
             }else if(result.status === 201){
-                this.setState({message:"Vous avez oublié votre mot de pass?", mdp: '',})
+                this.setState({message:"Vous avez oublié votre mot de pass?", mdp: '', statut: '', errorPSW : true})
             }
             if(result.status === 203){
                 this.setState({
-                    message:"On ne sait pas ce compte",
-                     errorClasse : true,
+                    message:"On ne sait pas cet adresse mail, vous devrez réessayer",
+                     errorMail : true,
                      mail: '',
                      mdp: '',
                      statut: ''

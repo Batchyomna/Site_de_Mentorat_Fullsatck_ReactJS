@@ -272,7 +272,7 @@ router.put('/user/mentor/edit-data/:id', (req, res) => {
         connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
           if (error) throw error
           const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
-          res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor });
+          res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor});
         })
       })
     }
@@ -374,25 +374,25 @@ router.put('/competence-choisi', (req, res) => {
   }
 })
 //---------------------------3.API/delete/compte/
-router.delete('/compte', (req, res) => {
-  if (req.body.statut === 'mentor') {
-    connection.query(`DELETE FROM mentor WHERE id_mentor = '${req.body.id}'`, function (err, result) {
+router.delete('/user/apprenti/delete-compte/:id', (req, res) => {
+    connection.query(`DELETE FROM apprenti WHERE id_apprenti = '${req.params.id}'`, function (err, result) {
       if (err) throw res.status(400).send('there is an error');
       console.log("Number of records deleted: " + result.affectedRows);
-      res.status(200).end("Ce mentor est bien supprimé")
+      res.status(200).send("Cet apprenti est bien supprimé")
     })
-  } else if (req.body.statut === 'apprenti') {
-    connection.query(`DELETE FROM apprenti WHERE id_apprenti = '${req.body.id}'`, function (err, result) {
-      if (err) throw res.status(400).send('there is an error');
-      console.log("Number of records deleted: " + result.affectedRows);
-      res.status(200).end("Cet apprenti est bien supprimé")
-    })
-  }
 });
+//---------------------------3.API/delete/compte/
+router.delete('/user/mentor/delete-compte/:id', (req, res) => {
+    connection.query(`DELETE FROM mentor WHERE id_mentor = '${req.params.id}'`, function (err, result) {
+      if (err) throw res.status(400).send('there is an error');
+      console.log("Number of records deleted: " + result.affectedRows);
+      res.status(200).send("Ce mentor est bien supprimé")
+    })
+})
 //---------3.API/get/competence-et-session(pour le mentor on peut ajouter AND b.reserve = true)
 router.get('/competence-et-session', (req, res) => {
   try {
-    if (req.body.statut === 'apprenti') {
+    if (req.body.statut === 'mentor') {
       connection.query(`SELECT a.id_apprenti, b.*, c.date_session from apprenti as a LEFT join competence as b ON a.id_apprenti = b.id_apprenti LEFT JOIN session as c ON b.id_competence = c.id_competence WHERE a.id_apprenti = '${req.body.id}'`, (erreur, result) => {
         if (erreur) throw erreur
         res.status(200).json(result)
