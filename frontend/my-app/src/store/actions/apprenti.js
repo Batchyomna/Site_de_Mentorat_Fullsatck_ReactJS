@@ -1,10 +1,10 @@
 export const signInApprenti = (user) => ({
     type: "SIGNIN_APPRENTI",
-    prenom_apprenti:user.prenom,
-    photo_apprenti : user.photo,
-    mail_apprenti: user.mail,
-    id_apprenti:user.id,
-    token_apprenti: user.token,
+    prenom_apprenti:user.prenom_apprenti,
+    photo_apprenti : user.photo_apprenti,
+    mail_apprenti: user.mail_apprenti,
+    id_apprenti:user.id_apprenti,
+    token_apprenti: user.token_apprenti,
 })
 export const signOutApprenti = () => ({
     type: "SIGNOUT_APPRENTI",
@@ -13,5 +13,14 @@ export const signOutApprenti = () => ({
     mail_apprenti: null,
     id_apprenti:null,
     token_apprenti: null,
+})
+export const apprentiCompetences = (competences) => ({
+    type: "FILL_A_COMPETENCES",
+    payload: competences,
+})
+export const changeDataApprenti = (data) => ({
+    type: "CHANGE_DATA_APPRENTI",
+    payload : data
+   
 })
 

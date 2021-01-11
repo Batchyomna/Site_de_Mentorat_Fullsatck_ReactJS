@@ -1,19 +1,16 @@
 #root{
   text-align: center;
-
-
+  font-family: 'DM Serif Display', serif;
 }
 .header {
   width: 100%;
   background-color:#43658B;
-
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   font-size: 24px;
-  
-  font-family: 'DM Serif Display', serif;
+  font-style: italic;
 }
 .logo {
   color:#ED6663 ;
@@ -36,32 +33,151 @@
 .menu :active{
   color: #ED6663;
 }
-/* .header-link{
-  flex: 5%;
-  background-color: #ED6663;
-} */
+.container{
+  margin-right: auto !important;
+  margin-left: auto !important;
+  margin-bottom: 10% ;
+  margin-top: 5%;
+  flex-wrap: wrap;
+}
+h2{
+  color: #43658B;
+  font-style: normal;
+ 
+}
+/*---------------- SignUp, SignIn */
+.label{
+  font-style: normal;
+  color: #43658B;
+}
+.inTheLabel{
+  font-style: italic;
+  color: #875959 !important;
+  background-color: #FFA372 !important;
+  font-size: 10px;
+}
+.greenMessage{
+  font-size: 30px;
+  color: green;
+}
+.redMessage{
+  font-size: 30px;
+  color: red;
+}
+.myButtons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:space-around;
+  margin: 3%;
+}
+.oneButton{
+  background-color: #ED6663 !important;
+  color: #43658B !important;
+ 
+  font-style: italic;
+}
+.smallMessage{ /*- utilisé dans NosCompetences-*/
+  color: #875959;
+  font-style: italic;
+}
+/* ---------------------NosCompetences */
+#imageNosCopms{  
+  background-color: #003557;
+}
+.allComps{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 5%;
+}
+.oneComp{  /*----flex: [flex-grow] [flex-shrink] [flex-basis]----*/
+  flex: 33%;
+  padding: 1%;
+}
+.oneComp:nth-child(2n){
+  border: 1px solid #FFA372;
+  color: #875959;
+  border-radius: 5px;
+}
+.oneComp:nth-child(2n+1){
+  background-color:  #FFA372;
+  color: #875959;
+  border-radius: 5px;
+}
+.token{
+  color: white;
+  background-color: red;
+  padding: .5%;
+  margin: 2%;
+}
+.nontoken{
+  color: white;
+  background-color: green;
+  padding: 1%;
+  margin: 2%;
+}
+.lire{
+  text-decoration: underline;
+ font-style: italic;
+ cursor: pointer;
+}
+/* --------One Competence */
+.photAndDescription{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-around;
+   align-items: center;
+   margin-top: 2%;
+   margin-bottom: 2%;
+   background-color: #FFA372; 
+   padding: 2%;
+}
+/* ------------profil */
+.history{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  
+}
+.profilOneCompetence{
+  flex: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1%;
+}
+.profilOneCompetence:nth-child(2n){
+  border: 1px solid #FFA372;
+  color: #875959;
+  border-radius: 5px;
+}
+.profilOneCompetence:nth-child(2n+1){
+  background-color:  #FFA372;
+  color: #875959;
+  border-radius: 5px;
+}
 
 
 
 
-
-
-
-
-
+/* footer */
 .footer{
+  /* position: absolute;
+  bottom: 0px; */
   width: 100%;
   height: 8vh;
   background-color: #43658B;
-  color: #ED6663;
-  position: absolute;
-  bottom: 0px;
+  color:#ED6663 ;
+  
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   font-size: 15px;
-  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  clear: both;
 }
 .social-net{
   width: 30%;
@@ -71,7 +187,6 @@
 
 }
 .social-net a{
-
   background-color: #ED6663;
   color: #43658B;
   padding: 2px;
@@ -81,41 +196,66 @@
 
 @media screen and (max-width: 575px) {
   .header{
-height: auto;
-font-size: 18px;
+  height: auto;
+  font-size: 18px;
   }
- .logo {
-  font-size: 40px;
+  .logo {
+    font-size: 40px;
   }
   .footer{
-    flex-direction: column;
+      flex-direction: column;
+      position: relative;
+      height: 25vh;
+      margin-top: 10%;
   }
   .social-net{
-    width: 100%;
+      width: 100%;
   }
   .social-net a{
-   width:50%;
-   justify-content: space-around ;
-   background-color: transparent;
-   color: #ED6663
-  
+    width:50%;
+    justify-content: space-around ;
+    background-color: transparent;
+    color: #ED6663
+  }
+  .myButtons{
+  flex-direction: column;
+  justify-content:space-between
+  }
+  .container{
+    margin: auto !important;
+  }
+  .allComps{
+  flex-direction: column;
+  }
+  .oneComp{
+    flex: 1 1 100%;
+  }
+  .photAndDescription{
+    flex-direction: column;
+    padding: 2%;
+  }
+  .profilOneCompetence{
+    flex-direction: column;
   }
 }
 
-@media screen and (min-width: 576px) and (max-width: 800px){
+@media screen and (min-width: 576px) and (max-width: 991px){
   .header{
     height: auto;
     font-size: 15px;
   }
   .logo {
-      font-size: 30px;
-      flex:22%;
+    font-size: 30px;
+    flex:22%;
   }
   .menu{
     flex: 60%;
   }
   .footer{
     flex-direction: column;
+     margin-top: 10%;
+     position: relative;
+     height: 25vh;
   }
   .social-net{
     width: 100%;
@@ -126,15 +266,8 @@ font-size: 18px;
     color: #ED6663;
     padding:0;
   }
-}
-
-
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+  .container{
+    margin: auto !important;
   }
 }
+
