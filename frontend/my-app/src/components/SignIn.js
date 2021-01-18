@@ -98,15 +98,15 @@ class SignIn extends Component {
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){
                     this.props.signInMentor({token_mentor:result.data.token_mentor, id_mentor: result.data.id, mail_mentor:this.state.mail, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor  })
-                    let mentorCompetences = await axios.get(`http://localhost:8000/user/history-competence/${result.data.id}`)
+                    let mentorCompetences = await axios.get(`http://localhost:8000/mentor/${result.data.id}`)
                     if(mentorCompetences.status === 200){
-                        this.props.fillCompetenceMentor()
+                        mentorCompetences.data.map(elem => this.props.fillCompetenceMentor(elem))
                     }
                 }else if(this.state.statut === "apprenti"){
                     this.props.signInApprenti({token_apprenti:result.data.token_apprenti, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti})
                     let apprentiCompetences = await axios.get(`http://localhost:8000/user/history-competence/${result.data.id}`)
                     if(apprentiCompetences.status === 200){
-                        console.log(apprentiCompetences.data);
+                        // console.log(apprentiCompetences.data);
                         apprentiCompetences.data.map(elem => this.props.fillCompetenceApprenti(elem))
                     }
                 }else if(this.state.statut === 'admin'){

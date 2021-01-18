@@ -14,13 +14,13 @@ export const signOutMentor = () => ({
     mail_mentor: null,
     id_mentor:null,
     token_mentor: null,
+    competencesDeMentor: []
 })
-export const fillCompetenceMentor = (competences) => ({
+export const fillCompetenceMentor = (competence) => ({
     type: "FILL_M_COMPETENCES",
-    payload: competences,
+    payload: competence,
 })
 export const changeDataMentor = (data) => ({
     type: "CHANGE_DATA_MENTOR",
     payload : data
-   
 })

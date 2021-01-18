@@ -28,6 +28,7 @@ const mentorReducer = (state = initialStates, action) => {
           mail_mentor: null,
           id_mentor:null,
           token_mentor: null,
+          competencesDeMentor: []
         }
       case "CHANGE_DATA_MENTOR":
         return{
@@ -41,7 +42,7 @@ const mentorReducer = (state = initialStates, action) => {
       case "FILL_M_COMPETENCES":
         return{
           ...state,
-          competences: [...state.competences, action.payload]
+          competencesDeMentor: [...state.competencesDeMentor, action.payload]
 
         }
 

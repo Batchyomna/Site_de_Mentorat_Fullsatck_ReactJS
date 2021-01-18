@@ -13,8 +13,7 @@ class ProfilMentor extends Component {
             mail_mentor: '',
             mdp_mentor: '',
             photo_mentor: '',
-            items: [],
-            // message: ''
+            message: ''
         }
     }
     render() {
@@ -22,7 +21,7 @@ class ProfilMentor extends Component {
         <div className="container">
                 <h2> Bonjour {this.props.prenom_mentor}</h2>
                 <section className="information">
-                    {/* <span className="message">{this.state.message}</span> */}
+                    <span className="greenMessage">{this.state.message}</span>
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -59,8 +58,8 @@ class ProfilMentor extends Component {
                 <section className="history">
                 <p className="smallMessage">Les compétences que vous avez ajoutées: </p>
                 {
-                    this.state.items.length > 0 ?
-                     (this.state.items.map(item=>(
+                    this.props.competencesDeMentor.length > 0 ?
+                     ( this.props.competencesDeMentor.map(item=>(
                          <div key={item.id_competence} className="profilOneCompetence">
                              <h5>{item.titre}</h5>
                              <p>Dans le domaine: {item.domaine}</p>
@@ -83,25 +82,25 @@ class ProfilMentor extends Component {
             [event.target.name]: event.target.value
         });
     }
-    async componentDidMount(){
-        try{
-          let result = await axios.get(`http://localhost:8000/mentor/${this.props.id_mentor}`)
-          if(result.status === 200){
-              this.setState({
-                  items: result.data
-              })
-          }
-        }catch(err){
-            console.log(err);
-        }
-    }
+    // async componentDidMount(){
+    //     try{
+    //       let result = await axios.get(`http://localhost:8000/mentor/${this.props.id_mentor}`)
+    //       if(result.status === 200){
+    //           this.setState({
+    //               items: result.data
+    //           })
+    //       }
+    //     }catch(err){
+    //         console.log(err);
+    //     }
+    // }
    
     async editData(e){
         e.preventDefault();
         try{
             let allStateData = this.state;
             for (let key in allStateData) {
-              if (key === 'items' || allStateData[key] === '') {
+              if (key === 'message' || allStateData[key] === '') {
                delete allStateData[key]
               }
             }
@@ -109,6 +108,14 @@ class ProfilMentor extends Component {
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
                 if(updateResult.status === 200){
                     this.props.changeDataMentor({id_mentor: updateResult.data.id_mentor, token_mentor: updateResult.data.token_mentor, mail_mentor: updateResult.data.mail_mentor, photo_mentor: updateResult.data.photo_mentor, prenom_mentor: updateResult.data.prenom_mentor })
+                    this.setState({
+                        prenom_mentor: '',
+                        nom_mentor: '',
+                        mail_mentor: '',
+                        mdp_mentor: '',
+                        photo_mentor: '',
+                        message: 'Vos coodonnées sont bien changées'
+                    })
                 }
             }
         }catch(err){
@@ -132,6 +139,7 @@ const mapStateToProps = (state)=> ({
     prenom_mentor: state.mentorReducer.prenom_mentor,
     photo_mentor: state.mentorReducer.photo_mentor,
     id_mentor: state.mentorReducer.id_mentor,
+    competencesDeMentor : state.mentorReducer.competencesDeMentor
 
 })
 const mapDispatchToProps ={
