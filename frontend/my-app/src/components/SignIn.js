@@ -5,8 +5,8 @@ import { Button, Form, Row, Col } from "react-bootstrap";
 import axios from 'axios'
 import  { Redirect } from 'react-router-dom'
 
-import {signInMentor, mentorCompetences} from '../store/actions/mentor'
-import {signInApprenti, apprentiCompetences} from '../store/actions/apprenti'
+import {signInMentor, fillCompetenceMentor} from '../store/actions/mentor'
+import {signInApprenti, fillCompetenceApprenti} from '../store/actions/apprenti'
 import { signInAdmin} from '../store/actions/admin'
 class SignIn extends Component {
     constructor() {
@@ -98,8 +98,17 @@ class SignIn extends Component {
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){
                     this.props.signInMentor({token_mentor:result.data.token_mentor, id_mentor: result.data.id, mail_mentor:this.state.mail, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor  })
+                    let mentorCompetences = await axios.get(`http://localhost:8000/user/history-competence/${result.data.id}`)
+                    if(mentorCompetences.status === 200){
+                        this.props.fillCompetenceMentor()
+                    }
                 }else if(this.state.statut === "apprenti"){
                     this.props.signInApprenti({token_apprenti:result.data.token_apprenti, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti})
+                    let apprentiCompetences = await axios.get(`http://localhost:8000/user/history-competence/${result.data.id}`)
+                    if(apprentiCompetences.status === 200){
+                        console.log(apprentiCompetences.data);
+                        apprentiCompetences.data.map(elem => this.props.fillCompetenceApprenti(elem))
+                    }
                 }else if(this.state.statut === 'admin'){
                     this.props.signInAdmin({token_admin:result.data.token_admin, id_admin: result.data.id, mail_admin:this.state.mail})
                 }
@@ -108,7 +117,7 @@ class SignIn extends Component {
             }
             if(result.status === 203){
                 this.setState({
-                    message:"On ne sait pas cet adresse mail, vous devrez réessayer",
+                    message:"On ne sait pas ce compte, vous devrez réessayer",
                      errorMail : true,
                      mail: '',
                      mdp: '',
@@ -136,8 +145,8 @@ const mapDispatchToProps = {
     signInMentor,
     signInApprenti,
     signInAdmin,
-    mentorCompetences,
-    apprentiCompetences,
+    fillCompetenceMentor,
+    fillCompetenceApprenti,
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

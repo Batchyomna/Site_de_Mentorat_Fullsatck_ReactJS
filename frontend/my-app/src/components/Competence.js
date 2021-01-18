@@ -46,7 +46,7 @@ class Competence extends Component {
                     (this.props.id_mentor === this.state.id_mentor) ?
                     <Button className="oneButton" variant="primary" type="submit" >Modifier</Button>
                     :
-                    this.state.reserve === 1 && this.state.id_apprenti != this.props.id_apprenti ? 
+                    this.state.reserve === 1 && this.state.id_apprenti !== this.props.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >ça m'interesse</Button>
                     :
                     this.state.reserve === 0 && this.props.id_apprenti ? 

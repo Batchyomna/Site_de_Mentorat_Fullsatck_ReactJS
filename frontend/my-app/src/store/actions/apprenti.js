@@ -13,10 +13,11 @@ export const signOutApprenti = () => ({
     mail_apprenti: null,
     id_apprenti:null,
     token_apprenti: null,
+    competencesDePasse : []
 })
-export const apprentiCompetences = (competences) => ({
+export const fillCompetenceApprenti = (competence) => ({
     type: "FILL_A_COMPETENCES",
-    payload: competences,
+    payload: competence,
 })
 export const changeDataApprenti = (data) => ({
     type: "CHANGE_DATA_APPRENTI",

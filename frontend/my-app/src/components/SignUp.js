@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import axios from 'axios'
-import  { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 class SignUp extends Component {
     constructor() {
         super();
@@ -22,7 +22,7 @@ class SignUp extends Component {
         if (this.state.signupFlag) {
             return (
                 <div className="container">
-                      <h2>Saisissez vos Coordonnées</h2>
+                    <h2>Saisissez vos Coordonnées</h2>
                     <span className="greenMessage">{this.state.message}<br /></span>
                     <p className="smallMessage">Les champs marqués d'un astérisque * sont obligatoires</p>
                     <Form>
@@ -41,21 +41,21 @@ class SignUp extends Component {
                                 <Form.Label className="float-left label">Adresse mail *</Form.Label>
                                 {
                                     this.state.errorMail ?
-                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="errorClasse"/>
-                                    :                                
-                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel"/>
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="S'IL VOUS PLAÎT, saisissez un BON MAIL" className="errorClasse" />
+                                        :
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel" />
 
                                 }
                             </Col>
                             <Col sm={6}>
-                                 <Form.Label className="float-left label">Mot de passe *</Form.Label>
+                                <Form.Label className="float-left label">Mot de passe *</Form.Label>
                                 <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" />
                             </Col>
                         </Row>
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Photo</Form.Label>
-                                <Form.Control value={this.state.photo} onChange={this.setChange.bind(this)} name="photo" placeholder="URL de votre photo" className="inTheLabel"/>
+                                <Form.Control value={this.state.photo} onChange={this.setChange.bind(this)} name="photo" placeholder="URL de votre photo" className="inTheLabel" />
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Votre statut *</Form.Label>
@@ -75,7 +75,7 @@ class SignUp extends Component {
                                     </Col>
                                 </Row>
                             )
-                            :             
+                            :
                             null
                         }
                         <div className="myButtons">
@@ -94,33 +94,43 @@ class SignUp extends Component {
     }
 
     setChange(event) {
-        if(event.target.name === 'mail' && valideEmail(event.target.value)){
-            this.setState({
-                errorMail: true,
-            })
-        }
         this.setState({
             [event.target.name]: event.target.value
         });
     }
-    goToSignIn(e){
+    goToSignIn(e) {
         e.preventDefault();
         this.setState({
             signupFlag: false,
         })
     }
-    validEmail (x) {
-        var rg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(rg.test(x)){
-         return true
-        } ;
-      }
-async goToSignUp(e) {
-    e.preventDefault();
-    try {
-        let result = await axios.post(`http://localhost:8000/sign-up`, { prenom: this.state.prenom, nom: this.state.nom, mail: this.state.mail, mdp: this.state.mdp, photo: this.state.photo, statut: this.state.statut, nom_SIREN: this.state.nom_SIREN })
-        console.log(result);
-        if (result.status === 201) {
+  
+    async goToSignUp(e) {
+        e.preventDefault();
+        try {
+            const rg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (!rg.test(this.state.mail)) {
+                this.setState({
+                    mail:'',
+                    errorMail: true,
+                })
+            } else {
+                let result = await axios.post(`http://localhost:8000/sign-up`, { prenom: this.state.prenom, nom: this.state.nom, mail: this.state.mail, mdp: this.state.mdp, photo: this.state.photo, statut: this.state.statut, nom_SIREN: this.state.nom_SIREN })
+                console.log(result);
+                if (result.status === 201) {
+                    this.setState({
+                        prenom: '',
+                        nom: '',
+                        mail: '',
+                        mdp: '',
+                        photo: '',
+                        statut: '',
+                        nom_SIREN: null,
+                        message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
+                    })
+                }
+            }
+        } catch (error) {
             this.setState({
                 prenom: '',
                 nom: '',
@@ -129,24 +139,12 @@ async goToSignUp(e) {
                 photo: '',
                 statut: '',
                 nom_SIREN: null,
-                message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
-            })
-        }
-    } catch (error) {
-        this.setState({
-            prenom: '',
-            nom: '',
-            mail: '',
-            mdp: '',
-            photo: '',
-            statut: '',
-            nom_SIREN: null,
-            message: 'Il y a un problème, vous devriez essayer encore une fois',
+                message: 'Il y a un problème, vous devriez essayer encore une fois',
 
-        })
-        console.error(error);
+            })
+            console.error(error);
+        }
     }
-}
 }
 
 export default SignUp;

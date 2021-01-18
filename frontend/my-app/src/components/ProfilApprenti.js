@@ -13,6 +13,7 @@ class ProfilApprenti extends Component {
             mail_apprenti: '',
             mdp_apprenti: '',
             photo_apprenti: '',
+            message:'',
             items: []
         }
     }
@@ -21,7 +22,7 @@ class ProfilApprenti extends Component {
             <div className="container">
                 <h2> Bonjour {this.props.prenom_apprenti}</h2>
                 <section className="information">
-                    {/* <span className="message">{this.state.message}</span> */}
+                    <span className="greenMessage">{this.state.message}</span>
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -58,8 +59,8 @@ class ProfilApprenti extends Component {
                 <section className="history">
                 <p className="smallMessage">Les compétences que vous avez déjà acquises: </p>
                 {
-                    this.state.items.length > 0 ?
-                     (this.state.items.map(item=>(
+                    this.props.competencesDePasse.length > 0 ?
+                     (this.props.competencesDePasse.map(item=>(
                          <div key={item.id_competence} className="profilOneCompetence">
                              <h5>{item.titre}</h5>
                              <p>Dans le domaine: {item.domaine}</p>
@@ -83,25 +84,13 @@ class ProfilApprenti extends Component {
             [event.target.name]: event.target.value
         });
     }
-    async componentDidMount(){
-        try{
-          let result = await axios.get(`http://localhost:8000/user/history-competence/${this.props.id_apprenti}`)
-          if(result.status === 200){
-              this.setState({
-                  items: result.data
-              })
-          }
-        }catch(err){
-            console.log(err);
-        }
-    }
    
     async editData(e){
         e.preventDefault();
         try{
             let allStateData = this.state;
             for (let key in allStateData) {
-              if (key === 'items' || allStateData[key] === '') {
+              if (key === 'items'|| key === 'message' || allStateData[key] === '') {
                 delete allStateData[key]
               }
             }
@@ -109,6 +98,14 @@ class ProfilApprenti extends Component {
             let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData)
             if(updateRresult.status===200){
               this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
+              this.setState({
+                prenom_apprenti: '',
+                nom_apprenti: '',
+                mail_apprenti: '',
+                mdp_apprenti: '',
+                photo_apprenti: '',
+                message:'Vos coordonnées sont bien changées'
+              })
             }
         }catch(err){
             console.log(err);
@@ -131,6 +128,7 @@ const mapStateToProps = (state)=> ({
     prenom_apprenti: state.apprentiReducer.prenom_apprenti,
     photo_apprenti: state.apprentiReducer.photo_apprenti,
     id_apprenti: state.apprentiReducer.id_apprenti,
+    competencesDePasse : state.apprentiReducer.competencesDePasse
 
 })
 const mapDispatchToProps ={

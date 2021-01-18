@@ -4,7 +4,7 @@ const initialStates = {
     mail_mentor: null,
     id_mentor:null,
     token_mentor: null,
-    competences: []
+    competencesDeMentor: []
  
 };
 

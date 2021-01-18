@@ -58,11 +58,19 @@ class Contact extends Component {
        if(result.status === 200){
            console.log(result.data);
            this.setState({
-               response : 'Votre mail est bien envoyé' // marche pas à cause d'actulisation de la page
+            nom: '',
+            sujet:'',
+            mail: '',
+            message:'',  
+            response : 'Votre mail est bien envoyé' // marche pas à cause d'actulisation de la page
            })
        }else{
         this.setState({
-            response : 'Excusez-nous, mais il y a des problèmes'// marche pas à cause d'actulisation de la page
+            nom: '',
+            sujet:'',
+            mail: '',
+            message:'', 
+            response : "Excusez-nous, mais nous avons des problèmes, S'il vous plaît ressayer", // marche pas à cause d'actulisation de la page
         })
            console.log(result.data.mesg);
        }

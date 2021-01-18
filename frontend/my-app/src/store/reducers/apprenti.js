@@ -4,6 +4,7 @@ const initialStates = {
     mail_apprenti: null,
     id_apprenti:null,
     token_apprenti: null,
+    competencesDePasse: []
  
 };
 
@@ -17,7 +18,6 @@ const apprentiReducer = (state = initialStates, action) => {
         mail_apprenti: action.mail_apprenti,
         id_apprenti:action.id_apprenti,
         token_apprenti: action.token_apprenti, 
-    
       }
       case "SIGNOUT_APPRENTI":
         return{
@@ -27,6 +27,7 @@ const apprentiReducer = (state = initialStates, action) => {
           mail_apprenti: null,
           id_apprenti:null,
           token_apprenti: null,
+          competencesDePasse : []
         }
       case "CHANGE_DATA_APPRENTI":
         return{
@@ -37,9 +38,15 @@ const apprentiReducer = (state = initialStates, action) => {
           id_apprenti:action.payload.id_apprenti,
           token_apprenti: action.payload.token_apprenti, 
         }
+      case "FILL_A_COMPETENCES":
+        return {
+          ...state,
+          competencesDePasse: [...state.competencesDePasse, action.payload]
+
+        }
 
     default:
-      return state // when we want to add presistStore, it bettre to return the state like this
+      return state// when we want to add presistStore, it bettre to return the state like this
                    // note return { ...state} like when we do usually
      
   }
