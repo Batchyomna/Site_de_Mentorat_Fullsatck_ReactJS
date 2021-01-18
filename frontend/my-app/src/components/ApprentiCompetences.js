@@ -12,17 +12,18 @@ class ApprentiCompetences extends Component {
         return (
             <div className="container">
                  <section className="history">
-                <p className="smallMessage">Les compétences que vous avez déjà acquises</p>
+                <p className="smallMessage">Les compétences que vous êtes en train de suivre</p>
                 {
                     this.state.items.length > 0 ?
                      (this.state.items.map(item=>(
-                         <div key={item.id_competence}>
-                             <h6>{item.titre}</h6>
-                             <p>{item.domaine}</p>
+                         <div key={item.id_competence} className='profilOneCompetence'>
+                             <h6><b>Titre:</b> {item.titre}</h6>
+                             <p><b>Domaine:</b> {item.domaine}</p>
+                             <p><b>Prochaine session:</b> {item.date_session}</p>
                          </div>
                      ))
                     )
-                    :null
+                    :<div>Vous n'avez pas des compétences</div>
                 }
                 </section>
             </div>
@@ -30,7 +31,7 @@ class ApprentiCompetences extends Component {
     }
     async componentDidMount(){
         try{
-          let result = await axios.get(`http://localhost:8000/user/history-competence/${this.props.id_apprenti}`)
+          let result = await axios.get(`http://localhost:8000/apprenti/all-competences/${this.props.id_apprenti}`)
           if(result.status === 200){
               this.setState({
                   items: result.data

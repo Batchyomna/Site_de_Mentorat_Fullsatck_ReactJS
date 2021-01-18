@@ -17,7 +17,8 @@ class Competence extends Component {
             photo_mentor: '',
             domaine: '',
             description: '',
-            id_mentor: null
+            id_mentor: null,
+            id_apprenti: null
         }
     }
     render() {
@@ -45,12 +46,12 @@ class Competence extends Component {
                     (this.props.id_mentor === this.state.id_mentor) ?
                     <Button className="oneButton" variant="primary" type="submit" >Modifier</Button>
                     :
-                    this.state.reserve === 1 && this.state.id_apprenti ? 
+                    this.state.reserve === 1 && this.state.id_apprenti != this.props.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >ça m'interesse</Button>
                     :
-                    this.state.reserve === 0 && this.state.id_apprenti ? 
+                    this.state.reserve === 0 && this.props.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >choisir cette compétence</Button>
-                    : !this.state.id_apprenti  ?
+                    : this.props.id_apprenti === null  ?
                     <p className="smallMessage">Connectez-vous <a href="/se-connecter/sign-up">ici</a> pour participer à cette compétence.</p>
                     : null
 
@@ -77,7 +78,8 @@ class Competence extends Component {
                     photo_mentor: details.data[0].photo_mentor,
                     domaine: details.data[0].domaine,
                     description : details.data[0].description,
-                    id_mentor: details.data[0].id_mentor
+                    id_mentor: details.data[0].id_mentor,
+                    id_apprenti: details.data[0].id_apprenti
                 })
             }
         }catch(err){
@@ -86,6 +88,7 @@ class Competence extends Component {
     }
 }
 const mapStateToProps =(state) => ({
-    id_mentor: state.mentorReducer.id_mentor
+    id_mentor: state.mentorReducer.id_mentor,
+    id_apprenti: state.apprentiReducer.id_apprenti
 })
 export default connect(mapStateToProps)(Competence);

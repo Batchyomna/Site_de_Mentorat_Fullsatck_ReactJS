@@ -27,7 +27,7 @@ class SignIn extends Component {
         }else if (this.state.signinFlag) {
             return (
                 <div className="container">
-                     <h2>Se Connecter</h2>
+                     <h2>Vous Connectez</h2>
                     <span className="redMessage">{this.state.message}<br/></span>
                     <p className="smallMessage">Tout les champs sont obligatoires</p>
                     <Form>

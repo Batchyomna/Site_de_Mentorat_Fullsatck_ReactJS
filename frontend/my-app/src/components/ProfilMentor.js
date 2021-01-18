@@ -14,7 +14,7 @@ class ProfilMentor extends Component {
             mdp_mentor: '',
             photo_mentor: '',
             items: [],
-            message: ''
+            // message: ''
         }
     }
     render() {
@@ -22,7 +22,7 @@ class ProfilMentor extends Component {
         <div className="container">
                 <h2> Bonjour {this.props.prenom_mentor}</h2>
                 <section className="information">
-                    <span className="message">{this.state.message}</span>
+                    {/* <span className="message">{this.state.message}</span> */}
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -96,20 +96,20 @@ class ProfilMentor extends Component {
         }
     }
    
-    async editData(){
+    async editData(e){
+        e.preventDefault();
         try{
             let allStateData = this.state;
             for (let key in allStateData) {
-              if (key === 'items' || key === 'message'|| allStateData[key] === '') {
+              if (key === 'items' || allStateData[key] === '') {
                delete allStateData[key]
               }
             }
-            let result = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
-            if(result.status === 200){
-              this.props.changeDataMentor({id_mentor: result.data.id_mentor, token_mentor: result.data.token_mentor, mail_mentor: result.data.mail_mentor, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor })
-            //  this.setState({
-            //      message: 'AAAAAAAAAAAAAAAA'
-            //  })
+            if(allStateData){
+                let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
+                if(updateResult.status === 200){
+                    this.props.changeDataMentor({id_mentor: updateResult.data.id_mentor, token_mentor: updateResult.data.token_mentor, mail_mentor: updateResult.data.mail_mentor, photo_mentor: updateResult.data.photo_mentor, prenom_mentor: updateResult.data.prenom_mentor })
+                }
             }
         }catch(err){
             console.log(err);
@@ -120,7 +120,7 @@ class ProfilMentor extends Component {
         try{
             let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`)
             if(deletResult.status === 200){
-               console.log(deletResult);
+               console.log('Account deleted', deletResult);
                this.props.signOutMentor()
             }
         }catch(err){

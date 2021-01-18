@@ -52,7 +52,8 @@ class Contact extends Component {
         });
     }    
 
-    async sendEmail() {  
+    async sendEmail(e) { 
+       e.preventDefault();
        let  result = await axios.post('http://localhost:8000/contact', {mail: this.state.mail ,sujet:this.state.sujet, nom:this.state.nom, message: this.state.message})
        if(result.status === 200){
            console.log(result.data);

@@ -21,7 +21,7 @@ class ProfilApprenti extends Component {
             <div className="container">
                 <h2> Bonjour {this.props.prenom_apprenti}</h2>
                 <section className="information">
-                    <span className="message">{this.state.message}</span>
+                    {/* <span className="message">{this.state.message}</span> */}
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -96,7 +96,8 @@ class ProfilApprenti extends Component {
         }
     }
    
-    async editData(){
+    async editData(e){
+        e.preventDefault();
         try{
             let allStateData = this.state;
             for (let key in allStateData) {

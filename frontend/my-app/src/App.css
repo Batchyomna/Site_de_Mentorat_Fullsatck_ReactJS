@@ -34,6 +34,7 @@
   color: #ED6663;
 }
 .container{
+  min-height: 50vh;
   margin-right: auto !important;
   margin-left: auto !important;
   margin-bottom: 10% ;
@@ -44,6 +45,12 @@ h2{
   color: #43658B;
   font-style: normal;
  
+}
+/* ------------Home */
+.homePage{
+  min-height: 70vh;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.603), rgba(255, 163, 114, 1),rgba(237, 102, 99, 1), rgba(0, 0, 255, 0.5), rgba(255, 255, 255, 0.603) );
+  background-repeat: no-repeat;
 }
 /*---------------- SignUp, SignIn */
 .label{

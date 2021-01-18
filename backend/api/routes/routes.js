@@ -238,14 +238,14 @@ router.put('/user/mentor/edit-data/:id', (req, res) => {
         var query = `UPDATE mentor SET `
         for (let i = 0; i < data.length; i++) {
           if (data[i] === 'mdp_mentor') {
-            query = query + `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé
-          } else if (i == data.length - 1) {
-            query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
+            query += `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé
+          } else if (i === data.length - 1) {
+            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` //  req.body[prenom_mentor] est un autre façon de dire req.body.prenom_mentor
           } else {
-            query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
           }
         }
-        query = query + ` WHERE id_mentor = ${req.params.id}`;
+        query +=` WHERE id_mentor = ${req.params.id}`;
         console.log(query);
         connection.query(query, function (err, resultat) {
           if (err) throw err;
@@ -260,12 +260,12 @@ router.put('/user/mentor/edit-data/:id', (req, res) => {
       var query = `UPDATE mentor SET `
       for (let i = 0; i < data.length; i++) {
         if (i == data.length - 1) {
-          query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
+          query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
         } else {
-          query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+          query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
         }
       }
-      query = query + ` WHERE id_mentor = ${req.params.id}`;
+      query += ` WHERE id_mentor = ${req.params.id}`;
       console.log(query);
       connection.query(query, function (err, resultat) {
         if (err) throw err;
@@ -312,6 +312,17 @@ router.get('/mentor/:id', async (req, res) => {
 router.get('/all/competences', async (req, res) => {
   try {
     connection.query('SELECT * FROM competence', function (err, result) {
+      if (err) throw err
+      res.status(200).json(result);
+    })
+  } catch (err) {
+    console.log(err);
+  }
+});
+// ------------3.API/get/apprenti/all-competences
+router.get('/apprenti/all-competences/:id', async (req, res) => {
+  try {
+    connection.query(`SELECT a.* , b.date_session FROM competence as a LEFT join session as b ON a.id_competence = b.id_competence WHERE id_apprenti = ${req.params.id}`, function (err, result) {
       if (err) throw err
       res.status(200).json(result);
     })
