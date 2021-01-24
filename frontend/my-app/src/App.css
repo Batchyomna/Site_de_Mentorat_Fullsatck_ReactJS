@@ -57,11 +57,14 @@ h2{
   font-style: normal;
   color: #43658B;
 }
+.form-control{
+  font-size: 20px !important;
+}
 .inTheLabel{
   font-style: italic;
   color: #875959 !important;
   background-color: #FFA372 !important;
-  font-size: 10px;
+  font-size: 18px !important;
 }
 .greenMessage{
   font-size: 30px;
@@ -69,7 +72,8 @@ h2{
 }
 .redMessage{
   font-size: 30px;
-  color: red;
+   background-color:crimson;
+
 }
 .myButtons{
   display: flex;
@@ -250,6 +254,9 @@ h2{
   }
   .profilOneCompetence{
     flex-direction: column;
+  }
+  .redMessage {
+    font-size: 20px;
   }
 }
 

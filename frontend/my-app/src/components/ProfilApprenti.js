@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux'
-import { Form, Row, Col, Button} from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
-import {changeDataApprenti,  signOutApprenti} from '../store/actions/apprenti'
+import { changeDataApprenti, signOutApprenti } from '../store/actions/apprenti'
 
 class ProfilApprenti extends Component {
-    constructor(){
+    constructor() {
         super()
-        this.state ={
+        this.state = {
             prenom_apprenti: '',
             nom_apprenti: '',
             mail_apprenti: '',
             mdp_apprenti: '',
             photo_apprenti: '',
-            message:'',
-            items: []
+            message: '',
+            messageError: ''
         }
     }
     render() {
@@ -23,6 +23,7 @@ class ProfilApprenti extends Component {
                 <h2> Bonjour {this.props.prenom_apprenti}</h2>
                 <section className="information">
                     <span className="greenMessage">{this.state.message}</span>
+                    <span className="redMessage">{this.state.messageError}</span>
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -38,7 +39,7 @@ class ProfilApprenti extends Component {
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
-                                <Form.Control value={this.state.mail_apprenti} onChange={this.setChange.bind(this)} name="mail_apprenti" placeholder="Saisissez votre mail" className="inTheLabel"/>
+                                <Form.Control value={this.state.mail_apprenti} onChange={this.setChange.bind(this)} name="mail_apprenti" placeholder="Saisissez votre mail" className="inTheLabel" />
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe</Form.Label>
@@ -48,33 +49,33 @@ class ProfilApprenti extends Component {
                         <Row>
                             <Col sm={12}>
                                 <Form.Label className="float-left label">Photo</Form.Label>
-                                <Form.Control value={this.state.photo_apprenti} onChange={this.setChange.bind(this)} name="photo_apprenti" placeholder="URL de votre photo" className="inTheLabel"/>
+                                <Form.Control value={this.state.photo_apprenti} onChange={this.setChange.bind(this)} name="photo_apprenti" placeholder="URL de votre photo" className="inTheLabel" />
                             </Col>
                         </Row>
                         <div className="myButtons">
-                        <Button className="oneButton" type="submit" onClick={this.editData.bind(this)}>Modifier</Button>
+                            <Button className="oneButton" type="submit" onClick={this.editData.bind(this)}>Modifier</Button>
                         </div>
                     </Form>
                 </section>
                 <section className="history">
-                <p className="smallMessage">Les compétences que vous avez déjà acquises: </p>
-                {
-                    this.props.competencesDePasse.length > 0 ?
-                     (this.props.competencesDePasse.map(item=>(
-                         <div key={item.id_competence} className="profilOneCompetence">
-                             <h5>{item.titre}</h5>
-                             <p>Dans le domaine: {item.domaine}</p>
-                             <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>
-                         </div>
-                     ))
-                    )
-                    :
-                    <span className="message">Vous n'avez encore aucune compétence </span>
+                    <p className="smallMessage">Les compétences que vous avez déjà acquises: </p>
+                    {
+                        this.props.competencesDePasse.length > 0 ?
+                            (this.props.competencesDePasse.map(item => (
+                                <div key={item.id_competence} className="profilOneCompetence">
+                                    <h5>{item.titre}</h5>
+                                    <p>Dans le domaine: {item.domaine}</p>
+                                    <a className="lire" href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>
+                                </div>
+                            ))
+                            )
+                            :
+                            <span className="message">Vous n'avez encore suivi aucune compétence </span>
 
-                }
+                    }
                 </section>
                 <div className="myButtons">
-                        <Button className="oneButton" type="submit" onClick={this.deleteAcount.bind(this)}>Supprimer votre compte</Button>
+                    <Button className="oneButton" type="submit" onClick={this.deleteAcount.bind(this)}>Supprimer votre compte</Button>
                 </div>
             </div>
         )
@@ -84,54 +85,68 @@ class ProfilApprenti extends Component {
             [event.target.name]: event.target.value
         });
     }
-   
-    async editData(e){
+
+    async editData(e) {
         e.preventDefault();
-        try{
+        try {
             let allStateData = this.state;
             for (let key in allStateData) {
-              if (key === 'items'|| key === 'message' || allStateData[key] === '') {
-                delete allStateData[key]
-              }
+                if (key === 'message' || key === 'messageError' || allStateData[key] === '') {
+                    delete allStateData[key]
+                }
             }
-
-            let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData)
-            if(updateRresult.status===200){
-              this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
-              this.setState({
-                prenom_apprenti: '',
-                nom_apprenti: '',
-                mail_apprenti: '',
-                mdp_apprenti: '',
-                photo_apprenti: '',
-                message:'Vos coordonnées sont bien changées'
-              })
+            if (allStateData.length > 0) {
+                let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData)
+                if (updateRresult.status === 200) {
+                    this.props.changeDataApprenti({ id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
+                    this.setState({
+                        prenom_apprenti: '',
+                        nom_apprenti: '',
+                        mail_apprenti: '',
+                        mdp_apprenti: '',
+                        photo_apprenti: '',
+                        message: 'Vos coordonnées sont bien changées'
+                    })
+                } else {
+                    this.setState({
+                        prenom_mentor: '',
+                        nom_mentor: '',
+                        mail_mentor: '',
+                        mdp_mentor: '',
+                        photo_mentor: '',
+                        messageError: 'Excusez-nous, mais vous devrez ressayer'
+                    })
+                }
+            } else {
+                this.setState({
+                    messageError: 'vous devez remplir au moins un champ pour changer ves coordonnées'
+                })
             }
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
-    async deleteAcount(e){
+    async deleteAcount(e) {
         e.preventDefault();
-        try{
+        try {
             let deletResult = await axios.delete(`http://localhost:8000/user/apprenti/delete-compte/${this.props.id_apprenti}`)
-            if(deletResult.status === 200){
-               console.log(deletResult);
-               this.props.signOutApprenti()
+            if (deletResult.status === 200) {
+                console.log(deletResult);
+                this.props.signOutApprenti()
             }
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
 }
-const mapStateToProps = (state)=> ({
+const mapStateToProps = (state) => ({
     prenom_apprenti: state.apprentiReducer.prenom_apprenti,
     photo_apprenti: state.apprentiReducer.photo_apprenti,
     id_apprenti: state.apprentiReducer.id_apprenti,
-    competencesDePasse : state.apprentiReducer.competencesDePasse
+    competencesDePasse: state.apprentiReducer.competencesDePasse
 
 })
-const mapDispatchToProps ={
+const mapDispatchToProps = {
     changeDataApprenti,
     signOutApprenti
 

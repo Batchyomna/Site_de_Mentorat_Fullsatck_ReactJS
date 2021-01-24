@@ -67,11 +67,11 @@ router.post('/sign-in', (req, res) => {
               res.status(200).json({ token_admin: token, id: admin[0].id_admin });  //You are authrised
               console.log('vous êtes bien un admin');
             } else {
-              res.status(201).send("Vous avez oublié votre mot de pass?")
+              res.status(201).json({msg:"Vous avez oublié votre mot de pass?"})
             }
           })
         } else {
-          res.status(203).send("Ce compte nous est inconnu")
+          res.status(203).json({msg:"Ce mail nous est inconnu ou peut-être vous avez selectionné un mouvais statut"})
         }
       })
     } else if (req.body.statut === 'mentor') {
@@ -84,11 +84,11 @@ router.post('/sign-in', (req, res) => {
               res.status(200).json({ token_mentor: token, id: mentor[0].id_mentor, photo_mentor: mentor[0].photo_mentor, prenom_mentor: mentor[0].prenom_mentor });  //You are authrised
               console.log('vous êtes bien un mentor');
             } else {
-              res.status(201).send("Vous avez oublié votre mot de pass?")
+              res.status(201).json({msg:"Vous avez oublié votre mot de pass?"})
             }
           })
         } else {
-          res.status(203).send("Ce compte nous est inconnu")
+          res.status(203).json({msg:"Ce mail nous est inconnu ou peut-être vous avez selectionné un mouvais statut"})
         }
       })
     } else if (req.body.statut === 'apprenti') {
@@ -101,17 +101,17 @@ router.post('/sign-in', (req, res) => {
               res.status(200).json({ token_apprenti: token, id: apprenti[0].id_apprenti, photo_apprenti: apprenti[0].photo_apprenti, prenom_apprenti: apprenti[0].prenom_apprenti });  //You are authrised
               console.log('vous êtes bien un apprenti');
             } else {
-              res.status(201).send("Vous avez oublié votre mot de pass?")
+              res.status(201).json({msg:"Vous avez oublié votre mot de pass?"})
             }
           })
         } else {
-          res.status(203).send("Ce compte est inconnu")
+          res.status(203).json({msg:"Ce mail est inconnu ou peut-être vous avez selectionné un mouvais statut"})
         }
       })
     }
   } catch (err) {
     console.log(err);
-    res.status(500).send('Il y a une erreur de serveur')
+    res.status(500).json({msg:'Il y a une erreur de serveur'})
   }
 });
 // ------------3.API/get/apprenti/:id
@@ -181,21 +181,24 @@ router.put('/admin/valid/:idMentor', (req, res) => {
 //------------3. API/PUT/user/apprenti/edit-data
 router.put('/user/apprenti/edit-data/:id', (req, res) => {
   try {
-    let data = Object.keys(req.body)
+    if(req.body.length > 0){
+       let data = Object.keys(req.body)
     if (req.body.mdp_apprenti) {
       bcrypt.hash(req.body.mdp_apprenti, saltRounds).then(function (hashPW) {
         var query = `UPDATE apprenti SET `
         for (let i = 0; i < data.length; i++) {
-          if (data[i] === 'mdp_apprenti') {
-            query = query + `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé
-          } else if (i == data.length - 1) {
-            query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]
+          if (data[i] === 'mdp_apprenti' & (i == data.length - 1)) {
+            query += `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé et il est le dernier elem dans body
+          }else if (data[i] === 'mdp_apprenti' & (i != data.length - 1)){
+            query += `${data[i]}` + ' = ' + `'${hashPW}'` + ', '
+          }else if (i == data.length - 1) {
+            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]
           } else {
-            query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
           }
         }
-        query = query + ` WHERE id_apprenti = ${req.params.id}`;
-        console.log(query);
+        query += ` WHERE id_apprenti = ${req.params.id}`;
+        console.log('avec mdp==>', query);
         connection.query(query, function (err, result) {
           if (err) throw err;
           connection.query(`SELECT * FROM apprenti WHERE id_apprenti = '${req.params.id}'`, (error, result) => {
@@ -209,12 +212,12 @@ router.put('/user/apprenti/edit-data/:id', (req, res) => {
       var query = `UPDATE apprenti SET `
       for (let i = 0; i < data.length; i++) {
         if (i == data.length - 1) {
-          query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]
+          query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_apprenti === req.body[prenom_apprenti]
         } else {
-          query = query + `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+          query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
         }
       }
-      query = query + ` WHERE id_apprenti = ${req.params.id}`;
+      query += ` WHERE id_apprenti = ${req.params.id}`;
       console.log(query);
       connection.query(query, function (err, result) {
         if (err) throw err;
@@ -225,6 +228,11 @@ router.put('/user/apprenti/edit-data/:id', (req, res) => {
         })
       })
     }
+    }else{
+      res.status(205).json({msg: 'vous avez rien envoyé' });
+
+    }
+   
   } catch (err) {
     console.log(err);
   }
@@ -232,13 +240,16 @@ router.put('/user/apprenti/edit-data/:id', (req, res) => {
 //---------3.API/POST/ modifier les data de mentor et sauvegarder les nouveaux data
 router.put('/user/mentor/edit-data/:id', (req, res) => {
   try {
+    if(req.body.length >0){
     let data = Object.keys(req.body)
     if (req.body.mdp_mentor) {
       bcrypt.hash(req.body.mdp_mentor, saltRounds).then(function (hashPW) {
         var query = `UPDATE mentor SET `
         for (let i = 0; i < data.length; i++) {
-          if (data[i] === 'mdp_mentor') {
-            query += `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé
+          if (data[i] === 'mdp_mentor' & (i == data.length - 1)) {
+            query += `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé et il est le dernier elem dans body
+          }else if (data[i] === 'mdp_mentor' & (i != data.length - 1)){
+            query += `${data[i]}` + ' = ' + `'${hashPW}'` + ', '
           } else if (i === data.length - 1) {
             query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` //  req.body[prenom_mentor] est un autre façon de dire req.body.prenom_mentor
           } else {
@@ -276,6 +287,9 @@ router.put('/user/mentor/edit-data/:id', (req, res) => {
         })
       })
     }
+  }else{
+    res.status(205).json({msg: 'vous avez rien envoyé' });
+  }
   } catch (err) {
     console.log(err);
   }
@@ -421,7 +435,7 @@ router.get('/competence-et-session', (req, res) => {
 //-------------3. API/GET/avoir tout les detail d'un competence et son mentor
 router.get('/one-competence/:id', (req, res) => {
   try {
-    connection.query(`SELECT a.*, b.photo_mentor, b.nom_mentor FROM competence as a LEFT JOIN mentor as b ON a.id_mentor = b.id_mentor WHERE id_competence= ${req.params.id}`, (err, result) => {
+    connection.query(`SELECT a.*, b.photo_mentor, b.nom_mentor, b.prenom_mentor FROM competence as a LEFT JOIN mentor as b ON a.id_mentor = b.id_mentor WHERE id_competence= ${req.params.id}`, (err, result) => {
       if (err) throw err
       res.status(200).json(result)
     })

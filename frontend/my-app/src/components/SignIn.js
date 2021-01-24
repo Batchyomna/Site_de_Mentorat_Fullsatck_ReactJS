@@ -29,32 +29,32 @@ class SignIn extends Component {
                 <div className="container">
                      <h2>Vous Connectez</h2>
                     <span className="redMessage">{this.state.message}<br/></span>
-                    <p className="smallMessage">Tout les champs sont obligatoires</p>
+                    <p className="smallMessage">Tous les champs sont obligatoires</p>
                     <Form>
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
                                 {
                                     this.state.errorMail ?
-                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="errorClasse"/>
+                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="errorClasse" required/>
                                     :
-                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel"/>
+                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel" required/>
                                 }
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe</Form.Label>
                                 {
                                     this.state.errorPSW ?
-                                    <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="errorClasse"/>
+                                    <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Réessayer de saisir votre mot de passe" className="errorClasse" required/>
                                      :
-                                     <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel"/>
+                                     <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required/>
                                 }
                             </Col>
                         </Row>
                         <Row>
                             <Col sm={12}>
                                 <Form.Label className="float-left label">Votre statut</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel">
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" required>
                                     <option value=" " className="inTheLabel">Choisissez votre statut</option>
                                     <option value="apprenti" className="inTheLabel">Apprenti</option>
                                     <option value="mentor" className="inTheLabel">Mentor</option>
@@ -79,6 +79,7 @@ class SignIn extends Component {
 
     setChange(event) {
         this.setState({
+            message:'',
             errorPSW: false,
             errorMail: false,
             [event.target.name]: event.target.value
@@ -94,6 +95,7 @@ class SignIn extends Component {
     async goToSignIn(e) {
         e.preventDefault();
         try {
+            console.log('après cliquer', this.state);
             let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){
@@ -106,29 +108,35 @@ class SignIn extends Component {
                     this.props.signInApprenti({token_apprenti:result.data.token_apprenti, id_apprenti: result.data.id, mail_apprenti:this.state.mail, photo_apprenti: result.data.photo_apprenti, prenom_apprenti: result.data.prenom_apprenti})
                     let apprentiCompetences = await axios.get(`http://localhost:8000/user/history-competence/${result.data.id}`)
                     if(apprentiCompetences.status === 200){
-                        // console.log(apprentiCompetences.data);
                         apprentiCompetences.data.map(elem => this.props.fillCompetenceApprenti(elem))
                     }
                 }else if(this.state.statut === 'admin'){
                     this.props.signInAdmin({token_admin:result.data.token_admin, id_admin: result.data.id, mail_admin:this.state.mail})
                 }
             }else if(result.status === 201){
-                this.setState({message:"Vous avez oublié votre mot de pass?", mdp: '', statut: '', errorPSW : true})
+                this.setState({
+                    message:"Vous avez oublié votre mot de passe? ou bien vous avez oublié de le remplir?",
+                    mdp: '',
+                    statut: ' ',
+                    mail: '',
+                    errorPSW : true
+                })
+                console.log('error mdp',this.state);
             }
             if(result.status === 203){
                 this.setState({
-                    message:"On ne sait pas ce compte, vous devrez réessayer",
-                     errorMail : true,
-                     mail: '',
-                     mdp: '',
-                     statut: ''
-                    })
+                    message: result.data.msg,
+                    errorMail : true,
+                    mail: '',
+                    mdp: '',
+                    statut: ' '
+                })
             }
         } catch (error) {
             this.setState({
                 mail: '',
                 mdp: '',
-                statut: '',
+                statut: ' ',
                 message: 'Vous devrez réessayer, car il y a des problèmes de connexion'
             })
             console.error(error);

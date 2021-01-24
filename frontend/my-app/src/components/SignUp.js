@@ -24,6 +24,9 @@ class SignUp extends Component {
                 <div className="container">
                     <h2>Saisissez vos Coordonnées</h2>
                     <span className="greenMessage">{this.state.message}<br /></span>
+                   {this.state.errorMail  &&
+                        <span className="redMessage">Vous devez utiliser un bon mail<br /></span>
+                   }
                     <p className="smallMessage">Les champs marqués d'un astérisque * sont obligatoires</p>
                     <Form>
                         <Row>
@@ -109,26 +112,57 @@ class SignUp extends Component {
         e.preventDefault();
         try {
             const rg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!rg.test(this.state.mail)) {
+            if (this.state.mail && (!rg.test(this.state.mail)) ){
                 this.setState({
                     mail:'',
                     errorMail: true,
                 })
-            } else {
-                let result = await axios.post(`http://localhost:8000/sign-up`, { prenom: this.state.prenom, nom: this.state.nom, mail: this.state.mail, mdp: this.state.mdp, photo: this.state.photo, statut: this.state.statut, nom_SIREN: this.state.nom_SIREN })
-                console.log(result);
-                if (result.status === 201) {
-                    this.setState({
-                        prenom: '',
-                        nom: '',
-                        mail: '',
-                        mdp: '',
-                        photo: '',
-                        statut: '',
-                        nom_SIREN: null,
-                        message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
-                    })
+            } else if(this.state.prenom && this.state.nom && this.state.mdp && this.state.statut)  {
+                if(this.state.statut === 'mentor'){
+                    if(this.state.nom_SIREN){
+                        let result = await axios.post(`http://localhost:8000/sign-up`, { prenom: this.state.prenom, nom: this.state.nom, mail: this.state.mail, mdp: this.state.mdp, photo: this.state.photo, statut: this.state.statut, nom_SIREN: this.state.nom_SIREN })
+                        console.log(result);
+                        if (result.status === 201) {
+                            this.setState({
+                                prenom: '',
+                                nom: '',
+                                mail: '',
+                                mdp: '',
+                                photo: '',
+                                statut: '',
+                                nom_SIREN: null,
+                                message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
+                            })
+                        }
+                    }else{
+                        this.setState({
+                            prenom: '',
+                            nom: '',
+                            mail: '',
+                            mdp: '',
+                            photo: '',
+                            statut: '',
+                            nom_SIREN: null,
+                            message: 'Vous devez saisir votre nomre SIREN',
+                        })
+                    }
+                }else{
+                    let result = await axios.post(`http://localhost:8000/sign-up`, { prenom: this.state.prenom, nom: this.state.nom, mail: this.state.mail, mdp: this.state.mdp, photo: this.state.photo, statut: this.state.statut})
+                    console.log(result);
+                    if (result.status === 201) {
+                        this.setState({
+                            prenom: '',
+                            nom: '',
+                            mail: '',
+                            mdp: '',
+                            photo: '',
+                            statut: '',
+                            nom_SIREN: null,
+                            message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
+                        })
+                    }
                 }
+               
             }
         } catch (error) {
             this.setState({

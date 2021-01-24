@@ -13,7 +13,8 @@ class ProfilMentor extends Component {
             mail_mentor: '',
             mdp_mentor: '',
             photo_mentor: '',
-            message: ''
+            message: '',
+            messageError:''
         }
     }
     render() {
@@ -22,6 +23,7 @@ class ProfilMentor extends Component {
                 <h2> Bonjour {this.props.prenom_mentor}</h2>
                 <section className="information">
                     <span className="greenMessage">{this.state.message}</span>
+                    <span className="redMessage">{this.state.messageError}</span> 
                     <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
                     <Form>
                         <Row>
@@ -100,14 +102,20 @@ class ProfilMentor extends Component {
         try{
             let allStateData = this.state;
             for (let key in allStateData) {
-              if (key === 'message' || allStateData[key] === '') {
+              if (key === 'message' || key === 'messageError' || allStateData[key] === '') {
                delete allStateData[key]
               }
             }
-            if(allStateData){
+            if(allStateData.length > 0){
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
                 if(updateResult.status === 200){
-                    this.props.changeDataMentor({id_mentor: updateResult.data.id_mentor, token_mentor: updateResult.data.token_mentor, mail_mentor: updateResult.data.mail_mentor, photo_mentor: updateResult.data.photo_mentor, prenom_mentor: updateResult.data.prenom_mentor })
+                    this.props.changeDataMentor({
+                        id_mentor: updateResult.data.id_mentor,
+                        token_mentor: updateResult.data.token_mentor,
+                        mail_mentor: updateResult.data.mail_mentor,
+                        photo_mentor: updateResult.data.photo_mentor,
+                        prenom_mentor: updateResult.data.prenom_mentor
+                    })
                     this.setState({
                         prenom_mentor: '',
                         nom_mentor: '',
@@ -116,12 +124,26 @@ class ProfilMentor extends Component {
                         photo_mentor: '',
                         message: 'Vos coodonnées sont bien changées'
                     })
+                } else{
+                    this.setState({
+                        prenom_mentor: '',
+                        nom_mentor: '',
+                        mail_mentor: '',
+                        mdp_mentor: '',
+                        photo_mentor: '',
+                        messageError: 'Excusez-nous, mais vous devrez ressayer'
+                    })
                 }
+            }else{
+                this.setState({
+                    messageError: 'vous devez remplir au moins un champ pour changer ves coordonnées'
+                })
             }
         }catch(err){
             console.log(err);
         }
     }
+ 
     async deleteAcount(e){
         e.preventDefault()
         try{

@@ -35,7 +35,7 @@ class Competence extends Component {
                 <div className="photAndDescription">
                     <img src={this.state.photo_mentor} alt='Mentor_photo' width="10%"  height="10%"/>
                     <div className="description">
-                        <b>Nom de Mentor: {this.state.nom_mentor}</b>
+                        <b>Nom et prénom de Mentor: {this.state.nom_mentor} {this.state.prenom_mentor}</b>
                         <p><b>Pour une durée:</b> {this.state.duree}</p>
                         <p><b>Dans une frequence: </b>{this.state.frequence}</p>
                         <p><b>Domaine: </b>{this.state.domaine}</p>
@@ -43,16 +43,19 @@ class Competence extends Component {
                     </div>
                 </div>
                 {
-                    (this.props.id_mentor === this.state.id_mentor) ?
-                    <Button className="oneButton" variant="primary" type="submit" >Modifier</Button>
+                    (this.props.id_mentor === this.state.id_mentor) && (this.state.reserve === 1) ?
+                      <span className="redMessage">Vous ne pouvez pas modifier cette compétence pour l'instant</span>
                     :
+                    (this.props.id_mentor === this.state.id_mentor) && (this.state.reserve === 0) ?
+                    <Button className="oneButton" variant="primary" type="submit" >Modifier</Button>
+                     :
                     this.state.reserve === 1 && this.state.id_apprenti !== this.props.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >ça m'interesse</Button>
                     :
                     this.state.reserve === 0 && this.props.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >choisir cette compétence</Button>
                     : this.props.id_apprenti === null  ?
-                    <p className="smallMessage">Connectez-vous <a href="/se-connecter/sign-up">ici</a> pour participer à cette compétence.</p>
+                    <p className="smallMessage">Connectez-vous sur notre plateforme dans la page <a href="/se-connecter/sign-up">Se connecter</a> pour participer à cette compétence.</p>
                     : null
 
                 }
@@ -79,7 +82,8 @@ class Competence extends Component {
                     domaine: details.data[0].domaine,
                     description : details.data[0].description,
                     id_mentor: details.data[0].id_mentor,
-                    id_apprenti: details.data[0].id_apprenti
+                    id_apprenti: details.data[0].id_apprenti,
+                    prenom_mentor: details.data[0].prenom_mentor 
                 })
             }
         }catch(err){
