@@ -133,6 +133,17 @@ class SignUp extends Component {
                                 nom_SIREN: null,
                                 message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
                             })
+                        }else if (result.status == 202){
+                            this.setState({
+                                prenom: '',
+                                nom: '',
+                                mail: '',
+                                mdp: '',
+                                photo: '',
+                                statut: '',
+                                nom_SIREN: null,
+                                message: 'Vous devez choisis un autre mail, car ce mail est déjà exist',
+                            })
                         }
                     }else{
                         this.setState({
@@ -159,6 +170,17 @@ class SignUp extends Component {
                             statut: '',
                             nom_SIREN: null,
                             message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
+                        })
+                    }else if (result.status == 202){
+                        this.setState({
+                            prenom: '',
+                            nom: '',
+                            mail: '',
+                            mdp: '',
+                            photo: '',
+                            statut: '',
+                            nom_SIREN: null,
+                            message: 'Vous devez choisis un autre mail, car ce mail est déjà exist',
                         })
                     }
                 }
