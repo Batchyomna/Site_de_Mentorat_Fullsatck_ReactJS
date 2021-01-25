@@ -6,9 +6,9 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 
 const connection = require('../database/connectionDB')
-// const myAuth  = require('../middleware/authentication')
-// const authSingUp = require('../middleware/authSignUp')
-// const authDelete  = require('../middleware/authDelete')
+const authPost  = require('../middleware/authPost')
+ const authSingUp = require('../middleware/authSignUp')
+const authDelete  = require('../middleware/authDelete')
 
 //pour securiser les password:
 const bcrypt = require('bcrypt');
@@ -32,10 +32,10 @@ function generateAccessToken(id, mail) {
   return jwt.sign({
     id: id,
     mail: mail
-  }, 'x_TOKEN_SECRET', { expiresIn: '1800s' });  //expires after half an hour (1800 seconds = 30 minutes)
+  }, 'MY_TOKEN_SECRET', { expiresIn: '1800s' });  //expires after half an hour (1800 seconds = 30 minutes)
 }
 //------------------------------------------3. API/post/sign-up-------------
-router.post('/sign-up', function (req, res) {
+router.post('/sign-up',authSingUp, function (req, res) {
   try {
     bcrypt.hash(req.body.mdp, saltRounds).then(function (hashPW) {
       if (req.body.statut === 'mentor') {
@@ -157,7 +157,7 @@ router.post('/new-admin', (req, res) => {
   }
 })
 //-------------3.API/delete/admin/non-valid/:idMentor
-router.delete('/admin/non-valid/:idMentor', (req, res) => {
+router.delete('/admin/non-valid/:idMentor',authDelete, (req, res) => {
   try {
     connection.query(`DELETE FROM mentor WHERE id_mentor ='${req.params.idMentor}'`, function (err, result) {
       if (err) throw err
@@ -288,7 +288,7 @@ router.get('/all/apprentis', (req, res) => {
   });
 });
 //----------3. API/post/new-competence
-router.post('/new-competence', (req, res) => {
+router.post('/new-competence',authPost, (req, res) => {
   try {
     const sql = `INSERT INTO competence (id_mentor, titre, domaine, frequence, duree, premiere_date, description, reserve) VALUES ('${req.body.id_mentor}', '${req.body.titre}', '${req.body.domaine}', '${req.body.frequence}', '${req.body.duree}', '${req.body.premiere_date}', '${req.body.description}', false)`;
     connection.query(sql)
@@ -374,7 +374,7 @@ router.put('/competence-choisi', (req, res) => {
   }
 })
 //---------------------------3.API/delete/compte/
-router.delete('/compte', (req, res) => {
+router.delete('/compte',authDelete, (req, res) => {
   if (req.body.statut === 'mentor') {
     connection.query(`DELETE FROM mentor WHERE id_mentor = '${req.body.id}'`, function (err, result) {
       if (err) throw res.status(400).send('there is an error');
