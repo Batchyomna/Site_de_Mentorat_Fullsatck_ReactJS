@@ -181,7 +181,7 @@ router.put('/admin/valid/:idMentor', (req, res) => {
 //------------3. API/PUT/user/apprenti/edit-data
 router.put('/user/apprenti/edit-data/:id', (req, res) => {
   try {
-    if(req.body.length > 0){
+    if(req.body){
        let data = Object.keys(req.body)
     if (req.body.mdp_apprenti) {
       bcrypt.hash(req.body.mdp_apprenti, saltRounds).then(function (hashPW) {
@@ -240,56 +240,56 @@ router.put('/user/apprenti/edit-data/:id', (req, res) => {
 //---------3.API/POST/ modifier les data de mentor et sauvegarder les nouveaux data
 router.put('/user/mentor/edit-data/:id', (req, res) => {
   try {
-    if(req.body.length >0){
-    let data = Object.keys(req.body)
-    if (req.body.mdp_mentor) {
-      bcrypt.hash(req.body.mdp_mentor, saltRounds).then(function (hashPW) {
+    if(req.body){
+      let data = Object.keys(req.body)
+      if (req.body.mdp_mentor) {
+        bcrypt.hash(req.body.mdp_mentor, saltRounds).then(function (hashPW) {
+          var query = `UPDATE mentor SET `
+          for (let i = 0; i < data.length; i++) {
+            if (data[i] === 'mdp_mentor' & (i == data.length - 1)) {
+              query += `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé et il est le dernier elem dans body
+            }else if (data[i] === 'mdp_mentor' & (i != data.length - 1)){
+              query += `${data[i]}` + ' = ' + `'${hashPW}'` + ', '
+            } else if (i === data.length - 1) {
+              query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` //  req.body[prenom_mentor] est un autre façon de dire req.body.prenom_mentor
+            } else {
+              query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
+            }
+          }
+          query +=` WHERE id_mentor = ${req.params.id}`;
+          console.log(query);
+          connection.query(query, function (err, resultat) {
+            if (err) throw err;
+            connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
+              if (error) throw error
+              const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
+              res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor });
+            })
+          })
+        })
+      } else {
         var query = `UPDATE mentor SET `
         for (let i = 0; i < data.length; i++) {
-          if (data[i] === 'mdp_mentor' & (i == data.length - 1)) {
-            query += `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé et il est le dernier elem dans body
-          }else if (data[i] === 'mdp_mentor' & (i != data.length - 1)){
-            query += `${data[i]}` + ' = ' + `'${hashPW}'` + ', '
-          } else if (i === data.length - 1) {
-            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` //  req.body[prenom_mentor] est un autre façon de dire req.body.prenom_mentor
+          if (i == data.length - 1) {
+            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
           } else {
             query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
           }
         }
-        query +=` WHERE id_mentor = ${req.params.id}`;
+        query += ` WHERE id_mentor = ${req.params.id}`;
         console.log(query);
         connection.query(query, function (err, resultat) {
           if (err) throw err;
           connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
             if (error) throw error
             const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
-            res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor });
+            res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor});
           })
         })
-      })
-    } else {
-      var query = `UPDATE mentor SET `
-      for (let i = 0; i < data.length; i++) {
-        if (i == data.length - 1) {
-          query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
-        } else {
-          query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
-        }
       }
-      query += ` WHERE id_mentor = ${req.params.id}`;
-      console.log(query);
-      connection.query(query, function (err, resultat) {
-        if (err) throw err;
-        connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
-          if (error) throw error
-          const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
-          res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor});
-        })
-      })
+    }else{
+      res.status(205).json({msg: 'vous avez rien envoyé' });
     }
-  }else{
-    res.status(205).json({msg: 'vous avez rien envoyé' });
-  }
   } catch (err) {
     console.log(err);
   }

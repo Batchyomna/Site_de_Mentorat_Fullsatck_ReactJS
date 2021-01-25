@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
-import {changeDataMentor, signOutMentor} from '../store/actions/mentor'
+import {changeDataMentor, signOutMentor} from '../../store/actions/mentor'
 
 class ProfilMentor extends Component {
     constructor(){
@@ -106,7 +106,7 @@ class ProfilMentor extends Component {
                delete allStateData[key]
               }
             }
-            if(allStateData.length > 0){
+            if(Object.keys(allStateData).length > 0){
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
                 if(updateResult.status === 200){
                     this.props.changeDataMentor({
@@ -124,7 +124,7 @@ class ProfilMentor extends Component {
                         photo_mentor: '',
                         message: 'Vos coodonnées sont bien changées'
                     })
-                } else{
+                } else {
                     this.setState({
                         prenom_mentor: '',
                         nom_mentor: '',
@@ -136,7 +136,7 @@ class ProfilMentor extends Component {
                 }
             }else{
                 this.setState({
-                    messageError: 'vous devez remplir au moins un champ pour changer ves coordonnées'
+                    messageError: 'vous devez remplir au moins un champ pour changer vos coordonnées'
                 })
             }
         }catch(err){

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
-import { changeDataApprenti, signOutApprenti } from '../store/actions/apprenti'
+import { changeDataApprenti, signOutApprenti } from '../../store/actions/apprenti'
 
 class ProfilApprenti extends Component {
     constructor() {
@@ -95,10 +95,10 @@ class ProfilApprenti extends Component {
                     delete allStateData[key]
                 }
             }
-            if (allStateData.length > 0) {
+            if (Object.keys(allStateData).length > 0) {
                 let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData)
                 if (updateRresult.status === 200) {
-                    this.props.changeDataApprenti({ id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
+                    this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
                     this.setState({
                         prenom_apprenti: '',
                         nom_apprenti: '',

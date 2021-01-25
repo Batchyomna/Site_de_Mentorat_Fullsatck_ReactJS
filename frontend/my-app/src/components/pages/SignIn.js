@@ -5,9 +5,9 @@ import { Button, Form, Row, Col } from "react-bootstrap";
 import axios from 'axios'
 import  { Redirect } from 'react-router-dom'
 
-import {signInMentor, fillCompetenceMentor} from '../store/actions/mentor'
-import {signInApprenti, fillCompetenceApprenti} from '../store/actions/apprenti'
-import { signInAdmin} from '../store/actions/admin'
+import {signInMentor, fillCompetenceMentor} from '../../store/actions/mentor'
+import {signInApprenti, fillCompetenceApprenti} from '../../store/actions/apprenti'
+import { signInAdmin} from '../../store/actions/admin'
 class SignIn extends Component {
     constructor() {
         super();

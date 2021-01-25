@@ -4,9 +4,9 @@ import React, { Component } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { connect } from 'react-redux'
-import {signOutMentor} from '../store/actions/mentor'
-import {signOutApprenti} from '../store/actions/apprenti'
-import {signOutAdmin} from '../store/actions/admin'
+import {signOutMentor} from '../../store/actions/mentor'
+import {signOutApprenti} from '../../store/actions/apprenti'
+import {signOutAdmin} from '../../store/actions/admin'
 
 
 class Header extends Component {

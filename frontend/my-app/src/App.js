@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import "./App.css";
 import {connect} from 'react-redux'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Profil from './components/Profil'
-import VosCompetences from './components/VosCompetences'
-import Home from './components/Home'
-import NosCompetences from './components/NosCompetences'
-import Contact from './components/Contact'
-import SignIn from './components/SignIn'
-import SignUp from './components/SignUp'
-import Competence from './components/Competence'
+import Header from './components/autres/Header'
+import Footer from './components/autres/Footer'
+import Profil from './components/profils/Profil'
+import VosCompetences from './components/competences/VosCompetences'
+import Home from './components/pages/Home'
+import NosCompetences from './components/pages/NosCompetences'
+import Contact from './components/pages/Contact'
+import SignIn from './components/pages/SignIn'
+import SignUp from './components/pages/SignUp'
+import Competence from './components/competences/Competence'
 
 class App extends Component {
   render() {
