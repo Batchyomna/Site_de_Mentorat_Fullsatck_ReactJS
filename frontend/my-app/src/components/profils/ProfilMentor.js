@@ -107,7 +107,9 @@ class ProfilMentor extends Component {
               }
             }
             if(Object.keys(allStateData).length > 0){
-                let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData)
+                let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData, {
+                    headers: {'Authorization': `${this.props.token_mentor}`}
+                  })
                 if(updateResult.status === 200){
                     this.props.changeDataMentor({
                         id_mentor: updateResult.data.id_mentor,
@@ -147,7 +149,10 @@ class ProfilMentor extends Component {
     async deleteAcount(e){
         e.preventDefault()
         try{
-            let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`)
+            let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`,
+            {
+                headers: {'Authorization': `${this.props.token_mentor}`}
+              })
             if(deletResult.status === 200){
                console.log('Account deleted', deletResult);
                this.props.signOutMentor()
@@ -161,7 +166,8 @@ const mapStateToProps = (state)=> ({
     prenom_mentor: state.mentorReducer.prenom_mentor,
     photo_mentor: state.mentorReducer.photo_mentor,
     id_mentor: state.mentorReducer.id_mentor,
-    competencesDeMentor : state.mentorReducer.competencesDeMentor
+    competencesDeMentor : state.mentorReducer.competencesDeMentor,
+    token_mentor: state.mentorReducer.token_mentor
 
 })
 const mapDispatchToProps ={

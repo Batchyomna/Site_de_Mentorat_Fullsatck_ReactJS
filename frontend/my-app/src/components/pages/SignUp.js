@@ -16,16 +16,20 @@ class SignUp extends Component {
             message: '',
             signupFlag: true,
             errorMail: false,
+            mailExsite: false
         }
     }
     render() {
         if (this.state.signupFlag) {
             return (
                 <div className="container">
-                    <h2>Saisissez vos Coordonnées</h2>
+                    <h2>Saisissez vos informations pérsonnelles</h2>
                     <span className="greenMessage">{this.state.message}<br /></span>
-                   {this.state.errorMail  &&
-                        <span className="redMessage">Vous devez utiliser un bon mail<br /></span>
+                   {this.state.errorMail &&
+                        <span className="redMessage">Vous devez utiliser un bon mail</span>
+                   }
+                   {this.state.mailExsite &&
+                        <span className="redMessage">Vous devez choisis un autre mail, car ce mail est déjà existante</span>
                    }
                     <p className="smallMessage">Les champs marqués d'un astérisque * sont obligatoires</p>
                     <Form>
@@ -47,7 +51,6 @@ class SignUp extends Component {
                                         <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="S'IL VOUS PLAÎT, saisissez un BON MAIL" className="errorClasse" />
                                         :
                                         <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel" />
-
                                 }
                             </Col>
                             <Col sm={6}>
@@ -83,7 +86,7 @@ class SignUp extends Component {
                         }
                         <div className="myButtons">
                             <Button className="oneButton" type="submit" onClick={this.goToSignUp.bind(this)} >Sign up</Button>
-                            <p className="smallMessage">Vous avez déjà un compte?</p>
+                            <p className="smallMessage">Vous avez déjà un compte? venez vous connecter.</p>
                             <Button className="oneButton" type="submit" onClick={this.goToSignIn.bind(this)}>Sign in</Button>
                         </div>
                     </Form>
@@ -133,7 +136,7 @@ class SignUp extends Component {
                                 nom_SIREN: null,
                                 message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
                             })
-                        }else if (result.status == 202){
+                        }else if (result.status === 202){
                             this.setState({
                                 prenom: '',
                                 nom: '',
@@ -142,7 +145,7 @@ class SignUp extends Component {
                                 photo: '',
                                 statut: '',
                                 nom_SIREN: null,
-                                message: 'Vous devez choisis un autre mail, car ce mail est déjà exist',
+                                mailExsite: true,
                             })
                         }
                     }else{
@@ -154,7 +157,7 @@ class SignUp extends Component {
                             photo: '',
                             statut: '',
                             nom_SIREN: null,
-                            message: 'Vous devez saisir votre nomre SIREN',
+                            message: 'Vous devez saisir votre SIREN nombre.',
                         })
                     }
                 }else{
@@ -171,7 +174,7 @@ class SignUp extends Component {
                             nom_SIREN: null,
                             message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
                         })
-                    }else if (result.status == 202){
+                    }else if (result.status === 202){
                         this.setState({
                             prenom: '',
                             nom: '',
@@ -180,7 +183,7 @@ class SignUp extends Component {
                             photo: '',
                             statut: '',
                             nom_SIREN: null,
-                            message: 'Vous devez choisis un autre mail, car ce mail est déjà exist',
+                           mailExsite: true,
                         })
                     }
                 }

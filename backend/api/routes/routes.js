@@ -390,7 +390,7 @@ router.get('/sessions_des_competences', async (req, res) => {
   }
 });
 //----------------3.API/put/competence-choisi
-router.put('/competence-choisi', (req, res) => {
+router.put('/competence-choisi',authPut, (req, res) => {
   try {
     connection.query(`UPDATE competence SET id_apprenti = '${req.body.id_apprenti}', reserve = true WHERE id_competence = '${req.body.id_competence}'`);
     res.status(200).send("Cette compétence est bien reservée");
@@ -484,7 +484,7 @@ router.get('/user/history-competence/:id', (req, res) => {
   }
 })
 //---------3. API/POST/ à la fin de l'engagement de compétence pour sauvegarder l'histoire de chaque apprenti
-router.post('/user/finish-competence', (req, res) => {
+router.post('/user/finish-competence',authPost, (req, res) => {
   try {
     connection.query(`INSERT INTO mycompetence (id_apprenti, id_competence) VALUES ('${req.body.id_apprenti}', '${req.body.id_competence}')`, (err, result) => {
       if (err) throw err

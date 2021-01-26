@@ -95,8 +95,11 @@ class ProfilApprenti extends Component {
                     delete allStateData[key]
                 }
             }
+
             if (Object.keys(allStateData).length > 0) {
-                let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData)
+                let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData,{
+                    headers: {'Authorization': `${this.props.token_apprenti}`}
+                  })
                 if (updateRresult.status === 200) {
                     this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
                     this.setState({
@@ -129,7 +132,10 @@ class ProfilApprenti extends Component {
     async deleteAcount(e) {
         e.preventDefault();
         try {
-            let deletResult = await axios.delete(`http://localhost:8000/user/apprenti/delete-compte/${this.props.id_apprenti}`)
+            let deletResult = await axios.delete(`http://localhost:8000/user/apprenti/delete-compte/${this.props.id_apprenti}`,
+            {
+                headers: {'Authorization': `${this.props.token_apprenti}`}
+              })
             if (deletResult.status === 200) {
                 console.log(deletResult);
                 this.props.signOutApprenti()
@@ -143,7 +149,8 @@ const mapStateToProps = (state) => ({
     prenom_apprenti: state.apprentiReducer.prenom_apprenti,
     photo_apprenti: state.apprentiReducer.photo_apprenti,
     id_apprenti: state.apprentiReducer.id_apprenti,
-    competencesDePasse: state.apprentiReducer.competencesDePasse
+    competencesDePasse: state.apprentiReducer.competencesDePasse,
+    token_apprenti: state.apprentiReducer.token_apprenti
 
 })
 const mapDispatchToProps = {
