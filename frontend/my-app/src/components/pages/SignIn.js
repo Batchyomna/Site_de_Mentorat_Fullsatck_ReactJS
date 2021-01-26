@@ -54,8 +54,8 @@ class SignIn extends Component {
                         <Row>
                             <Col sm={12}>
                                 <Form.Label className="float-left label">Votre statut</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" required>
-                                    <option value=" " className="inTheLabel">Choisissez votre statut</option>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" value={this.state.statut} required>
+                                    <option value='' className="inTheLabel">Choisissez votre statut</option>
                                     <option value="apprenti" className="inTheLabel">Apprenti</option>
                                     <option value="mentor" className="inTheLabel">Mentor</option>
                                     <option value="admin" className="inTheLabel">Admin</option>
@@ -117,15 +117,14 @@ class SignIn extends Component {
                 this.setState({
                     message:"Vous avez oublié votre mot de passe? ou bien vous avez oublié de le remplir?",
                     mdp: '',
-                    statut: ' ',
+                    statut: '',
                     mail: '',
                     errorPSW : true
                 })
                 console.log('error mdp',this.state);
-            }
-            if(result.status === 203){
+            }else if(result.status === 203){
                 this.setState({
-                    message: result.data.msg,
+                    message: 'Ce mail nous est inconnu ou peut-être vous avez selectionné un mouvais statut',
                     errorMail : true,
                     mail: '',
                     mdp: '',
