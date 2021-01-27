@@ -36,9 +36,9 @@ class SignIn extends Component {
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
                                 {
                                     this.state.errorMail ?
-                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="errorClasse" required/>
+                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="errorClasse" required/>
                                     :
-                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel" required/>
+                                    <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="inTheLabel" required/>
                                 }
                             </Col>
                             <Col sm={6}>
@@ -47,7 +47,7 @@ class SignIn extends Component {
                                     this.state.errorPSW ?
                                     <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Réessayer de saisir votre mot de passe" className="errorClasse" required/>
                                      :
-                                     <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required/>
+                                    <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required/>
                                 }
                             </Col>
                         </Row>
@@ -95,7 +95,6 @@ class SignIn extends Component {
     async goToSignIn(e) {
         e.preventDefault();
         try {
-            console.log('après cliquer', this.state);
             let result = await axios.post(`http://localhost:8000/sign-in`, { mail: this.state.mail, mdp: this.state.mdp, statut: this.state.statut})
             if (result.status === 200) {
                 if(this.state.statut === "mentor"){

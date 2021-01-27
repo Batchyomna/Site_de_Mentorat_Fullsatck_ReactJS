@@ -43,11 +43,18 @@ class Competence extends Component {
                     </div>
                 </div>
                 {
+                    this.props.token_admin ?
+                    <Button className="oneButton" variant="primary" type="submit" >Supprimer</Button>
+                    :
                     this.props.id_mentor === this.state.id_mentor && this.state.reserve === 1 ?
                       <span className="redMessage">Vous ne pouvez pas modifier cette compétence pour l'instant.</span>
                     :
                     this.props.id_mentor === this.state.id_mentor && this.state.reserve === 0 ?
+                    <>
                       <Button className="oneButton" variant="primary" type="submit" >Modifier</Button>
+                      <Button className="oneButton" variant="primary" type="submit" >Supprimer</Button>
+                    </>
+
                     :
                     this.props.id_apprenti === null  ?
                       <p className="smallMessage">Connectez-vous sur notre plateforme dans la page <a href="/se-connecter/sign-up">Se connecter</a> pour participer à cette compétence.</p>
@@ -61,7 +68,7 @@ class Competence extends Component {
                       </>
                     : 
                     this.state.reserve === 1 && this.props.id_apprenti === this.state.id_apprenti ? 
-                    <p className="smallMessage">Vous êtes entrain de suivre cette compétence</p>
+                    <p className="smallMessage">Vous êtes en train de suivre cette compétence</p>
                     :
                     this.state.reserve === 0 && this.props.id_apprenti ? 
                     <Button className="oneButton" variant="primary" type="submit" >choisir cette compétence</Button>
@@ -103,6 +110,7 @@ class Competence extends Component {
 const mapStateToProps =(state) => ({
     id_mentor: state.mentorReducer.id_mentor,
     id_apprenti: state.apprentiReducer.id_apprenti,
-    mail_apprenti: state.apprentiReducer.mail_apprenti
+    mail_apprenti: state.apprentiReducer.mail_apprenti,
+    token_admin: state.adminReducer.token_admin
 })
 export default connect(mapStateToProps)(Competence);

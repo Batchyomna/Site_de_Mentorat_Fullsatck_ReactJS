@@ -36,11 +36,11 @@ class SignUp extends Component {
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Prénom *</Form.Label>
-                                <Form.Control value={this.state.prenom} onChange={this.setChange.bind(this)} name="prenom" placeholder="Saisissez votre prénom" className="inTheLabel" />
+                                <Form.Control value={this.state.prenom} onChange={this.setChange.bind(this)} name="prenom" placeholder="Saisissez votre prénom" className="inTheLabel" required/>
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Nom *</Form.Label>
-                                <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel" />
+                                <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel" required />
                             </Col>
                         </Row>
                         <Row>
@@ -48,14 +48,14 @@ class SignUp extends Component {
                                 <Form.Label className="float-left label">Adresse mail *</Form.Label>
                                 {
                                     this.state.errorMail ?
-                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="S'IL VOUS PLAÎT, saisissez un BON MAIL" className="errorClasse" />
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Utilisez le forme: email@exemple.com" className="errorClasse" required/>
                                         :
-                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel" />
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="inTheLabel" />
                                 }
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe *</Form.Label>
-                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" />
+                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required/>
                             </Col>
                         </Row>
                         <Row>
@@ -65,7 +65,7 @@ class SignUp extends Component {
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Votre statut *</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel">
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" value={this.state.statut} required>
                                     <option value="" className="inTheLabel">Choisissez votre statut</option>
                                     <option value="apprenti" className="inTheLabel">Apprenti</option>
                                     <option value="mentor" className="inTheLabel">Mentor</option>

@@ -7,11 +7,11 @@ const jwt = require("jsonwebtoken");
             console.log('im in delet next');
             next();
         }else{
-            res.status(401).end('Mouvaise requête')
+            res.status(403).send('Accès non autorisé')
         } 
     }catch(err){
-        
-        res.status(401).send('il y a des erreurs')
+        console.log(err);
+        // res.status(405).send('il y a des erreurs de connexion')
     }
    
 };

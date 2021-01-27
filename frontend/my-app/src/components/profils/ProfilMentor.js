@@ -20,11 +20,12 @@ class ProfilMentor extends Component {
     render() {
         return(
         <div className="container">
-                <h2> Bonjour {this.props.prenom_mentor}</h2>
+                <h1> Bonjour {this.props.prenom_mentor}</h1>
+                <span className="greenMessage">{this.state.message}</span>
+                <span className="redMessage">{this.state.messageError}</span> 
                 <section className="information">
-                    <span className="greenMessage">{this.state.message}</span>
-                    <span className="redMessage">{this.state.messageError}</span> 
-                    <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
+               
+                    <h3 className="smallMessage">Vous voulez changer vos informations pérsonnelles?</h3>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -39,7 +40,7 @@ class ProfilMentor extends Component {
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
-                                <Form.Control value={this.state.mail_mentor} onChange={this.setChange.bind(this)} name="mail_mentor" placeholder="Saisissez votre mail" className="inTheLabel"/>
+                                <Form.Control value={this.state.mail_mentor} onChange={this.setChange.bind(this)} name="mail_mentor" placeholder="email@exemple.com" className="inTheLabel"/>
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe</Form.Label>
@@ -58,7 +59,7 @@ class ProfilMentor extends Component {
                     </Form>
                 </section>
                 <section className="history">
-                <p className="smallMessage">Les compétences que vous avez ajoutées: </p>
+                <h3 className="smallMessage">Les compétences que vous avez ajoutées: </h3>
                 {
                     this.props.competencesDeMentor.length > 0 ?
                      ( this.props.competencesDeMentor.map(item=>(
@@ -74,9 +75,11 @@ class ProfilMentor extends Component {
                 }
                 </section>
                 <div className="myButtons">
-                    <Button className="oneButton" type="submit" onClick={this.deleteAcount.bind(this)}>Supprimer votre compte</Button>
+                    <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer votre compte</Button>
                 </div>
+                
             </div>
+
         )
     }
     setChange(event) {
@@ -84,20 +87,7 @@ class ProfilMentor extends Component {
             [event.target.name]: event.target.value
         });
     }
-    // async componentDidMount(){
-    //     try{
-    //       let result = await axios.get(`http://localhost:8000/mentor/${this.props.id_mentor}`)
-    //       if(result.status === 200){
-    //           this.setState({
-    //               items: result.data
-    //           })
-    //       }
-    //     }catch(err){
-    //         console.log(err);
-    //     }
-    // }
-   
-    async editData(e){
+       async editData(e){
         e.preventDefault();
         try{
             let allStateData = this.state;
@@ -146,7 +136,7 @@ class ProfilMentor extends Component {
         }
     }
  
-    async deleteAcount(e){
+    async deleteAccount(e){
         e.preventDefault()
         try{
             let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`,

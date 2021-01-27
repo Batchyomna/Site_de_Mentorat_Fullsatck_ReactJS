@@ -14,6 +14,10 @@ class Home extends Component {
                         Formez-vous à distance.<br/>
                         Trouvez l'aide dans le domaine d'informatique, pour acquérir des nouvelles compétences.
                         </p>
+                        <h4 className='lire'>
+                            <a href="/se-connecter/sign-up" alt="informatique"> Rejoignez le club et vous informez toute l'année ! </a>
+                        </h4>
+                        
                     </div>
                 </div>
             </div>

@@ -138,14 +138,15 @@ router.get('/mentor/:id', async (req, res) => {
   }
 });
 //-----------------3.API/ GET /mentors
-router.get('/all/mentors', (req, res) => {
-  connection.query("SELECT * FROM mentor", function (err, result, fields) {
+router.get('/admin/mentors/all-not-valid', (req, res) => {
+  connection.query("SELECT id_mentor, prenom_mentor, nom_mentor, nom_SIREN, statut_mentor FROM mentor", function (err, result, fields) {
     if (err) throw err;
-    res.status(200).send(result);
+    let notValidMentors = result.filter(elem=> elem.statut_mentor === 0)
+    res.status(200).json(notValidMentors);
   });
 });
 //-------------3.API/post/admin
-router.post('/new-admin', (req, res) => {
+router.post('/admin/new-admin',authPost, (req, res) => {
   try {
     bcrypt.hash(req.body.mdp, saltRounds).then(function (hashPW) {
       const sql = `INSERT INTO admin (mail_admin, mdp_admin) VALUES ('${req.body.mail}', '${hashPW}')`;
@@ -169,13 +170,16 @@ router.delete('/admin/non-valid/:idMentor',authDelete, (req, res) => {
     console.log(err);
   }
 })
-//----------------3.API/post/admin/valid/:idMentor
-router.put('/admin/valid/:idMentor',authPut, (req, res) => {
+//----------------3.API/put/admin/valid/:idMentor
+router.put('/admin/valid/:idMentor', authPut, (req, res) => {
   try {
-    connection.query(`UPDATE mentor SET statut_mentor = true WHERE id_mentor = '${req.params.idMentor}'`);
-    res.status(200).send("Le mentor est valid maintentant");
-  } catch (err) {
-    console.log(err);
+    connection.query(`UPDATE mentor SET statut_mentor = true WHERE id_mentor = '${req.params.idMentor}'`, function (err, result) {
+      if(err) throw res.status(205).json({msg: 'there is un error conection with DB'})
+      res.status(200).json({msg:"Le mentor est valid maintentant"});
+
+    });
+  } catch (error) {
+    console.log(error);
   }
 })
 //------------3. API/PUT/user/apprenti/edit-data
@@ -230,9 +234,7 @@ router.put('/user/apprenti/edit-data/:id',authPut, (req, res) => {
     }
     }else{
       res.status(205).json({msg: 'vous avez rien envoyé' });
-
     }
-   
   } catch (err) {
     console.log(err);
   }
@@ -294,6 +296,43 @@ router.put('/user/mentor/edit-data/:id',authPut, (req, res) => {
     console.log(err);
   }
 })
+//-------------------API/PUT/admin
+router.put('/user/admin/edit-data/:id', authPut, (req,res)=>{
+  try{
+      if (req.body.mdp) {
+        bcrypt.hash(req.body.mdp_mentor, saltRounds).then(function (hashPW) {
+          if (req.body.mail){ 
+            connection.query(`UPDATE admin SET mdp_admin = '${hashPW}', mail_admin = '${req.body.mail}' WHERE id_admin = ${req.params.id}`, (error, result)=>{
+            if (error) throw error
+            console.log(result);
+          })
+          }else{
+            connection.query(`UPDATE admin SET mdp_admin = '${hashPW}' WHERE id_admin = ${req.params.id}`, (err, result)=>{
+              if (err) throw err
+              console.log(result);
+            })
+          }
+        })
+        connection.query(`SELECT * FROM admin WHERE id_admin = '${req.params.id}'`, (error, result) => {
+          if(error) throw error
+          res.status(200).json({id_admin: result[0].id_admin, token_admin:generateAccessToken(result[0].id_admin, result[0].mail_admin), mail_admin: result[0].mail_admin })
+        })             
+      }else if (req.body.mail){
+          connection.query(`UPDATE admin SET mail_admin = '${req.body.mail}' WHERE id_admin = ${req.params.id}`, (error, result)=>{
+              if (error) throw error
+              console.log(result);
+            })
+          connection.query(`SELECT * FROM admin WHERE id_admin = '${req.params.id}'`, (error, result) => {
+            if(error) throw error
+            res.status(200).json({id_admin: result[0].id_admin, token_admin:generateAccessToken(result[0].id_admin, result[0].mail_admin), mail_admin: result[0].mail_admin })
+          })
+      } else{
+        res.status(205).json({msg: 'vous avez rien envoyé'})
+      }
+  }catch(err){
+    console.log(err);
+  }
+})
 //--------------3.API/GET/apprenti
 router.get('/all/apprentis', (req, res) => {
   connection.query("SELECT * FROM apprenti", function (err, result, fields) {
@@ -334,9 +373,20 @@ router.get('/all/competences', async (req, res) => {
   }
 });
 // ------------3.API/get/apprenti/all-competences
-router.get('/apprenti/all-competences/:id', async (req, res) => {
+router.get('/apprenti/session-competences/:id', async (req, res) => {
   try {
-    connection.query(`SELECT a.* , b.date_session FROM competence as a LEFT join session as b ON a.id_competence = b.id_competence WHERE id_apprenti = ${req.params.id}`, function (err, result) {
+    connection.query(`SELECT a.* , b.date_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_apprenti = ${req.params.id}`, function (err, result) {
+      if (err) throw err
+      res.status(200).json(result);
+    })
+  } catch (err) {
+    console.log(err);
+  }
+});
+// ------------3.API/get/apprenti/all-competences
+router.get('/mentor/session-competences/:id', async (req, res) => {
+  try {
+    connection.query(`SELECT a.* , b.date_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_mentor = ${req.params.id}`, function (err, result) {
       if (err) throw err
       res.status(200).json(result);
     })
@@ -402,7 +452,7 @@ router.put('/competence-choisi',authPut, (req, res) => {
 router.delete('/user/apprenti/delete-compte/:id',authDelete, (req, res) => {
     connection.query(`DELETE FROM apprenti WHERE id_apprenti = '${req.params.id}'`, function (err, result) {
       if (err) throw res.status(400).send('there is an error');
-      console.log("Number of records deleted: " + result.affectedRows);
+      console.log("Number of apprentis deleted: " + result.affectedRows);
       res.status(200).send("Cet apprenti est bien supprimé")
     })
 });
@@ -410,9 +460,17 @@ router.delete('/user/apprenti/delete-compte/:id',authDelete, (req, res) => {
 router.delete('/user/mentor/delete-compte/:id',authDelete, (req, res) => {
     connection.query(`DELETE FROM mentor WHERE id_mentor = '${req.params.id}'`, function (err, result) {
       if (err) throw res.status(400).send('there is an error');
-      console.log("Number of records deleted: " + result.affectedRows);
+      console.log("Number of mentors deleted: " + result.affectedRows);
       res.status(200).send("Ce mentor est bien supprimé")
     })
+})
+//---------------------------3.API/delete/compte/
+router.delete('/user/admin/delete-compte/:id',authDelete, (req, res) => {
+  connection.query(`DELETE FROM admin WHERE id_admin = '${req.params.id}'`, function (err, result) {
+    if (err) throw res.status(400).send('there is an error');
+    console.log("Number of admins deleted: " + result.affectedRows);
+    res.status(200).send("Cet admin est bien supprimé")
+  })
 })
 //---------3.API/get/competence-et-session(pour le mentor on peut ajouter AND b.reserve = true)
 router.get('/competence-et-session', (req, res) => {

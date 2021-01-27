@@ -24,7 +24,7 @@ class ProfilApprenti extends Component {
                 <section className="information">
                     <span className="greenMessage">{this.state.message}</span>
                     <span className="redMessage">{this.state.messageError}</span>
-                    <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
+                    <p className="smallMessage">Vous voulez changer vos informations pérsonnelles?</p>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -39,7 +39,7 @@ class ProfilApprenti extends Component {
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
-                                <Form.Control value={this.state.mail_apprenti} onChange={this.setChange.bind(this)} name="mail_apprenti" placeholder="Saisissez votre mail" className="inTheLabel" />
+                                <Form.Control value={this.state.mail_apprenti} onChange={this.setChange.bind(this)} name="mail_apprenti" placeholder="email@exemple.com" className="inTheLabel" />
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe</Form.Label>
@@ -75,7 +75,7 @@ class ProfilApprenti extends Component {
                     }
                 </section>
                 <div className="myButtons">
-                    <Button className="oneButton" type="submit" onClick={this.deleteAcount.bind(this)}>Supprimer votre compte</Button>
+                    <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer votre compte</Button>
                 </div>
             </div>
         )
@@ -129,7 +129,7 @@ class ProfilApprenti extends Component {
             console.log(err);
         }
     }
-    async deleteAcount(e) {
+    async deleteAccount(e) {
         e.preventDefault();
         try {
             let deletResult = await axios.delete(`http://localhost:8000/user/apprenti/delete-compte/${this.props.id_apprenti}`,

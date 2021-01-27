@@ -13,5 +13,5 @@ const jwt = require("jsonwebtoken");
         res.status(402).send('il y a des erreurs')
     }
    
-};
+}
 module.exports = authPost
