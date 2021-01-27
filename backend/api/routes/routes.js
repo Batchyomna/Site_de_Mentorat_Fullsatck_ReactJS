@@ -341,9 +341,9 @@ router.get('/all/apprentis', (req, res) => {
   });
 });
 //----------3. API/post/new-competence
-router.post('/new-competence',authPost, (req, res) => {
+router.post('/mentor/new-competence/:id_mentor',(req, res) => {
   try {
-    const sql = `INSERT INTO competence (id_mentor, titre, domaine, frequence, duree, premiere_date, description, reserve) VALUES ('${req.body.id_mentor}', '${req.body.titre}', '${req.body.domaine}', '${req.body.frequence}', '${req.body.duree}', '${req.body.premiere_date}', '${req.body.description}', false)`;
+    const sql = `INSERT INTO competence (id_mentor, titre, domaine, frequence, duree, premiere_date, description, reserve) VALUES ('${req.params.id_mentor}', '${req.body.titre}', '${req.body.domaine}', '${req.body.frequence}', '${req.body.duree}', '${req.body.premiere_date}', '${req.body.description}', false)`;
     connection.query(sql)
     res.status(201).send('votre compétence comme mentor est bien inscrit')
   } catch (err) {

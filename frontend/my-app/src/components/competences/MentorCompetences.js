@@ -28,8 +28,6 @@ class MentorCompetences extends Component {
         return (
             <div className="container">
             <h2> Bonjour {this.props.prenom_mentor}</h2>
-            <span className="greenMessage">{this.state.message}</span>
-            <span className="redMessage">{this.state.messageError}</span> 
             <section className="information">
             <h3 className="smallMessage">vos prochaines sessions</h3>
 
@@ -42,6 +40,7 @@ class MentorCompetences extends Component {
 }
 const mapStateToProps = (state) =>({
     id_mentor: state.mentorReducer.id_mentor,
+    prenom_mentor: state.mentorReducer.prenom_mentor
 
 })
 

@@ -18,9 +18,47 @@ class FormAddComp extends Component {
             messageError: ''
         }
     }
+    addComp(e){
+        e.preventDefault();
+        let {titre, domaine, duree, frequence, premiere_date, description} =this.state
+        let that = this
+        axios.post(`http://localhost:8000/mentor/new-competence/${this.props.id_mentor}`, {titre, domaine, duree, frequence, premiere_date, description} )
+        .then((response) =>{
+          if(response.status === 201){
+              that.setState({
+                titre:'',
+                domaine:'',
+                duree:'',
+                frequence:'',
+                premiere_date:'',
+                description:'',
+                message: 'vous avez bien ajouté une nouvelle compétence',
+              })
+          }else{
+            that.setState({
+            titre:'',
+           domaine:'',
+           duree:'',
+           frequence:'',
+           premiere_date:'',
+           description:'',
+                messageError: 'vous devez réessayer encore une fois',
+              })
+          }
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    setChange(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    }
     render() {
         return (
             <div>
+             <span className="greenMessage">{this.state.message}</span>
+            <span className="redMessage">{this.state.messageError}</span> 
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -37,72 +75,64 @@ class FormAddComp extends Component {
                                     <option value="SQL" className="inTheLabel">SQL</option>
                                     <option value="JAVA" className="inTheLabel">JAVA</option>
                                     <option value="Python" className="inTheLabel">Python</option>
-                                    <option value="JS" className="inTheLabel">JS</option>
-
+                                    <option value="CMS" className="inTheLabel">CMS</option>
+                                    <option value="Autre" className="inTheLabel">Autre</option>
                                 </Form.Control>
                             </Col>
                         </Row>
                         <Row>
                             <Col sm={6}>
-                                <Form.Label className="float-left label">Adresse mail</Form.Label>
-                                <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Saisissez votre mail" className="inTheLabel" />
-                            </Col>
+                                <Form.Label className="float-left label">Durée *</Form.Label>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="duree" className="inTheLabel" value={this.state.duree} required>
+                                    <option value="" className="inTheLabel">Choisissez la duree</option>
+                                    <option value="1" className="inTheLabel">1 mois</option>
+                                    <option value="2" className="inTheLabel">2 mois</option>
+                                    <option value="3" className="inTheLabel">3 mois</option>
+                                    <option value="4" className="inTheLabel">4 mois</option>
+                                    <option value="5" className="inTheLabel">5 mois</option>
+                                    <option value="6" className="inTheLabel">6 mois</option>
+                                    <option value="10" className="inTheLabel">10 mois</option>
+                                    <option value="Autre" className="inTheLabel">Autre</option>
+                                </Form.Control>                      
+                                </Col>
                             <Col sm={6}>
-                                <Form.Label className="float-left label">Mot de passe</Form.Label>
-                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" />
+                                <Form.Label className="float-left label">Frequence *</Form.Label>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequence} required>
+                                    <option value="" className="inTheLabel">Choisissez la frequence</option>
+                                    <option value="1" className="inTheLabel">1 fois par semaine</option>
+                                    <option value="2" className="inTheLabel">2 par semaine</option>
+                                    <option value="3" className="inTheLabel">3 par semaine</option>
+                                    <option value="4" className="inTheLabel">tout les jours</option>
+                                    <option value="5" className="inTheLabel">2 fois par mois</option>
+                                    <option value="6" className="inTheLabel">samedi et dimanche</option>
+                                    <option value="10" className="inTheLabel">chaque soir</option>
+                                    <option value="Autre" className="inTheLabel">Autre</option>
+                                </Form.Control>                              
                             </Col>
                         </Row>
                         <Row>
-                            <Col sm={12}>
-                                <Form.Label className="float-left label">Photo</Form.Label>
-                                <Form.Control value={this.state.photo} onChange={this.setChange.bind(this)} name="photo" placeholder="URL de votre photo" className="inTheLabel" />
+                            <Col sm={6}>
+                                <Form.Label className="float-left label">Première date *</Form.Label>
+                                 {/* <input class="form-control" type="datetime-local" value="2021-08-19T13:45:00" id="example-datetime-local-input"> */}
+                                <Form.Control type ="date"value={this.state.premiere_date} onChange={this.setChange.bind(this)} name="premiere_date" placeholder="Saisissez la premiere date" className="inTheLabel" required/>
+                            </Col>
+                            <Col sm={6}>
+                                <Form.Label className="float-left label">Description *</Form.Label>
+                                <Form.Control value={this.state.description} onChange={this.setChange.bind(this)} name="description" placeholder="Saisissez le description" className="inTheLabel" />
                             </Col>
                         </Row>
                         <div className="myButtons">
-                            <Button className="oneButton" type="submit" onClick={this.editData.bind(this)}>Modifier</Button>
+                            <Button className="oneButton" type="submit" onClick={this.addComp.bind(this)}>Ajouter</Button>
                         </div>
                     </Form>
             </div>
         );
     }
-    async editData(e){
-        e.preventDefault();
-        //  let dataToEdit = deleteEmptyValue(this.state)
-        if (Object.keys(this.state).length > 0) {
-            if(this.props.token_apprenti){
-                let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`,this.state,{
-                    headers: {'Authorization': `${this.props.token_apprenti}`}
-                })
-                if (updateRresult.status === 200) {
-                    this.props.fillCompetenceMentor({id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
-                    this.setState({
-                        prenom: '',
-                        nom: '',
-                        mail: '',
-                        mdp: '',
-                        photo: '',
-                        message: 'Vos coordonnées sont bien changées'
-                    })
-                }
-            }
-        } else {
-            this.setState({
-                messageError: 'vous devez remplir au moins un champ pour changer ves coordonnées'
-            })
-        }
-    }  
-    // deleteEmptyValue(objet){
-    //     for (let key in objet) {
-    //         if (objet[key] === '') {
-    //             delete objet[key]
-    //         }
-    //     }
-    //     return objet
-    // }
 }
 
 const mapStateToProps = (state) => ({
-    id_mentor: state.mentorReducer.id_mentor
+    id_mentor: state.mentorReducer.id_mentor,
+    token_mentor: state.mentorReducer.token_mentor
 
 })
 const mapDispatchToProps={
