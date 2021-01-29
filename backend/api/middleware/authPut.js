@@ -12,6 +12,7 @@ function authPut(req, res, next){
         } 
     }catch(err){
         console.log(err);
+        res.status(405).end('vous devez vous reconnctez, jwt expired')
     }
    
 }

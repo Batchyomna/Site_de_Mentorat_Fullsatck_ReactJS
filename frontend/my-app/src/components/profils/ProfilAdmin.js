@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { changeDataAdmin, signOutAdmin } from '../../store/actions/admin'
-
 class ProfilAdmin extends Component {
     constructor(){
         super()
@@ -67,6 +66,7 @@ class ProfilAdmin extends Component {
             }
         } catch (err) {
             console.log(err);
+            this.props.signOutAdmin() // jwt expired
         }
     }
     async addAdmin(e){
@@ -99,6 +99,7 @@ class ProfilAdmin extends Component {
             }
         }catch(err){
             console.log(err);
+            this.props.signOutAdmin()// jwt expired
         }
     }
     async deleteAccount(e) {
@@ -114,11 +115,11 @@ class ProfilAdmin extends Component {
             }
         } catch (err) {
             console.log(err);
+            this.props.signOutAdmin()// jwt expired
         }
     }
     deleteMentor(idMentor) {
-        try {
-            let that = this
+               let that = this
              axios.delete(`http://localhost:8000/admin/non-valid/${idMentor}`,
             {
                 headers: {'Authorization': `${this.props.token_admin}`}
@@ -128,11 +129,10 @@ class ProfilAdmin extends Component {
                     message: 'vous avez bien effectué la suppression'
                 })
             }).catch((error)=> {
-                console.log(error);                
+                console.log(error);  
+                this.props.signOutAdmin()// jwt expired         
             });
-        } catch (err) {
-            console.log(err);
-        }
+       
     }
     async validMentor(idMentor){
         try{
@@ -150,6 +150,7 @@ class ProfilAdmin extends Component {
             }
         }catch(err){
             console.log(err);
+            this.props.signOutAdmin()// jwt expired
         }
     }
     render() {

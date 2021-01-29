@@ -17,6 +17,7 @@ class Competence extends Component {
             photo_mentor: '',
             domaine: '',
             description: '',
+            premiere_date: '',
             id_mentor: null,
             id_apprenti: null
         }
@@ -36,9 +37,10 @@ class Competence extends Component {
                     <img src={this.state.photo_mentor} alt='Mentor_photo' width="10%"  height="10%"/>
                     <div className="description">
                         <b>Nom et prénom de Mentor: {this.state.nom_mentor} {this.state.prenom_mentor}</b>
+                        <p><b>Domaine: </b>{this.state.domaine}</p>
+                        <p><b>Première date: </b>{this.state.premiere_date}</p>
                         <p><b>Pour une durée:</b> {this.state.duree}</p>
                         <p><b>Dans une frequence: </b>{this.state.frequence}</p>
-                        <p><b>Domaine: </b>{this.state.domaine}</p>
                         <p><b>description:</b><br></br>{this.state.description || 'There is no description'}</p>
                     </div>
                 </div>
@@ -99,7 +101,8 @@ class Competence extends Component {
                     description : details.data[0].description,
                     id_mentor: details.data[0].id_mentor,
                     id_apprenti: details.data[0].id_apprenti,
-                    prenom_mentor: details.data[0].prenom_mentor 
+                    prenom_mentor: details.data[0].prenom_mentor,
+                    premiere_date: details.data[0].premiere_date
                 })
             }
         }catch(err){

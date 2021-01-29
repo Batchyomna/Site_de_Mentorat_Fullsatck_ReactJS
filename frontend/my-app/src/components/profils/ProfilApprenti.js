@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { changeDataApprenti, signOutApprenti } from '../../store/actions/apprenti'
+import deleteEmptyValue from '../functions/functions'
 
 class ProfilApprenti extends Component {
     constructor() {
@@ -89,12 +90,12 @@ class ProfilApprenti extends Component {
     async editData(e) {
         e.preventDefault();
         try {
-            let allStateData = this.state;
-            for (let key in allStateData) {
-                if (key === 'message' || key === 'messageError' || allStateData[key] === '') {
-                    delete allStateData[key]
-                }
-            }
+            let allStateData = deleteEmptyValue(this.state);
+            // for (let key in allStateData) {
+            //     if (key === 'message' || key === 'messageError' || allStateData[key] === '') {
+            //         delete allStateData[key]
+            //     }
+            // }
 
             if (Object.keys(allStateData).length > 0) {
                 let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData,{
@@ -127,6 +128,7 @@ class ProfilApprenti extends Component {
             }
         } catch (err) {
             console.log(err);
+            this.props.signOutApprenti()// jwt expired
         }
     }
     async deleteAccount(e) {
@@ -142,6 +144,7 @@ class ProfilApprenti extends Component {
             }
         } catch (err) {
             console.log(err);
+            this.props.signOutApprenti()// jwt expired
         }
     }
 }

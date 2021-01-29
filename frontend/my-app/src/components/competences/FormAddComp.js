@@ -25,6 +25,7 @@ class FormAddComp extends Component {
         axios.post(`http://localhost:8000/mentor/new-competence/${this.props.id_mentor}`, {titre, domaine, duree, frequence, premiere_date, description} )
         .then((response) =>{
           if(response.status === 201){
+            that.props.fillCompetenceMentor( {titre, domaine, duree, frequence, premiere_date, description})
               that.setState({
                 titre:'',
                 domaine:'',
@@ -55,6 +56,7 @@ class FormAddComp extends Component {
         });
     }
     render() {
+        // je dois verfier le status de ce mentor d'abord
         return (
             <div>
              <span className="greenMessage">{this.state.message}</span>

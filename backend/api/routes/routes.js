@@ -33,7 +33,7 @@ function generateAccessToken(id, mail) {
   return jwt.sign({
     id: id,
     mail: mail
-  }, 'MY_TOKEN_SECRET', { expiresIn: '1800s' });  //expires after half an hour (1800 seconds = 30 minutes)
+  }, 'MY_TOKEN_SECRET', { expiresIn: '60s' });  //expires after half an hour (1800 seconds = 30 minutes)
 }
 //------------------------------------------3. API/post/sign-up-------------
 router.post('/sign-up',authSingUp, function (req, res) {
@@ -375,7 +375,7 @@ router.get('/all/competences', async (req, res) => {
 // ------------3.API/get/apprenti/all-competences
 router.get('/apprenti/session-competences/:id', async (req, res) => {
   try {
-    connection.query(`SELECT a.* , b.date_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_apprenti = ${req.params.id}`, function (err, result) {
+    connection.query(`SELECT a.*, b.date_session, b.id_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_apprenti = ${req.params.id}`, function (err, result) {
       if (err) throw err
       res.status(200).json(result);
     })
@@ -386,8 +386,8 @@ router.get('/apprenti/session-competences/:id', async (req, res) => {
 // ------------3.API/get/apprenti/all-competences
 router.get('/mentor/session-competences/:id', async (req, res) => {
   try {
-    connection.query(`SELECT a.* , b.date_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_mentor = ${req.params.id}`, function (err, result) {
-      if (err) throw err
+    connection.query(`SELECT a.*, b.date_session, b.id_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_mentor = ${req.params.id} AND reserve = true`, function (err, result) {
+      if (err) throw err    
       res.status(200).json(result);
     })
   } catch (err) {

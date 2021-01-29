@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import "./App.css";
 import {connect} from 'react-redux'
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Header from './components/autres/Header'
 import Footer from './components/autres/Footer'
 import Profil from './components/profils/Profil'
-import VosCompetences from './components/competences/VosCompetences'
+import AgendaUser from './components/competences/AgendaUser'
 import Home from './components/pages/Home'
 import NosCompetences from './components/pages/NosCompetences'
 import Contact from './components/pages/Contact'
@@ -20,8 +20,8 @@ class App extends Component {
         <Router>
           <Header />
           <Switch>
-            <Route exact={true} path="/user/profil"> {this.props.token_mentor || this.props.token_apprenti|| this.props.token_admin ? <Profil/> : <Redirect to="/"/>}</Route>
-            <Route exact={true} path="/user/vos-competences"> {this.props.token_mentor || this.props.token_apprenti ? <VosCompetences/>: <Redirect to="/"/>} </Route>
+            <Route exact={true} path="/user/profil" > {this.props.token_mentor || this.props.token_apprenti|| this.props.token_admin ? <Profil /> : <Redirect to="/"/>}</Route>
+            <Route exact={true} path="/user/agenda"> {this.props.token_mentor || this.props.token_apprenti ? <AgendaUser/>: <Redirect to="/"/>} </Route>
             <Route exact={true} path="/contact"><Contact/></Route>
             <Route exact={true}  path="/nos-competences"> <NosCompetences/></Route>
             <Route exact={true}  path="/nos-competences/:id" ><Competence/> </Route>

@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
 import {changeDataMentor, signOutMentor} from '../../store/actions/mentor'
+import deleteEmptyValue from '../functions/functions'
 
 class ProfilMentor extends Component {
     constructor(){
@@ -14,7 +15,8 @@ class ProfilMentor extends Component {
             mdp_mentor: '',
             photo_mentor: '',
             message: '',
-            messageError:''
+            messageError:'',
+        
         }
     }
     render() {
@@ -25,7 +27,7 @@ class ProfilMentor extends Component {
                 <span className="redMessage">{this.state.messageError}</span> 
                 <section className="information">
                
-                    <h3 className="smallMessage">Vous voulez changer vos informations pérsonnelles?</h3>
+                    <h2>Vous voulez changer vos informations pérsonnelles?</h2>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -59,7 +61,7 @@ class ProfilMentor extends Component {
                     </Form>
                 </section>
                 <section className="history">
-                <h3 className="smallMessage">Les compétences que vous avez ajoutées: </h3>
+                <h2>Les compétences que vous avez ajoutées: </h2>
                 {
                     this.props.competencesDeMentor.length > 0 ?
                      ( this.props.competencesDeMentor.map(item=>(
@@ -84,18 +86,16 @@ class ProfilMentor extends Component {
     }
     setChange(event) {
         this.setState({
+            messageError: '',
+            message:'',
             [event.target.name]: event.target.value
         });
     }
        async editData(e){
         e.preventDefault();
         try{
-            let allStateData = this.state;
-            for (let key in allStateData) {
-              if (key === 'message' || key === 'messageError' || allStateData[key] === '') {
-               delete allStateData[key]
-              }
-            }
+            let allStateData = deleteEmptyValue(this.state);
+
             if(Object.keys(allStateData).length > 0){
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData, {
                     headers: {'Authorization': `${this.props.token_mentor}`}
@@ -116,14 +116,14 @@ class ProfilMentor extends Component {
                         photo_mentor: '',
                         message: 'Vos coodonnées sont bien changées'
                     })
-                } else {
+                } else if(updateResult.status=== 403) {
                     this.setState({
                         prenom_mentor: '',
                         nom_mentor: '',
                         mail_mentor: '',
                         mdp_mentor: '',
                         photo_mentor: '',
-                        messageError: 'Excusez-nous, mais vous devrez ressayer'
+                        messageError: "Vous n'êtes pas autorisés"
                     })
                 }
             }else{
@@ -133,6 +133,7 @@ class ProfilMentor extends Component {
             }
         }catch(err){
             console.log(err);
+            this.props.signOutMentor()// ou redirecte pq TokenExpiredError: jwt expired
         }
     }
  
@@ -149,6 +150,7 @@ class ProfilMentor extends Component {
             }
         }catch(err){
             console.log(err);
+            this.props.signOutMentor() // jwt expired
         }
     }
 }

@@ -18,13 +18,17 @@ class NosCompetences extends Component {
                     <img src="https://images.unsplash.com/photo-1589828994379-7a8869c4f519?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8cGFwZXIlMjBhcnJvd3xlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="mentor" width="40%" />
                 </div>
                 <Form>
-                    <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaineSelected" className="inTheLabel" onClick={this.selectDomaine.bind(this)}>
-                        <option value="" className="inTheLabel">Choisissez un domaine</option>
-                        {this.state.allDomaine.length !== 0 ?
-                            this.state.allDomaine.map((elem) => {
-                            return <option value={elem.domaine} className="inTheLabel" key={elem.id_competence}>{elem.domaine}</option>
-                        })
-                        : null}
+                    <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaineSelected" className="inTheLabel" onClick={this.selectDomaine.bind(this)} value={this.state.domaineSelected}>
+                        <option value="" className="inTheLabel">All domaines</option>
+                        <option value="HTML" className="inTheLabel">HTML,CSS</option>
+                        <option value="JS" className="inTheLabel">JS</option>
+                        <option value="PHP" className="inTheLabel">PHP</option>
+                        <option value="SQL" className="inTheLabel">SQL</option>
+                        <option value="JAVA" className="inTheLabel">JAVA</option>
+                        <option value="Python" className="inTheLabel">Python</option>
+                        <option value="CMS" className="inTheLabel">CMS</option>
+                        <option value="Autre" className="inTheLabel">Autre</option>
+                        
                     </Form.Control>
                 </Form>
                 <h2>Nos Compétences</h2>

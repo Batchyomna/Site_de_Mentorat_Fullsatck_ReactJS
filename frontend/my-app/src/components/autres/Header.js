@@ -19,9 +19,9 @@ class Header extends Component {
         {this.props.token_mentor ?  
           (
               <Nav className="mr-auto menu">                
-                <Link  to="/user/vos-competences">Vos Compétences</Link>
                 <Link to="/nos-competences"  >Nos Compétences</Link>
                 <Link  to="/contact">Contact</Link>
+                <Link  to="/user/agenda">votre agenda</Link>
                 <Link  to="/user/profil">
                   <img height="50px" width="50px" alt="Mentoring" src={this.props.photo_mentor} />
                 </Link>
@@ -36,9 +36,9 @@ class Header extends Component {
       : this.props.token_apprenti ?
          ( 
               <Nav className="mr-auto menu">
-                <Link  to="/user/vos-competences">Vos Compétences</Link>
                 <Link to="/nos-competences"  >Nos Compétences</Link>
                 <Link  to="/contact">Contact</Link>
+                <Link  to="/user/agenda">votre agenda</Link>
                 <Link  to="/user/profil">
                   <img height="50px" width="50px" alt="apprentissge" src={this.props.photo_apprenti} />
                 </Link>
