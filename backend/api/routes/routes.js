@@ -74,6 +74,7 @@ router.post('/sign-in', (req, res) => {
             }
           })
         } else {
+          console.log('mail inconnu');
           res.status(203).json({msg:"Ce mail nous est inconnu, ou vous peut-être avez selectionné un mauvais statut"})
         }
       })
@@ -91,6 +92,7 @@ router.post('/sign-in', (req, res) => {
             }
           })
         } else {
+          console.log('mail inconnu');
           res.status(203).json({msg:"Ce mail nous est inconnu, ou vous peut-être avez selectionné un mauvais statut"})
         }
       })
@@ -108,7 +110,7 @@ router.post('/sign-in', (req, res) => {
             }
           })
         } else {
-          console.log('route apprenti status 203, unconnu mail');
+          console.log('mail inconnu');
           res.status(203).json({msg:"Ce mail nous est inconnu, ou vous peut-être avez selectionné un mauvais statut"})
         }
       })
