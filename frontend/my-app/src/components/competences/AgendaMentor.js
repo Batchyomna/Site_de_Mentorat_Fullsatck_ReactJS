@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FormAddComp from './FormAddComp'
 import {connect} from 'react-redux'
 import axios from 'axios';
-import futureDate from '../functions/functions'
+import futureDate from '../functions/futureDate'
 
 
 class MentorCompetences extends Component {

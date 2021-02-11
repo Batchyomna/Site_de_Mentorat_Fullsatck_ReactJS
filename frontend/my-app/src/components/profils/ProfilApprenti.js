@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { changeDataApprenti, signOutApprenti } from '../../store/actions/apprenti'
-import deleteEmptyValue from '../functions/functions'
+import deleteEmptyValue from '../functions/deleteEmptyValueApprenti'
 
 class ProfilApprenti extends Component {
     constructor() {
@@ -15,17 +15,16 @@ class ProfilApprenti extends Component {
             mdp_apprenti: '',
             photo_apprenti: '',
             message: '',
-            messageError: ''
+            error: false
         }
     }
     render() {
         return (
             <div className="container">
-                <h2> Bonjour {this.props.prenom_apprenti}</h2>
+                <h1> Bonjour {this.props.prenom_apprenti}</h1>
                 <section className="information">
-                    <span className="greenMessage">{this.state.message}</span>
-                    <span className="redMessage">{this.state.messageError}</span>
-                    <p className="smallMessage">Vous voulez changer vos informations pérsonnelles?</p>
+                    <span className={this.state.error ? "redMessage" : "greenMessage"}>{this.state.message}</span>
+                    <h2 className="smallMessage">Vous voulez changer vos informations personnelles?</h2>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -59,7 +58,7 @@ class ProfilApprenti extends Component {
                     </Form>
                 </section>
                 <section className="history">
-                    <p className="smallMessage">Les compétences que vous avez déjà acquises: </p>
+                    <h2 className="smallMessage">Les compétences que vous avez déjà acquises: </h2>
                     {
                         this.props.competencesDePasse.length > 0 ?
                             (this.props.competencesDePasse.map(item => (
@@ -72,7 +71,6 @@ class ProfilApprenti extends Component {
                             )
                             :
                             <span className="message">Vous n'avez encore suivi aucune compétence </span>
-
                     }
                 </section>
                 <div className="myButtons">
@@ -83,6 +81,8 @@ class ProfilApprenti extends Component {
     }
     setChange(event) {
         this.setState({
+            error: false,
+            message:'',
             [event.target.name]: event.target.value
         });
     }
@@ -91,11 +91,6 @@ class ProfilApprenti extends Component {
         e.preventDefault();
         try {
             let allStateData = deleteEmptyValue(this.state);
-            // for (let key in allStateData) {
-            //     if (key === 'message' || key === 'messageError' || allStateData[key] === '') {
-            //         delete allStateData[key]
-            //     }
-            // }
 
             if (Object.keys(allStateData).length > 0) {
                 let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData,{
@@ -118,17 +113,21 @@ class ProfilApprenti extends Component {
                         mail_mentor: '',
                         mdp_mentor: '',
                         photo_mentor: '',
-                        messageError: 'Excusez-nous, mais vous devrez ressayer'
+                        error:true,
+                        message: 'Excusez-nous, mais vous devrez ressayer'
                     })
                 }
             } else {
                 this.setState({
-                    messageError: 'vous devez remplir au moins un champ pour changer ves coordonnées'
+                    error: true,
+                    message: 'vous devez remplir au moins un champ pour changer ves coordonnées'
                 })
             }
         } catch (err) {
             console.log(err);
+             alert('vous devez vous connecter à nouveau')
             this.props.signOutApprenti()// jwt expired
+           
         }
     }
     async deleteAccount(e) {
@@ -140,10 +139,12 @@ class ProfilApprenti extends Component {
               })
             if (deletResult.status === 200) {
                 console.log(deletResult);
+                alert('vous devez vous connecter à nouveau')
                 this.props.signOutApprenti()
             }
         } catch (err) {
             console.log(err);
+            alert('vous devez vous connecter à nouveau')
             this.props.signOutApprenti()// jwt expired
         }
     }

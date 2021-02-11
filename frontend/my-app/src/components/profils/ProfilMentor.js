@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
 import {changeDataMentor, signOutMentor} from '../../store/actions/mentor'
-import deleteEmptyValue from '../functions/functions'
+import deleteEmptyValue from '../functions/deleteEmptyValueApprenti'
 
 class ProfilMentor extends Component {
     constructor(){
@@ -15,7 +15,7 @@ class ProfilMentor extends Component {
             mdp_mentor: '',
             photo_mentor: '',
             message: '',
-            messageError:'',
+            error: false,
         
         }
     }
@@ -23,11 +23,10 @@ class ProfilMentor extends Component {
         return(
         <div className="container">
                 <h1> Bonjour {this.props.prenom_mentor}</h1>
-                <span className="greenMessage">{this.state.message}</span>
-                <span className="redMessage">{this.state.messageError}</span> 
                 <section className="information">
-               
-                    <h2>Vous voulez changer vos informations pérsonnelles?</h2>
+                    <span  className={this.state.error ? "redMessage" : "greenMessage"} >{this.state.message}</span>
+
+                    <h2>Vous voulez changer vos informations personnelles?</h2>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -86,12 +85,12 @@ class ProfilMentor extends Component {
     }
     setChange(event) {
         this.setState({
-            messageError: '',
+            error: false,
             message:'',
             [event.target.name]: event.target.value
         });
     }
-       async editData(e){
+    async editData(e){
         e.preventDefault();
         try{
             let allStateData = deleteEmptyValue(this.state);
@@ -114,6 +113,7 @@ class ProfilMentor extends Component {
                         mail_mentor: '',
                         mdp_mentor: '',
                         photo_mentor: '',
+                        error: false,
                         message: 'Vos coodonnées sont bien changées'
                     })
                 } else if(updateResult.status=== 403) {
@@ -123,16 +123,19 @@ class ProfilMentor extends Component {
                         mail_mentor: '',
                         mdp_mentor: '',
                         photo_mentor: '',
-                        messageError: "Vous n'êtes pas autorisés"
+                        error: true,
+                        message: "Vous n'êtes pas autorisés"
                     })
                 }
             }else{
                 this.setState({
-                    messageError: 'vous devez remplir au moins un champ pour changer vos coordonnées'
+                    error: true,
+                    message: 'vous devez remplir au moins un champ pour changer vos coordonnées'
                 })
             }
         }catch(err){
             console.log(err);
+            alert('vous devez vous connecter à nouveau')
             this.props.signOutMentor()// ou redirecte pq TokenExpiredError: jwt expired
         }
     }
@@ -150,6 +153,7 @@ class ProfilMentor extends Component {
             }
         }catch(err){
             console.log(err);
+            alert('vous devez vous connecter à nouveau')
             this.props.signOutMentor() // jwt expired
         }
     }

@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import axios from 'axios'
 import { Redirect } from 'react-router-dom'
+import detectAttack from '../functions/detectAttack'
+import deleteEmptyValueApprenti from '../functions/deleteEmptyValueApprenti'
+import deleteEmptyValueMentor from '../functions/deleteEmptyValueMentor'
+import testMail from '../functions/testMail'
+
 class SignUp extends Component {
     constructor() {
         super();
@@ -16,27 +21,32 @@ class SignUp extends Component {
             message: '',
             signupFlag: true,
             errorMail: false,
-            mailExsite: false
+            mailExsite: false,
+            error: false
         }
     }
     render() {
         if (this.state.signupFlag) {
             return (
                 <div className="container">
-                    <h2>Saisissez vos informations pérsonnelles</h2>
-                    <span className="greenMessage">{this.state.message}<br /></span>
-                   {this.state.errorMail &&
-                        <span className="redMessage">Vous devez utiliser un bon mail</span>
-                   }
-                   {this.state.mailExsite &&
-                        <span className="redMessage">Vous devez choisis un autre mail, car ce mail est déjà existante</span>
-                   }
+                    <h2>Saisissez vos informations personnelles</h2>
+                    {this.state.error ?
+                        <span className="redMessage">{this.state.message}</span>
+                        :
+                        <span className="greenMessage">{this.state.message}</span>
+                    }
+                    {this.state.errorMail &&
+                        <span className="redMessage">Vous devez utiliser un mail valide<br /></span>
+                    }
+                    {this.state.mailExsite &&
+                        <span className="redMessage">Vous devez choisis un autre mail, car ce mail existe déjà</span>
+                    }
                     <p className="smallMessage">Les champs marqués d'un astérisque * sont obligatoires</p>
                     <Form>
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Prénom *</Form.Label>
-                                <Form.Control value={this.state.prenom} onChange={this.setChange.bind(this)} name="prenom" placeholder="Saisissez votre prénom" className="inTheLabel" required/>
+                                <Form.Control value={this.state.prenom} onChange={this.setChange.bind(this)} name="prenom" placeholder="Saisissez votre prénom" className="inTheLabel" required />
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Nom *</Form.Label>
@@ -48,14 +58,14 @@ class SignUp extends Component {
                                 <Form.Label className="float-left label">Adresse mail *</Form.Label>
                                 {
                                     this.state.errorMail ?
-                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Utilisez le forme: email@exemple.com" className="errorClasse" required/>
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Utilisez le forme: email@exemple.com" className="errorClasse" required />
                                         :
                                         <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="inTheLabel" />
                                 }
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe *</Form.Label>
-                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required/>
+                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required />
                             </Col>
                         </Row>
                         <Row>
@@ -77,7 +87,7 @@ class SignUp extends Component {
                                 <Row>
                                     <Col sm={12}>
                                         <Form.Label className="float-left label">Votre noméru de SIREN *</Form.Label>
-                                        <Form.Control value={this.state.nom_SIREN} onChange={this.setChange.bind(this)} name="nom_SIREN" placeholder="Saisissez votre noméro SIREN qui contient 9 chiffres" className="inTheLabel" />
+                                        <Form.Control value={this.state.nom_SIREN} onChange={this.setChange.bind(this)} name="nom_SIREN" placeholder="Saisissez votre numéro SIREN qui contient 9 chiffres" className="inTheLabel" />
                                     </Col>
                                 </Row>
                             )
@@ -101,6 +111,9 @@ class SignUp extends Component {
 
     setChange(event) {
         this.setState({
+            errorMail: false,
+            mailExsite: false,
+            error: false,
             [event.target.name]: event.target.value
         });
     }
@@ -110,59 +123,17 @@ class SignUp extends Component {
             signupFlag: false,
         })
     }
-  
+
     async goToSignUp(e) {
         e.preventDefault();
         try {
-            const rg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (this.state.mail && (!rg.test(this.state.mail)) ){
-                this.setState({
-                    mail:'',
-                    errorMail: true,
-                })
-            } else if(this.state.prenom && this.state.nom && this.state.mdp && this.state.statut)  {
-                if(this.state.statut === 'mentor'){
-                    if(this.state.nom_SIREN){
-                        let result = await axios.post(`http://localhost:8000/sign-up`, { prenom: this.state.prenom, nom: this.state.nom, mail: this.state.mail, mdp: this.state.mdp, photo: this.state.photo, statut: this.state.statut, nom_SIREN: this.state.nom_SIREN })
-                        console.log(result);
-                        if (result.status === 201) {
-                            this.setState({
-                                prenom: '',
-                                nom: '',
-                                mail: '',
-                                mdp: '',
-                                photo: '',
-                                statut: '',
-                                nom_SIREN: null,
-                                message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
-                            })
-                        }else if (result.status === 202){
-                            this.setState({
-                                prenom: '',
-                                nom: '',
-                                mail: '',
-                                mdp: '',
-                                photo: '',
-                                statut: '',
-                                nom_SIREN: null,
-                                mailExsite: true,
-                            })
-                        }
-                    }else{
-                        this.setState({
-                            prenom: '',
-                            nom: '',
-                            mail: '',
-                            mdp: '',
-                            photo: '',
-                            statut: '',
-                            nom_SIREN: null,
-                            message: 'Vous devez saisir votre SIREN nombre.',
-                        })
-                    }
-                }else{
-                    let result = await axios.post(`http://localhost:8000/sign-up`, { prenom: this.state.prenom, nom: this.state.nom, mail: this.state.mail, mdp: this.state.mdp, photo: this.state.photo, statut: this.state.statut})
-                    console.log(result);
+            let allStateDataApprenti = deleteEmptyValueApprenti(this.state)
+            let allStateDataMentor = deleteEmptyValueMentor(this.state)
+            if (this.state.mail && !testMail(this.state.mail)) {
+                this.setState({ mail: '', errorMail: true })
+            } else if (this.state.prenom && this.state.nom && this.state.mdp && this.state.statut && testMail(this.state.mail)) {
+                if (this.state.statut === 'apprenti' && !detectAttack(allStateDataApprenti)) {
+                    let result = await axios.post(`http://localhost:8000/sign-up`, allStateDataApprenti)
                     if (result.status === 201) {
                         this.setState({
                             prenom: '',
@@ -172,9 +143,9 @@ class SignUp extends Component {
                             photo: '',
                             statut: '',
                             nom_SIREN: null,
-                            message: 'Vous êtes bien inscrit, vous pourrez vous connecter',
+                            message: 'Vous êtes bien inscrit, vous pouvez vous connecter',
                         })
-                    }else if (result.status === 202){
+                    } else if (result.status === 202) {
                         this.setState({
                             prenom: '',
                             nom: '',
@@ -183,12 +154,69 @@ class SignUp extends Component {
                             photo: '',
                             statut: '',
                             nom_SIREN: null,
-                           mailExsite: true,
+                            mailExsite: true,
+                            errorMail: false
                         })
                     }
-                }
-               
+                }else if (this.state.statut === 'mentor' && !detectAttack(allStateDataMentor) && this.state.nom_SIREN) {
+                    let result = await axios.post(`http://localhost:8000/sign-up`, allStateDataMentor)
+                    if (result.status === 201) {
+                        this.setState({
+                            prenom: '',
+                            nom: '',
+                            mail: '',
+                            mdp: '',
+                            photo: '',
+                            statut: '',
+                            nom_SIREN: null,
+                            message: 'Vous êtes bien inscrit, vous pouvez vous connecter',
+                        })
+                    } else if (result.status === 202) {
+                        this.setState({
+                            prenom: '',
+                            nom: '',
+                            mail: '',
+                            mdp: '',
+                            photo: '',
+                            statut: '',
+                            nom_SIREN: null,
+                            mailExsite: true,
+                            errorMail: false
+                        })
+                    }
+                }else if(this.state.statut === 'mentor'  && !this.state.nom_SIREN){
+                    this.setState({
+                        prenom: '',
+                        nom: '',
+                        mail: '',
+                        mdp: '',
+                        photo: '',
+                        statut: '',
+                        nom_SIREN: null,
+                        message: 'Vous devez saisir votre numéro SIREN',
+                    }) 
+                }  else{
+                    this.setState({
+                        message: 'Réessayer, car vous avez utilisé des caractères spéciaux.',
+                        error: true,
+                        signupFlag: true,
+                    })
+                }             
+            } else {
+                this.setState({
+                    message: 'Réessayer, car vous avez oublié de remplir tous les champs obligatoirs',
+                    error: true,
+                    signupFlag: true,
+                    prenom: '',
+                    nom: '',
+                    mail: '',
+                    mdp: '',
+                    photo: '',
+                    statut: '',
+                    nom_SIREN: null,
+                })
             }
+            
         } catch (error) {
             this.setState({
                 prenom: '',

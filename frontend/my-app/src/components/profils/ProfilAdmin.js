@@ -12,12 +12,11 @@ class ProfilAdmin extends Component {
             mail_new_admin: '',
             mdp_new_admin: '',
             message: '',
-            messageError:'',
+            error: false,
             mentors: []
         }
     }
     componentDidMount(){
-        try{
         axios.get('http://localhost:8000/admin/mentors/all-not-valid')
         .then((response) => {
             this.setState({
@@ -27,14 +26,11 @@ class ProfilAdmin extends Component {
         .catch(function (error) {
             console.log(error);
         })
-        }catch(err){
-            console.log(err);
-        }
     }
      setChange =  (event) => {
         this.setState({
             message: '',
-            messageError:'',
+            error: false,
             [event.target.name]: event.target.value
         });
     }
@@ -50,22 +46,26 @@ class ProfilAdmin extends Component {
                     this.setState({
                         mail_admin: '',
                         mdp_admin: '',
+                        error: false,
                         message: 'Vos coordonnées sont bien changées'
                     })
                 } else {
                     this.setState({
                         mail_admin: '',
                         mdp_admin: '',
+                        error: false,
                         messageError: 'Excusez-nous, mais vous devrez réessayer'
                     })
                 }
             } else {
                 this.setState({
-                    messageError: 'vous devez remplir au moins un champ pour changer vos informations'
+                    error: true,
+                    message: 'vous devez remplir au moins un champ pour changer vos informations'
                 })
             }
         } catch (err) {
             console.log(err);
+            alert('vous devez vous connecter à nouveau')
             this.props.signOutAdmin() // jwt expired
         }
     }
@@ -76,29 +76,33 @@ class ProfilAdmin extends Component {
             if(mail_new_admin && mdp_new_admin){
                 let addNewAdmin = await axios.post('http://localhost:8000/admin/new-admin',{mail: mail_new_admin, mdp: mdp_new_admin}, {
                     headers: {'Authorization': `${this.props.token_admin}`}
-                })
+                  })
                 if(addNewAdmin.status === 201){
                     this.setState({
                         mail_new_admin: '',
                         mdp_new_admin: '',
+                        error: false,
                         message: 'vous avez bien ajouté un nouveau admin'
                     })
                 }else{
                     this.setState({
                         mail_new_admin: '',
                         mdp_new_admin: '',
-                        messageError: 'vous devez réssayer, car il y a des problème de conniexion'
+                        error: true,
+                        message: 'vous devez réssayer, car il y a des problème de conniexion'
                     })
                 }
             }else{
                 this.setState({
                     mail_new_admin: '',
                     mdp_new_admin: '',
-                    messageError: 'vous devez remplir les deux champs'
+                    error: true,
+                    message: 'vous devez remplir les deux champs'
                 })
             }
         }catch(err){
             console.log(err);
+            alert('vous devez vous connecter à nouveau')
             this.props.signOutAdmin()// jwt expired
         }
     }
@@ -115,24 +119,26 @@ class ProfilAdmin extends Component {
             }
         } catch (err) {
             console.log(err);
+            alert('vous devez vous connecter à nouveau')
             this.props.signOutAdmin()// jwt expired
         }
     }
     deleteMentor(idMentor) {
-               let that = this
-             axios.delete(`http://localhost:8000/admin/non-valid/${idMentor}`,
-            {
-                headers: {'Authorization': `${this.props.token_admin}`}
-            }).then((response) => {
-                console.log(response);
-                that.setState({
-                    message: 'vous avez bien effectué la suppression'
-                })
-            }).catch((error)=> {
-                console.log(error);  
-                this.props.signOutAdmin()// jwt expired         
-            });
-       
+        let that = this
+        axios.delete(`http://localhost:8000/admin/non-valid/${idMentor}`, {
+            headers: {'Authorization': `${this.props.token_admin}`}
+        }).then((response) => {
+            console.log(response);
+            that.setState({
+                error: false,
+                message: 'vous avez bien effectué la suppression'
+            })
+        }).catch((error)=> {
+            console.log(error);
+            alert('vous devez vous connecter à nouveau') 
+            this.props.signOutAdmin()// jwt expired
+
+        });
     }
     async validMentor(idMentor){
         try{
@@ -141,15 +147,18 @@ class ProfilAdmin extends Component {
             })
             if (updateResult.status === 200) {
                 this.setState({
+                    error: false,
                     message: 'vous avez bien effectué la validation'
                 })
             }else{
                 this.setState({
+                    error: true,
                     message: 'vous devez réessayer à cause de problème de connexion'
                 })
             }
         }catch(err){
             console.log(err);
+            alert('vous devez vous connecter à nouveau')
             this.props.signOutAdmin()// jwt expired
         }
     }
@@ -157,10 +166,10 @@ class ProfilAdmin extends Component {
         return (
             <div className="container">
                  <h1> En tant qu'un Admin </h1>
-                 <span className="greenMessage">{this.state.message}</span>
-                <span className="redMessage">{this.state.messageError}</span> 
+                {/* <span className="redMessage">{this.state.messageError}</span>  */}
                 <section className="information">
-                    <h3 className="smallMessage">Vous voulez changer vos informations pérsonnelles?</h3>
+                    <span className={this.state.error ? "redMessage" : "greenMessage"}>{this.state.message}</span>
+                    <h2 className="smallMessage">Vous voulez changer vos informations personnelles?</h2>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -178,8 +187,8 @@ class ProfilAdmin extends Component {
                     </Form>
                 </section>
                 <section>
-                <h3 className="smallMessage">Vous voulez ajouter un nouveau adimnistrateur? </h3>
-                <h3 className="smallMessage">Saisissez ses informations</h3>
+                <h2 className="smallMessage">Vous voulez ajouter un nouveau adimnistrateur? </h2>
+                <h2 className="smallMessage">Saisissez ses informations</h2>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -195,10 +204,9 @@ class ProfilAdmin extends Component {
                         <Button className="oneButton" type="submit" onClick={this.addAdmin.bind(this)}>Ajouter</Button>
                         </div>
                     </Form>
-                
                 </section>
                 <section className="history">
-                <h3 className="smallMessage">Les mentors qui attendent votre permission:</h3>
+                <h2 className="smallMessage">Les mentors qui attendent votre permission:</h2>
                 {
                     this.state.mentors.length >0 ?
                     this.state.mentors.map(item=>(
@@ -225,7 +233,7 @@ class ProfilAdmin extends Component {
     
     
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state)=> ({
     id_admin: state.adminReducer.id_admin,
     token_admin: state.adminReducer.token_admin
 

@@ -6,17 +6,17 @@ const authSignUp = function(req, res, next){
       if (err) throw err;
       let theMail = result.find(element => element.mail_mentor === req.body.mail)
       if (theMail) {
-        res.status(202).send('Ce mail est déjà utilisé vous devez choisir un autre mail')//status(202)= to solve this problem in the part .then of axios
+        res.status(202).send('Ce mail est déjà utilisé vous devez choisir un autre mail')   //status(202)= to solve this problem in the part .then of axios
       } else {
         next()
       }
     })
   }else if(req.body.statut === 'apprenti'){
-    connection.query("SELECT mail_apprenti FROM apprenti", function (err, result, fields) {
+    connection.query("SELECT mail_apprenti FROM apprenti", function (err, result, fields){
       if (err) throw err;
       let theMail = result.find(element => element.mail_apprenti === req.body.mail)
       if (theMail) {
-        res.status(202).send('Ce mail est déjà utilisé vous devez choisir un autre mail')//status(202)= to solve this problem in the part .then of axios
+        res.status(202).send('Ce mail est déjà utilisé vous devez choisir un autre mail')    //status(202)= to solve this problem in the part .then of axios
       } else {
         next()
       }
