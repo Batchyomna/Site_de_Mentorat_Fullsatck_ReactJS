@@ -1,5 +1,5 @@
 function detectAttack(object){
-    const regexSQL  = /('(''|[^'])*')|("(""|[^"])*")|(;)|(=)|(-)|(--)|(\?)|(\b(ALTER|CREATE|DELETE|DROP|OR|AND|WHERE|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)/gi;
+    const regexSQL  = /('(''|[^'])*')|("(""|[^"])*")|(;)|(--)|(\b(ALTER|CREATE|DELETE|DROP|OR|AND|WHERE|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)/gi;
     // eslint-disable-next-line
     const regexXSS = /((\%3C)|<)((\%2F)|\/)*[a-z0-9\%]+((\%3E)|>)|((\%3C)|<)((\%69)|i|(\%49))((\%6D)|m|(\%4D))((\%67)|g|(\%47))[^\n]+((\%3E)|>)|((\%3C)|<)[^\n]+((\%3E)|>)/i
     let counter = 0;
@@ -17,3 +17,4 @@ function detectAttack(object){
     }
 }
 module.exports = detectAttack;
+//  const regexSQL  = /('(''|[^'])*')|("(""|[^"])*")|(;)|(-)|(--)|(=)|(\?)|(\b(ALTER|CREATE|DELETE|DROP|OR|AND|WHERE|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)/gi;

@@ -39,18 +39,18 @@ class SignUp extends Component {
                         <span className="redMessage">Vous devez utiliser un mail valide<br /></span>
                     }
                     {this.state.mailExsite &&
-                        <span className="redMessage">Vous devez choisis un autre mail, car ce mail existe déjà</span>
+                        <span className="redMessage">Vous devez choisir un autre mail, car ce mail existe déjà</span>
                     }
                     <p className="smallMessage">Les champs marqués d'un astérisque * sont obligatoires</p>
                     <Form>
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Prénom *</Form.Label>
-                                <Form.Control value={this.state.prenom} onChange={this.setChange.bind(this)} name="prenom" placeholder="Saisissez votre prénom" className="inTheLabel" required />
+                                <Form.Control value={this.state.prenom} onChange={this.setChange.bind(this)} name="prenom" placeholder="Saisissez votre prénom" className="inTheLabel" />
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Nom *</Form.Label>
-                                <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel" required />
+                                <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel"/>
                             </Col>
                         </Row>
                         <Row>
@@ -58,14 +58,14 @@ class SignUp extends Component {
                                 <Form.Label className="float-left label">Adresse mail *</Form.Label>
                                 {
                                     this.state.errorMail ?
-                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="Utilisez le forme: email@exemple.com" className="errorClasse" required />
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" className="errorClasse"  />
                                         :
                                         <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="inTheLabel" />
                                 }
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe *</Form.Label>
-                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required />
+                                <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" />
                             </Col>
                         </Row>
                         <Row>
@@ -75,7 +75,7 @@ class SignUp extends Component {
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Votre statut *</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" value={this.state.statut} required>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" value={this.state.statut}>
                                     <option value="" className="inTheLabel">Choisissez votre statut</option>
                                     <option value="apprenti" className="inTheLabel">Apprenti</option>
                                     <option value="mentor" className="inTheLabel">Mentor</option>
@@ -87,7 +87,7 @@ class SignUp extends Component {
                                 <Row>
                                     <Col sm={12}>
                                         <Form.Label className="float-left label">Votre noméru de SIREN *</Form.Label>
-                                        <Form.Control value={this.state.nom_SIREN} onChange={this.setChange.bind(this)} name="nom_SIREN" placeholder="Saisissez votre numéro SIREN qui contient 9 chiffres" className="inTheLabel" />
+                                        <Form.Control value={this.state.nom_SIREN} onChange={this.setChange.bind(this)} name="nom_SIREN" placeholder="Saisissez votre numéro SIREN qui comprend 9 chiffres" className="inTheLabel" />
                                     </Col>
                                 </Row>
                             )
@@ -96,7 +96,7 @@ class SignUp extends Component {
                         }
                         <div className="myButtons">
                             <Button className="oneButton" type="submit" onClick={this.goToSignUp.bind(this)} >Sign up</Button>
-                            <p className="smallMessage">Vous avez déjà un compte? venez vous connecter.</p>
+                            <p className="smallMessage">Vous avez déjà un compte? Connectez-vous ici.</p>
                             <Button className="oneButton" type="submit" onClick={this.goToSignIn.bind(this)}>Sign in</Button>
                         </div>
                     </Form>
@@ -114,6 +114,7 @@ class SignUp extends Component {
             errorMail: false,
             mailExsite: false,
             error: false,
+            message: '',
             [event.target.name]: event.target.value
         });
     }
@@ -129,10 +130,15 @@ class SignUp extends Component {
         try {
             let allStateDataApprenti = deleteEmptyValueApprenti(this.state)
             let allStateDataMentor = deleteEmptyValueMentor(this.state)
-            if (this.state.mail && !testMail(this.state.mail)) {
-                this.setState({ mail: '', errorMail: true })
+
+            if(detectAttack(allStateDataApprenti) || detectAttack(allStateDataMentor)){
+                this.setState({
+                    message: 'Réessayez, car vous avez utilisé des caractères spéciaux.', error: true, signupFlag: true,
+                })
+            } else if (this.state.mail && !testMail(this.state.mail)) {
+                    this.setState({ mail: '', errorMail: true , signupFlag: true})
             } else if (this.state.prenom && this.state.nom && this.state.mdp && this.state.statut && testMail(this.state.mail)) {
-                if (this.state.statut === 'apprenti' && !detectAttack(allStateDataApprenti)) {
+                if (this.state.statut === 'apprenti' ) {
                     let result = await axios.post(`http://localhost:8000/sign-up`, allStateDataApprenti)
                     if (result.status === 201) {
                         this.setState({
@@ -144,9 +150,11 @@ class SignUp extends Component {
                             statut: '',
                             nom_SIREN: null,
                             message: 'Vous êtes bien inscrit, vous pouvez vous connecter',
+                            signupFlag: true,
                         })
                     } else if (result.status === 202) {
                         this.setState({
+                            mailExsite: true,
                             prenom: '',
                             nom: '',
                             mail: '',
@@ -154,11 +162,11 @@ class SignUp extends Component {
                             photo: '',
                             statut: '',
                             nom_SIREN: null,
-                            mailExsite: true,
-                            errorMail: false
+                            errorMail: false,
+                            signupFlag: true,
                         })
                     }
-                }else if (this.state.statut === 'mentor' && !detectAttack(allStateDataMentor) && this.state.nom_SIREN) {
+                }else if (this.state.statut === 'mentor' && this.state.nom_SIREN !== null) {
                     let result = await axios.post(`http://localhost:8000/sign-up`, allStateDataMentor)
                     if (result.status === 201) {
                         this.setState({
@@ -170,6 +178,7 @@ class SignUp extends Component {
                             statut: '',
                             nom_SIREN: null,
                             message: 'Vous êtes bien inscrit, vous pouvez vous connecter',
+                            signupFlag: true,
                         })
                     } else if (result.status === 202) {
                         this.setState({
@@ -181,11 +190,14 @@ class SignUp extends Component {
                             statut: '',
                             nom_SIREN: null,
                             mailExsite: true,
-                            errorMail: false
+                            errorMail: false,
+                            signupFlag: true,
                         })
                     }
-                }else if(this.state.statut === 'mentor'  && !this.state.nom_SIREN){
+                }else if(this.state.statut === 'mentor'  && this.state.nom_SIREN === null ){
                     this.setState({
+                        message: 'Vous devez saisir votre numéro SIREN',
+                        error: true,
                         prenom: '',
                         nom: '',
                         mail: '',
@@ -193,18 +205,12 @@ class SignUp extends Component {
                         photo: '',
                         statut: '',
                         nom_SIREN: null,
-                        message: 'Vous devez saisir votre numéro SIREN',
-                    }) 
-                }  else{
-                    this.setState({
-                        message: 'Réessayer, car vous avez utilisé des caractères spéciaux.',
-                        error: true,
                         signupFlag: true,
-                    })
-                }             
-            } else {
+                    }) 
+                }           
+            }else {
                 this.setState({
-                    message: 'Réessayer, car vous avez oublié de remplir tous les champs obligatoirs',
+                    message: 'Réessayez, car vous avez oublié de remplir tous les champs obligatoirs',
                     error: true,
                     signupFlag: true,
                     prenom: '',
@@ -229,7 +235,6 @@ class SignUp extends Component {
                 message: 'Il y a un problème, vous devriez essayer encore une fois',
 
             })
-            console.error(error);
         }
     }
 }

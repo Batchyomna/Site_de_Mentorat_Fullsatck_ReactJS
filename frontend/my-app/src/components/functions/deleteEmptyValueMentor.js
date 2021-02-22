@@ -1,6 +1,6 @@
 function deleteEmptyValueMentor(object){
     for (let key in object) {
-        if (key === 'message' || key === 'error' || object[key] === '' || key === 'signupFlag' || key === 'errorMail' || key ==='mailExsite' || key ==='signinFlag' || key ==='errorPSW' || key === 'nom_SIREN'){ 
+        if (key === 'message' || key === 'error' || object[key] === '' || key === 'signupFlag' || key === 'errorMail' || key ==='mailExsite' || key ==='signinFlag' || key ==='errorPSW'){ 
             delete object[key]
         }
     }

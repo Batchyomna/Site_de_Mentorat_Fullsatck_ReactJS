@@ -16,15 +16,17 @@ class SignIn extends Component {
         e.preventDefault();
         try {
             let allStateData = deleteEmptyValue(this.state)
-            if (this.state.mail && !testMail(this.state.mail)) {
+            if(detectAttack(allStateData)){
                 this.setState({
-                    mail: '',
-                    errorMail: true,
-                    message: 'Vous devez utiliser un mail valide'
+                    message: 'Réessayez, car vous avez utilisé des caractères spéciaux.', signinFlag: true,
                 })
-            } else if (this.state.mdp && this.state.statut && testMail(this.state.mail) && !detectAttack(allStateData )) {
+            }else if (this.state.mail && !testMail(this.state.mail)) {
+                this.setState({
+                    mail: '',  errorMail: true,  signinFlag: true, message: 'Vous devez utiliser un mail valide',
+                })
+            } else if (this.state.mdp && this.state.statut && testMail(this.state.mail)) {
                 let result = await axios.post(`http://localhost:8000/sign-in`, allStateData)
-                console.log('result post', result);
+        
                 if (result.status === 200) {
                     if (this.state.statut === "mentor") {
                         this.props.signInMentor({ token_mentor: result.data.token_mentor, id_mentor: result.data.id, mail_mentor: this.state.mail, photo_mentor: result.data.photo_mentor, prenom_mentor: result.data.prenom_mentor })
@@ -52,7 +54,7 @@ class SignIn extends Component {
                     })
                 } else if (result.status === 203) {
                     this.setState({
-                        message: 'Ce mail nous est inconnu ou vous peut-être avez sélectionné un mauvais statut',
+                        message: 'Ce mail nous est inconnu, vous avez peut-être sélectionné un mauvais statut',
                         mail: '',
                         mdp: '',
                         statut: ' ',
@@ -112,25 +114,25 @@ class SignIn extends Component {
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
                                 {
                                     this.state.errorMail ?
-                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="errorClasse"/>
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" className="errorClasse"/>
                                         :
-                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="inTheLabel" required />
+                                        <Form.Control value={this.state.mail} onChange={this.setChange.bind(this)} name="mail" placeholder="email@exemple.com" className="inTheLabel"/>
                                 }
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe</Form.Label>
                                 {
-                                    this.state.errorPSW ?
-                                        <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Réessayez de saisir votre mot de passe" className="errorClasse" />
-                                        :
-                                        <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" required />
+                                this.state.errorPSW ?
+                                    <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" className="errorClasse"/>
+                                    :
+                                    <Form.Control type="password" value={this.state.mdp} onChange={this.setChange.bind(this)} name="mdp" placeholder="Saisissez votre mot de passe" className="inTheLabel" />
                                 }
                             </Col>
                         </Row>
                         <Row>
                             <Col sm={12}>
                                 <Form.Label className="float-left label">Votre statut</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" value={this.state.statut} required>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="statut" className="inTheLabel" value={this.state.statut}>
                                     <option value='' className="inTheLabel">Choisissez votre statut</option>
                                     <option value="apprenti" className="inTheLabel">Apprenti</option>
                                     <option value="mentor" className="inTheLabel">Mentor</option>
