@@ -30,7 +30,7 @@
   color: #ED6663;
 }
 
-.menu :active{
+ .active {
   color: #ED6663;
 }
 .container{
@@ -265,6 +265,9 @@ h2{
   .redMessage {
     font-size: 20px;
   }
+  #agendaPhoto{
+    display: none;
+  }
 }
 
 @media screen and (min-width: 576px) and (max-width: 991px){
@@ -296,6 +299,9 @@ h2{
   }
   .container{
     margin: auto !important;
+  }
+  #agendaPhoto{
+   width:70%;
   }
 }
 

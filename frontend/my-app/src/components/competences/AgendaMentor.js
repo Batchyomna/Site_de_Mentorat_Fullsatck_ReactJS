@@ -1,75 +1,87 @@
 import React, { Component } from 'react';
-import FormAddComp from './FormAddComp'
-import {connect} from 'react-redux'
+import '../competences/CompetenceStyle.css'
+import { connect } from 'react-redux'
 import axios from 'axios';
 import futureDate from '../functions/futureDate'
-
+import Table from 'react-bootstrap/Table'
+import agendaPhoto from './assets/agenda2.jpg'
 
 class MentorCompetences extends Component {
-    constructor(){
+    constructor() {
         super()
-        this.state ={
+        this.state = {
             message: '',
-            messageError:'',
+            messageError: '',
             futureSession: []
         }
     }
-    componentDidMount(){
-            let that = this
-            axios.get(`http://localhost:8000/mentor/session-competences/${this.props.id_mentor}`)
-            .then((response)=>{
-                let x = response.data.filter((elmAPI )=> 
-                        {
-                        if(futureDate(elmAPI.date_session)){
-                            return true
-                        }else{
-                            return false
-                        }
-                        }) 
-                   for (let i=0; i< x.length; i++){
-                       if ( that.state.length === 0 || that.state.futureSession.findIndex((elmState) => (elmState.id_competence === x[i].id_competence) ) < 0){
-                            that.setState({
-                            futureSession: [...that.state.futureSession, x[i]]
-                            })
-                        } 
+    componentDidMount() {
+        let that = this
+        axios.get(`http://localhost:8000/mentor/session-competences/${this.props.id_mentor}`)
+            .then((response) => {
+                let x = response.data.filter((elemFromAPI) => {
+                    if (futureDate(elemFromAPI.date_session)) {
+                        return true
+                    } else {
+                        return false
                     }
-                    
                 })
-            .catch((err)=>{
-            console.log(err);
-        })
+                for (let i = 0; i < x.length; i++) {
+                    if (that.state.length === 0 || that.state.futureSession.findIndex((elmState) => (elmState.id_competence === x[i].id_competence)) < 0) {
+                        that.setState({
+                            futureSession: [...that.state.futureSession, x[i]]
+                        })
+                    }
+                }
+
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
     render() {
         return (
             <div className="container">
-                <h1>En tant qu'un mentor {this.props.prenom_mentor}</h1>
-                <h2> Pour ajouter une nouvelle compétence, veuillez remplir tous les champs:</h2>
-                <section className="information">
-                <FormAddComp/>
-                  
+                   <h1>Mentor {this.props.prenom_mentor}, Vos prochaines sessions sont:</h1>
+                <section >
+                    <img src={agendaPhoto} alt="agenda" id="agendaPhoto"/>
                 </section>
                 <section className="history">
-                <h2>Vos prochaines sessions</h2>
-                    {this.state.futureSession.length > 0 ?
-                        this.state.futureSession.map(item=>(
-                            <div key={item.id_session} className="profilOneCompetence">
-                                <h6>{item.titre}</h6>
-                                <p>Dans le domaine: {item.domaine}</p>
-                                <p>Le: {item.date_session}</p>
-                                <a className="lire"  href={`/session-competences/done/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Done</a>
-                            </div>
-                        ))
-                        :
-                        <span className="message">Vous n'avez aucune session dans l'avenir </span>
-                    }
+                 <p/>
+                    <Table responsive="sm">
+                            <thead>
+                                <tr className="headTable">
+                                    <th>Titre</th>
+                                    <th>Domaine</th>
+                                    <th>Date</th>
+                                    <th>Fini</th>
+                                </tr>
+                            </thead>
+                            {this.state.futureSession.length > 0 ?
+                            <tbody>
+                                {this.state.futureSession.map(item => (
+                                    <tr key={item.id_session} className="oneCompetence">
+                                        <td>{item.titre}</td>
+                                        <td>{item.domaine}</td>
+                                        <td>{item.date_session}</td>
+                                        <td><a className="lire" href={`/session-competences/done/${item.id_competence}`} alt="détails">Done</a></td>
+                                    </tr>
+                                ))
+                                }
+                            </tbody>
+                             :
+                              <span className="smallMessage">Vous n'avez aucune session dans l'avenir </span>
+                             }
+                        </Table>
+                   
 
                 </section>
-               
+
             </div>
         );
     }
 }
-const mapStateToProps = (state) =>({
+const mapStateToProps = (state) => ({
     id_mentor: state.mentorReducer.id_mentor,
     prenom_mentor: state.mentorReducer.prenom_mentor
 

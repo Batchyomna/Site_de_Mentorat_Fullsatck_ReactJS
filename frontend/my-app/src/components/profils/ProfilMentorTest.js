@@ -25,6 +25,7 @@ class ProfilMentor extends Component {
         return(
         <div className="container">
                 <h1> Bonjour {this.props.prenom_mentor}</h1>
+
                 <section className="information">
                     <span  className={this.state.error ? "redMessage" : "greenMessage"} >{this.state.message}</span>
 
@@ -139,7 +140,7 @@ class ProfilMentor extends Component {
     async deleteAccount(e){
         e.preventDefault()
         try{
-            let confirmerSuppression = window.confirm("Êtes-vous sûr de vouloir supprimer votre compte?");
+            var confirmerSuppression = confirm("Vous allez supprimer votre compte?");
             if (confirmerSuppression) {
                  let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`,
             {
@@ -150,6 +151,8 @@ class ProfilMentor extends Component {
                this.props.signOutMentor()
             }
                }
+           
+            
         }catch(err){
             console.log(err);
             alert('vous devez vous connecter à nouveau')
@@ -161,6 +164,7 @@ const mapStateToProps = (state)=> ({
     prenom_mentor: state.mentorReducer.prenom_mentor,
     photo_mentor: state.mentorReducer.photo_mentor,
     id_mentor: state.mentorReducer.id_mentor,
+    // competencesDeMentor : state.mentorReducer.competencesDeMentor,
     token_mentor: state.mentorReducer.token_mentor
 
 })

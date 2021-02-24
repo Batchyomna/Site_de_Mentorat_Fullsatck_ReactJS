@@ -98,7 +98,7 @@ class FormAddComp extends Component {
                                 </Form.Control>                      
                                 </Col>
                             <Col sm={6}>
-                                <Form.Label className="float-left label">Frequence *</Form.Label>
+                                <Form.Label className="float-left label">Fréquence *</Form.Label>
                                 <Form.Control as="select" onChange={this.setChange.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequence} required>
                                     <option value="" className="inTheLabel">Choisissez la frequence</option>
                                     <option value="1" className="inTheLabel">1 fois par semaine</option>
