@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
 import {changeDataMentor, signOutMentor} from '../../store/actions/mentor'
-import FormAddComp from './FormAddComp'
+import FormAddComp from '../competences/FormAddComp'
 import deleteEmptyValue from '../functions/deleteEmptyValueApprenti'
 import CompetencesAjoutes from '../competences/CompetencesAjoutes';
 
@@ -18,8 +18,22 @@ class ProfilMentor extends Component {
             photo_mentor: '',
             message: '',
             error: false,
+            statut_mentor: null
         
         }
+    }
+    componentDidMount(){
+        let that = this
+        axios.get(`http://localhost:8000/mentor/statut/${this.props.id_mentor}`)
+        .then(response =>{
+           
+         that.setState({
+            statut_mentor: response.data.statut_mentor
+         })
+        })
+        .catch(err =>{
+            console.log(err);
+        })
     }
     render() {
         return(
@@ -61,16 +75,20 @@ class ProfilMentor extends Component {
                         </div>
                     </Form>
                 </section>
-                <h2> Pour ajouter une nouvelle compétence, veuillez remplir tous les champs:</h2>
-                <section className="information">
+                {this.state.statut_mentor === 1 ?
+                <>
+                 <section className="information">
+                    <h2> Pour ajouter une nouvelle compétence, veuillez remplir tous les champs:</h2>
                     <FormAddComp />
-
-                </section>
-                <section className="history">
-                <h2>Les compétences que vous avez ajoutées: </h2>
-                
-                <CompetencesAjoutes/>
-                </section>
+                 </section>
+                 <section className="history">
+                     <h2>Les compétences que vous avez ajoutées: </h2>
+                     <CompetencesAjoutes/>
+                 </section>
+                 </>
+                 :
+                 <h5  className="redMessage"> Pour ajouter une compétence, vous devez attendre l'autorisation administratif</h5>
+                }
                 <div className="myButtons">
                     <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer votre compte</Button>
                 </div>

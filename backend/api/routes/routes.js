@@ -57,6 +57,17 @@ router.get('/mentor/:id', async (req, res) => {
     console.log(err);
   }
 });
+//------status of mentor
+router.get('/mentor/statut/:id', async (req, res) => {
+  try {
+    connection.query(`SELECT statut_mentor FROM mentor WHERE id_mentor = ${req.params.id}`, function (err, result) {
+      if (err) throw err
+      res.status(200).json(result[0]);
+    })
+  } catch (err) {
+    console.log(err);
+  }
+});
 //-----------------3.API/ GET /mentors
 router.get('/admin/mentors/all-not-valid', (req, res) => {
   connection.query("SELECT id_mentor, prenom_mentor, nom_mentor, nom_SIREN, statut_mentor FROM mentor", function (err, result, fields) {

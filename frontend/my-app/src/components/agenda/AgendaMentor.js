@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import '../competences/CompetenceStyle.css'
+import './assets/style/agenda.css'
 import { connect } from 'react-redux'
 import axios from 'axios';
 import futureDate from '../functions/futureDate'
 import Table from 'react-bootstrap/Table'
-import agendaPhoto from './assets/agenda2.jpg'
+import agendaPhoto from './assets/img/agenda2.jpg'
 
 class MentorCompetences extends Component {
     constructor() {
@@ -60,7 +60,7 @@ class MentorCompetences extends Component {
                             {this.state.futureSession.length > 0 ?
                             <tbody>
                                 {this.state.futureSession.map(item => (
-                                    <tr key={item.id_session} className="oneCompetence">
+                                    <tr key={item.id_session} className="agendaTable">
                                         <td>{item.titre}</td>
                                         <td>{item.domaine}</td>
                                         <td>{item.date_session}</td>

@@ -22,7 +22,7 @@ class CompetencesAjoutes extends Component {
                                 <tr key={item.id_competence} className="oneCompetence">
                                     <td>{item.titre}</td>
                                     <td>{item.domaine}</td>
-                                    <td><a className="lire" href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Modifier/Supprimer</a></td>
+                                    <td><a className="lire" href={`/nos-competences/${item.id_competence}`} alt="Pour plus de détails">Modifier/Supprimer</a></td>
                                 </tr>
                             ))
                             }

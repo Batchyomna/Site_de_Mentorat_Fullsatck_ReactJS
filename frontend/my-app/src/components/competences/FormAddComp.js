@@ -18,7 +18,7 @@ class FormAddComp extends Component {
             messageError: ''
         }
     }
-    addComp(e){
+    addCompetence(e){
         e.preventDefault();
         let {titre, domaine, duree, frequence, premiere_date, description} =this.state
         let that = this
@@ -56,7 +56,6 @@ class FormAddComp extends Component {
         });
     }
     render() {
-        // je dois verfier le status de ce mentor d'abord
         return (
             <div>
              <span className="greenMessage">{this.state.message}</span>
@@ -69,7 +68,7 @@ class FormAddComp extends Component {
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Domaine *</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaine" className="inTheLabel" value={this.state.domaine} required>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaine" className="inTheLabel" value={this.state.domaine} >
                                     <option value="" className="inTheLabel">Choisissez le domaine</option>
                                     <option value="HTML" className="inTheLabel">HTML,CSS</option>
                                     <option value="JS" className="inTheLabel">JS</option>
@@ -85,38 +84,53 @@ class FormAddComp extends Component {
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Durée *</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="duree" className="inTheLabel" value={this.state.duree} required>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="duree" className="inTheLabel" value={this.state.duree} >
                                     <option value="" className="inTheLabel">Choisissez la duree</option>
-                                    <option value="1" className="inTheLabel">1 mois</option>
-                                    <option value="2" className="inTheLabel">2 mois</option>
-                                    <option value="3" className="inTheLabel">3 mois</option>
-                                    <option value="4" className="inTheLabel">4 mois</option>
-                                    <option value="5" className="inTheLabel">5 mois</option>
-                                    <option value="6" className="inTheLabel">6 mois</option>
-                                    <option value="10" className="inTheLabel">10 mois</option>
-                                    <option value="Autre" className="inTheLabel">Autre</option>
+                                    <option value="1 mois" className="inTheLabel">1 mois</option>
+                                    <option value="2 mois" className="inTheLabel">2 mois</option>
+                                    <option value="3 mois" className="inTheLabel">3 mois</option>
+                                    <option value="4 mois" className="inTheLabel">4 mois</option>
+                                    <option value="5 mois" className="inTheLabel">5 mois</option>
+                                    <option value="6 mois" className="inTheLabel">6 mois</option>
+                                    <option value="10 mois" className="inTheLabel">10 mois</option>
+                                    <option value="autre" className="inTheLabel">Autre</option>
                                 </Form.Control>                      
                                 </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Fréquence *</Form.Label>
-                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequence} required>
+                                <Form.Control as="select" onChange={this.setChange.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequence} >
                                     <option value="" className="inTheLabel">Choisissez la frequence</option>
-                                    <option value="1" className="inTheLabel">1 fois par semaine</option>
-                                    <option value="2" className="inTheLabel">2 par semaine</option>
-                                    <option value="3" className="inTheLabel">3 par semaine</option>
-                                    <option value="4" className="inTheLabel">tout les jours</option>
-                                    <option value="5" className="inTheLabel">2 fois par mois</option>
-                                    <option value="6" className="inTheLabel">samedi et dimanche</option>
-                                    <option value="10" className="inTheLabel">chaque soir</option>
-                                    <option value="Autre" className="inTheLabel">Autre</option>
+                                    <option value="1 fois par semaine" className="inTheLabel">1 fois par semaine</option>
+                                    <option value="2 fois par semaine" className="inTheLabel">2 fois par semaine</option>
+                                    <option value="3 fois par semaine" className="inTheLabel">3 fois par semaine</option>
+                                    <option value="tout les jours" className="inTheLabel">tout les jours</option>
+                                    <option value="2 fois par mois" className="inTheLabel">2 fois par mois</option>
+                                    <option value="samedi et dimanche" className="inTheLabel">samedi et dimanche</option>
+                                    <option value="chaque soir" className="inTheLabel">chaque soir</option>
+                                    <option value="autre" className="inTheLabel">Autre</option>
                                 </Form.Control>                              
                             </Col>
                         </Row>
                         <Row>
+                        {this.state.duree === 'autre' && 
+                            <Col sm={6}>
+                                <Form.Label className="float-left label">Précisez la durée</Form.Label>
+                                <Form.Control onChange={this.setChange.bind(this)} name="duree" className="inTheLabel" value={this.state.durée} >
+                                </Form.Control>
+                            </Col>
+                        }
+                       {this.state.frequence === 'autre' && 
+                            <Col sm={6}>
+                                <Form.Label className="float-left label">Précisez le fréquence</Form.Label>
+                                <Form.Control onChange={this.setChange.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequence} >
+                                </Form.Control>
+                            </Col>
+                        }
+                        </Row> 
+                        <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Première date *</Form.Label>
-                                 {/* <input class="form-control" type="datetime-local" value="2021-08-19T13:45:00" id="example-datetime-local-input"> */}
-                                <Form.Control type ="date"value={this.state.premiere_date} onChange={this.setChange.bind(this)} name="premiere_date" placeholder="Saisissez la premiere date" className="inTheLabel" required/>
+                                <Form.Control type ="date"value={this.state.premiere_date} onChange={this.setChange.bind(this)} name="premiere_date" placeholder="Saisissez la premiere date" className="inTheLabel" />
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Description *</Form.Label>
@@ -124,7 +138,7 @@ class FormAddComp extends Component {
                             </Col>
                         </Row>
                         <div className="myButtons">
-                            <Button className="oneButton" type="submit" onClick={this.addComp.bind(this)}>Ajouter</Button>
+                            <Button className="oneButton" type="submit" onClick={this.addCompetence.bind(this)}>Ajouter</Button>
                         </div>
                     </Form>
             </div>

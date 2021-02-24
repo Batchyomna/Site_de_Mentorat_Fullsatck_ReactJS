@@ -87,6 +87,7 @@ class Competence extends Component {
         try{
             let x = window.location.pathname.split('/')
             let compId = parseInt(x[x.length - 1])
+            console.log(compId);
             let details = await axios.get(`http://localhost:8000/one-competence/${compId}`)
             if (details.status === 200) {
                 console.log(details.data);

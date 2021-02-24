@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect} from "react-router-do
 import Header from './components/autres/Header'
 import Footer from './components/autres/Footer'
 import Profil from './components/profils/Profil'
-import AgendaUser from './components/competences/AgendaUser'
+import AgendaUser from './components/agenda/AgendaUser'
 import Home from './components/pages/Home'
 import NosCompetences from './components/pages/NosCompetences'
 import Contact from './components/pages/Contact'
