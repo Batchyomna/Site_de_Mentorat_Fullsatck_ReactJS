@@ -4,7 +4,9 @@ import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
 import {changeDataMentor, signOutMentor} from '../../store/actions/mentor'
 import FormAddComp from '../competences/FormAddComp'
-import deleteEmptyValue from '../functions/deleteEmptyValueApprenti'
+import deleteEmptyValueMentor from '../functions/deleteEmptyValueMentor'
+import testMail from '../functions/testMail'
+import detectAttack from '../functions/detectAttack'
 import CompetencesAjoutes from '../competences/CompetencesAjoutes';
 
 class ProfilMentor extends Component {
@@ -26,7 +28,6 @@ class ProfilMentor extends Component {
         let that = this
         axios.get(`http://localhost:8000/mentor/statut/${this.props.id_mentor}`)
         .then(response =>{
-           
          that.setState({
             statut_mentor: response.data.statut_mentor
          })
@@ -107,12 +108,20 @@ class ProfilMentor extends Component {
     async editData(e){
         e.preventDefault();
         try{
-            let allStateData = deleteEmptyValue(this.state);
-
-            if(Object.keys(allStateData).length > 0){
+            let allStateData = deleteEmptyValueMentor(this.state);
+            if(detectAttack(allStateData)){
+                this.setState({
+                    message: 'Réessayez, car vous avez utilisé des caractères spéciaux.', error: true
+                })
+            }else if (this.state.mail_mentor && !testMail(this.state.mail_mentor)){
+                this.setState({
+                    error: true, message: 'vous devez utiliser un mail valide'
+                })
+            }else if(Object.keys(allStateData).length > 0){
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData, {
-                    headers: {'Authorization': `${this.props.token_mentor}`}
+                    headers: {'authorization': `${this.props.token_mentor}`}
                   })
+                  this.componentDidMount();
                 if(updateResult.status === 200){
                     this.props.changeDataMentor({
                         id_mentor: updateResult.data.id_mentor,
@@ -130,7 +139,7 @@ class ProfilMentor extends Component {
                         error: false,
                         message: 'Vos coodonnées sont bien changées'
                     })
-                } else if(updateResult.status=== 403) {
+                } else if(updateResult.status=== 405) {
                     this.setState({
                         prenom_mentor: '',
                         nom_mentor: '',
@@ -138,15 +147,17 @@ class ProfilMentor extends Component {
                         mdp_mentor: '',
                         photo_mentor: '',
                         error: true,
-                        message: "Vous n'êtes pas autorisés"
+                        message: "vous devez vous connecter à nouveau" //TokenExpiredError: jwt expired
                     })
                 }
             }else{
-                this.setState({
-                    error: true,
-                    message: 'vous devez remplir au moins un champ pour changer vos coordonnées'
-                })
-            }
+               this.componentDidMount();
+                    this.setState({
+                        error: true,
+                        message: 'vous devez remplir au moins un champ pour changer vos coordonnées',
+                       
+                    })
+                }
         }catch(err){
             console.log(err);
             alert('vous devez vous connecter à nouveau')
@@ -164,7 +175,6 @@ class ProfilMentor extends Component {
                 headers: {'Authorization': `${this.props.token_mentor}`}
               })
             if(deletResult.status === 200){
-               console.log('Account deleted', deletResult);
                this.props.signOutMentor()
             }
                }

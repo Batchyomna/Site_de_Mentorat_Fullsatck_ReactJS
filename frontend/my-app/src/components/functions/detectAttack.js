@@ -17,4 +17,5 @@ function detectAttack(object){
     }
 }
 module.exports = detectAttack;
+
 //  const regexSQL  = /('(''|[^'])*')|("(""|[^"])*")|(;)|(-)|(--)|(=)|(\?)|(\b(ALTER|CREATE|DELETE|DROP|OR|AND|WHERE|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)/gi;

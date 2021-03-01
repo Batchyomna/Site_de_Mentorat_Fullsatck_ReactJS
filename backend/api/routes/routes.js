@@ -46,28 +46,8 @@ router.get('/apprenti/:id', async (req, res) => {
     console.log(err);
   }
 });
-//---------3.API/GET/ avoir toutes les compétence qui sont ajouté par un mentor
-router.get('/mentor/:id', async (req, res) => {
-  try {
-    connection.query(`SELECT * FROM competence WHERE id_mentor = ${req.params.id}`, function (err, result) {
-      if (err) throw err
-      res.status(200).json(result);
-    })
-  } catch (err) {
-    console.log(err);
-  }
-});
-//------status of mentor
-router.get('/mentor/statut/:id', async (req, res) => {
-  try {
-    connection.query(`SELECT statut_mentor FROM mentor WHERE id_mentor = ${req.params.id}`, function (err, result) {
-      if (err) throw err
-      res.status(200).json(result[0]);
-    })
-  } catch (err) {
-    console.log(err);
-  }
-});
+
+
 //-----------------3.API/ GET /mentors
 router.get('/admin/mentors/all-not-valid', (req, res) => {
   connection.query("SELECT id_mentor, prenom_mentor, nom_mentor, nom_SIREN, statut_mentor FROM mentor", function (err, result, fields) {
@@ -88,6 +68,7 @@ router.post('/admin/new-admin',authPost, (req, res) => {
     console.log(err);
   }
 })
+
 //-------------3.API/delete/admin/non-valid/:idMentor
 router.delete('/admin/non-valid/:idMentor',authDelete, (req, res) => {
   try {
@@ -169,63 +150,7 @@ router.put('/user/apprenti/edit-data/:id',authPut, (req, res) => {
     console.log(err);
   }
 })
-//---------3.API/POST/ modifier les data de mentor et sauvegarder les nouveaux data
-router.put('/user/mentor/edit-data/:id',authPut, (req, res) => {
-  try {
-    if(req.body){
-      let data = Object.keys(req.body)
-      if (req.body.mdp_mentor) {
-        bcrypt.hash(req.body.mdp_mentor, saltRounds).then(function (hashPW) {
-          var query = `UPDATE mentor SET `
-          for (let i = 0; i < data.length; i++) {
-            if (data[i] === 'mdp_mentor' & (i == data.length - 1)) {
-              query += `${data[i]}` + ' = ' + `'${hashPW}'`               // pour sauvegarder mdp hashé et il est le dernier elem dans body
-            }else if (data[i] === 'mdp_mentor' & (i != data.length - 1)){
-              query += `${data[i]}` + ' = ' + `'${hashPW}'` + ', '
-            } else if (i === data.length - 1) {
-              query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` //  req.body[prenom_mentor] est un autre façon de dire req.body.prenom_mentor
-            } else {
-              query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
-            }
-          }
-          query +=` WHERE id_mentor = ${req.params.id}`;
-          console.log(query);
-          connection.query(query, function (err, resultat) {
-            if (err) throw err;
-            connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
-              if (error) throw error
-              const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
-              res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor });
-            })
-          })
-        })
-      } else {
-        var query = `UPDATE mentor SET `
-        for (let i = 0; i < data.length; i++) {
-          if (i == data.length - 1) {
-            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` // req.body.prenom_mentor === req.body[prenom_mentor]
-          } else {
-            query += `${data[i]}` + ' = ' + `'${req.body[data[i]]}'` + ', '
-          }
-        }
-        query += ` WHERE id_mentor = ${req.params.id}`;
-        console.log(query);
-        connection.query(query, function (err, resultat) {
-          if (err) throw err;
-          connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
-            if (error) throw error
-            const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
-            res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor});
-          })
-        })
-      }
-    }else{
-      res.status(205).json({msg: 'vous avez rien envoyé' });
-    }
-  } catch (err) {
-    console.log(err);
-  }
-})
+
 //-------------------API/PUT/admin
 router.put('/user/admin/edit-data/:id', authPut, (req,res)=>{
   try{
@@ -270,27 +195,8 @@ router.get('/all/apprentis', (req, res) => {
     res.status(200).json(result);
   });
 });
-//----------3. API/post/new-competence
-router.post('/mentor/new-competence/:id_mentor',(req, res) => {
-  try {
-    const sql = `INSERT INTO competence (id_mentor, titre, domaine, frequence, duree, premiere_date, description, reserve) VALUES ('${req.params.id_mentor}', '${req.body.titre}', '${req.body.domaine}', '${req.body.frequence}', '${req.body.duree}', '${req.body.premiere_date}', '${req.body.description}', false)`;
-    connection.query(sql)
-    res.status(201).send('votre compétence comme mentor est bien inscrit')
-  } catch (err) {
-    console.log(err);
-  }
-})
-// ------------3.API/get/mentor/:id
-router.get('/mentor/:id', async (req, res) => {
-  try {
-    connection.query(`SELECT * FROM mentor WHERE id_mentor = ${req.params.id}`, function (err, result) {
-      if (err) throw err
-      res.status(200).json(result[0]);
-    })
-  } catch (err) {
-    console.log(err);
-  }
-});
+
+
 // ------------3.API/get/all/competences
 router.get('/all/competences', async (req, res) => {
   try {
@@ -313,17 +219,7 @@ router.get('/apprenti/session-competences/:id', async (req, res) => {
     console.log(err);
   }
 });
-// ------------3.API/get/apprenti/all-competences
-router.get('/mentor/session-competences/:id', async (req, res) => {
-  try {
-    connection.query(`SELECT a.*, b.date_session, b.id_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_mentor = ${req.params.id} AND reserve = true`, function (err, result) {
-      if (err) throw err    
-      res.status(200).json(result);
-    })
-  } catch (err) {
-    console.log(err);
-  }
-});
+
 // ------------3.API/get/domaine/:domaine
 router.get('/domaine/:domaine', async (req, res) => {
   try {
@@ -346,16 +242,7 @@ router.get('/all/domaines', async (req, res) => {
     console.log(err);
   }
 });
-//-------------3.API/post/new-session
-router.post('/new-session', (req, res) => {
-  try {
-    const sql = `INSERT INTO session (id_competence, date_session) VALUES ('${req.body.id_competence}', '${req.body.date_session}')`;
-    connection.query(sql)
-    res.status(201).send('votre prochaine session est bien inscrits')
-  } catch (err) {
-    console.log(err);
-  }
-})
+
 // ------------3.API/get/sessions_des_competences
 router.get('/sessions_des_competences', async (req, res) => {
   try {
@@ -370,7 +257,7 @@ router.get('/sessions_des_competences', async (req, res) => {
   }
 });
 //----------------3.API/put/competence-choisi
-router.put('/competence-choisi',authPut, (req, res) => {
+router.put('/apprenti/competence-choisi',authPut, (req, res) => {
   try {
     connection.query(`UPDATE competence SET id_apprenti = '${req.body.id_apprenti}', reserve = true WHERE id_competence = '${req.body.id_competence}'`);
     res.status(200).send("Cette compétence est bien reservée");
@@ -386,14 +273,7 @@ router.delete('/user/apprenti/delete-compte/:id',authDelete, (req, res) => {
       res.status(200).send("Cet apprenti est bien supprimé")
     })
 });
-//---------------------------3.API/delete/compte/
-router.delete('/user/mentor/delete-compte/:id',authDelete, (req, res) => {
-    connection.query(`DELETE FROM mentor WHERE id_mentor = '${req.params.id}'`, function (err, result) {
-      if (err) throw res.status(400).send('there is an error');
-      console.log("Number of mentors deleted: " + result.affectedRows);
-      res.status(200).send("Ce mentor est bien supprimé")
-    })
-})
+
 //---------------------------3.API/delete/compte/
 router.delete('/user/admin/delete-compte/:id',authDelete, (req, res) => {
   connection.query(`DELETE FROM admin WHERE id_admin = '${req.params.id}'`, function (err, result) {
@@ -405,13 +285,13 @@ router.delete('/user/admin/delete-compte/:id',authDelete, (req, res) => {
 //---------3.API/get/competence-et-session(pour le mentor on peut ajouter AND b.reserve = true)
 router.get('/competence-et-session', (req, res) => {
   try {
-    if (req.body.statut === 'mentor') {
+    if (req.body.statut === 'apprenti') {
       connection.query(`SELECT a.id_apprenti, b.*, c.date_session from apprenti as a LEFT join competence as b ON a.id_apprenti = b.id_apprenti LEFT JOIN session as c ON b.id_competence = c.id_competence WHERE a.id_apprenti = '${req.body.id}'`, (erreur, result) => {
         if (erreur) throw erreur
         res.status(200).json(result)
       })
     } else if (req.body.statut === 'mentor') {
-      connection.query(`SELECT a.id_mentor, b.*, c.date_session FROM mentor as a LEFT join competence as b ON a.id_mentor = b.id_mentor LEFT JOIN session as c ON b.id_competence = c.id_competence WHERE a.id_mentor = '${req.body.id}'`, (erreur, result) => {
+      connection.query(`SELECT a.id_mentor, b.*, c.date_session FROM mentor as a LEFT join competence as b ON a.id_mentor = b.id_mentor LEFT JOIN session as c ON b.id_competence = c.id_competence WHERE a.id_mentor = '${req.body.id}' AND b.reserve = true`, (erreur, result) => {
         if (erreur) throw erreur
         res.status(200).json(result)
       });
@@ -420,17 +300,8 @@ router.get('/competence-et-session', (req, res) => {
     console.log(err);
   }
 })
-//-------------3. API/GET/avoir tout les detail d'un competence et son mentor
-router.get('/one-competence/:id', (req, res) => {
-  try {
-    connection.query(`SELECT a.*, b.photo_mentor, b.nom_mentor, b.prenom_mentor FROM competence as a LEFT JOIN mentor as b ON a.id_mentor = b.id_mentor WHERE id_competence= ${req.params.id}`, (err, result) => {
-      if (err) throw err
-      res.status(200).json(result)
-    })
-  } catch (err) {
-    console.log(err);
-  }
-})
+
+
 //--------------3.API/POST/
 router.post('/contact', (req, res) => {
   const transporter = nodemailer.createTransport({

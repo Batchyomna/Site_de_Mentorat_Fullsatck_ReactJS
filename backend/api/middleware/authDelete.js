@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
     try{
         const decodedToken = jwt.verify(req.headers.authorization, 'MY_TOKEN_SECRET');
         if (decodedToken){
-            console.log('im in delet next');
             next();
         }else{
             res.status(403).send('Accès non autorisé')

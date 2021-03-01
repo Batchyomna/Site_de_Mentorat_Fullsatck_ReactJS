@@ -42,7 +42,8 @@ class MentorCompetences extends Component {
     render() {
         return (
             <div className="container">
-                   <h1>Mentor {this.props.prenom_mentor}, Vos prochaines sessions sont:</h1>
+                   <h1>Mentor {this.props.prenom_mentor}</h1>
+                   <h2> Vous allez trouver ici vos prochaines sessions</h2>
                 <section >
                     <img src={agendaPhoto} alt="agenda" id="agendaPhoto"/>
                 </section>
@@ -57,9 +58,10 @@ class MentorCompetences extends Component {
                                     <th>Fini</th>
                                 </tr>
                             </thead>
-                            {this.state.futureSession.length > 0 ?
                             <tbody>
-                                {this.state.futureSession.map(item => (
+                            {this.state.futureSession.length > 0 ?
+                            
+                                this.state.futureSession.map(item => (
                                     <tr key={item.id_session} className="agendaTable">
                                         <td>{item.titre}</td>
                                         <td>{item.domaine}</td>
@@ -67,11 +69,10 @@ class MentorCompetences extends Component {
                                         <td><a className="lire" href={`/session-competences/done/${item.id_competence}`} alt="détails">Done</a></td>
                                     </tr>
                                 ))
-                                }
-                            </tbody>
                              :
-                              <span className="smallMessage">Vous n'avez aucune session dans l'avenir </span>
+                              <tr><td><span className="smallMessage">Vous n'avez aucune session dans l'avenir </span></td></tr>   
                              }
+                             </tbody>
                         </Table>
                    
 

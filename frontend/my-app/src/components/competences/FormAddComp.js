@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { fillCompetenceMentor } from '../../store/actions/mentor'
+import emptyValue from '../functions/emptyValue'
+import detectAttack from '../functions/detectAttack'
 
 class FormAddComp extends Component {
     constructor() {
@@ -15,51 +17,86 @@ class FormAddComp extends Component {
            premiere_date:'',
            description:'',
             message: '',
-            messageError: ''
+            error: false,
+            dureeAutre:'',
+            frequenceAutre:'',
         }
     }
     addCompetence(e){
         e.preventDefault();
         let {titre, domaine, duree, frequence, premiere_date, description} =this.state
-        let that = this
-        axios.post(`http://localhost:8000/mentor/new-competence/${this.props.id_mentor}`, {titre, domaine, duree, frequence, premiere_date, description} )
-        .then((response) =>{
-          if(response.status === 201){
-            that.props.fillCompetenceMentor( {titre, domaine, duree, frequence, premiere_date, description})
-              that.setState({
+        if(this.state.duree === 'autre'){
+         duree = this.state.dureeAutre
+        } 
+        if(this.state.frequence === 'autre'){
+          frequence = this.state.frequenceAutre
+        }
+        if(detectAttack({titre, domaine, duree, frequence, premiere_date, description})){
+            this.setState({
+                error: true ,message: "Vous ne devez pas utiliser des caratères spéciaux."
+            })
+        }else if( emptyValue({titre, domaine, duree, frequence, premiere_date, description})){
+            this.setState({
+                error: true ,message: "Vous devez remplir tous les champs afin d'ajouter une nouvelle compétence"
+            })
+        }else{
+            let that = this
+            axios.post(`http://localhost:8000/mentor/new-competence/${this.props.id_mentor}`, {titre, domaine, duree, frequence, premiere_date, description},
+            {
+                headers: {'authorization': `${this.props.token_mentor}`}
+              })
+            .then((response) =>{
+            if(response.status === 201){
+                that.props.fillCompetenceMentor({id_competence:response.data.id_competence, titre, domaine, duree, frequence, premiere_date, description, reserve:0})
+                that.setState({
+                    titre:'',
+                    domaine:'',
+                    duree:'',
+                    frequence:'',
+                    premiere_date:'',
+                    description:'',
+                    message: 'vous avez bien ajouté une nouvelle compétence',
+                    error: false,
+                    dureeAutre:'',
+                    frequenceAutre:'',
+                })
+            }else{
+                that.setState({
                 titre:'',
                 domaine:'',
                 duree:'',
                 frequence:'',
                 premiere_date:'',
                 description:'',
-                message: 'vous avez bien ajouté une nouvelle compétence',
-              })
-          }else{
-            that.setState({
-            titre:'',
-           domaine:'',
-           duree:'',
-           frequence:'',
-           premiere_date:'',
-           description:'',
-                messageError: 'vous devez réessayer encore une fois',
-              })
-          }
-        }).catch((error)=>{
-            console.log(error);
-        })
+                message: 'vous devez réessayer encore une fois',
+                error: true,
+                dureeAutre:'',
+                frequenceAutre:'',
+                })
+            }
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }
     }
     setChange(event) {
         this.setState({
+            message: '',
+            error: false,
             [event.target.name]: event.target.value
         });
+    }
+    setChangeAutre(event){
+      if(event.target.name ==='duree' ){ 
+        this.setState({dureeAutre: event.target.value, message:''})
+      }else{
+        this.setState({frequenceAutre: event.target.value, message:''})
+      }
     }
     render() {
         return (
             <div>
-             <span className="greenMessage">{this.state.message}</span>
-            <span className="redMessage">{this.state.messageError}</span> 
+             <span className={this.state.error ? "redMessage" : "greenMessage"}>{this.state.message}</span>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -82,6 +119,13 @@ class FormAddComp extends Component {
                             </Col>
                         </Row>
                         <Row>
+                        {this.state.duree === 'autre' ?
+                            <Col sm={6}>
+                                <Form.Label className="float-left label">Précisez l'autre durée *</Form.Label>
+                                <Form.Control onChange={this.setChangeAutre.bind(this)} name="duree" className="inTheLabel" value={this.state.dureeAutre} >
+                                </Form.Control>
+                            </Col>
+                           :
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Durée *</Form.Label>
                                 <Form.Control as="select" onChange={this.setChange.bind(this)} name="duree" className="inTheLabel" value={this.state.duree} >
@@ -96,6 +140,15 @@ class FormAddComp extends Component {
                                     <option value="autre" className="inTheLabel">Autre</option>
                                 </Form.Control>                      
                                 </Col>
+                            }
+                              
+                       {this.state.frequence === 'autre' ? 
+                            <Col sm={6}>
+                                <Form.Label className="float-left label">Précisez l'autre fréquence</Form.Label>
+                                <Form.Control onChange={this.setChangeAutre.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequenceAutre} >
+                                </Form.Control>
+                            </Col>
+                        :
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Fréquence *</Form.Label>
                                 <Form.Control as="select" onChange={this.setChange.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequence} >
@@ -110,23 +163,8 @@ class FormAddComp extends Component {
                                     <option value="autre" className="inTheLabel">Autre</option>
                                 </Form.Control>                              
                             </Col>
+                        }
                         </Row>
-                        <Row>
-                        {this.state.duree === 'autre' && 
-                            <Col sm={6}>
-                                <Form.Label className="float-left label">Précisez la durée</Form.Label>
-                                <Form.Control onChange={this.setChange.bind(this)} name="duree" className="inTheLabel" value={this.state.durée} >
-                                </Form.Control>
-                            </Col>
-                        }
-                       {this.state.frequence === 'autre' && 
-                            <Col sm={6}>
-                                <Form.Label className="float-left label">Précisez le fréquence</Form.Label>
-                                <Form.Control onChange={this.setChange.bind(this)} name="frequence" className="inTheLabel" value={this.state.frequence} >
-                                </Form.Control>
-                            </Col>
-                        }
-                        </Row> 
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Première date *</Form.Label>

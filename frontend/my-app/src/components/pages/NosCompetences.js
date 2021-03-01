@@ -32,7 +32,6 @@ class NosCompetences extends Component {
                     </Form.Control>
                 </Form>
                 <h2>Nos Compétences</h2>
-
                 <div className="allComps">
                     {this.state.allCompetences.length > 0 ? this.state.allCompetences.map((item) => {
                         return (
@@ -42,6 +41,7 @@ class NosCompetences extends Component {
                                     :
                                     <b className="nontoken">disponsible</b>
                                     }
+                                    <br/>
                                 <h4>{item.titre}</h4>
                                 <b>Domaine:</b> <p className="smallMessage">{item.domaine}</p>
                                 <b>Durée: </b><p className="smallMessage">{item.duree}</p>
@@ -75,12 +75,6 @@ class NosCompetences extends Component {
         this.setState({
             [event.target.name]: event.target.value
         });
-    }
-    readMore(id) {
-        this.setState({
-            flagOneComp: true,
-            id_Comp: id
-        })
     }
   async  selectDomaine(event){
         if(event.target.value===''){

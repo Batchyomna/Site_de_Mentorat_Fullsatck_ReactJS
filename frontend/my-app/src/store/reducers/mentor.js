@@ -45,6 +45,28 @@ const mentorReducer = (state = initialStates, action) => {
           competencesDeMentor: [...state.competencesDeMentor, action.payload]
 
         }
+      case "EDIT_COMPETENCE_MENTOR":
+        let elemForEdit = state.competencesDeMentor.filter(elem => elem.id_competence === action.payload.id_competence)
+        let indexElemForEdit = state.competencesDeMentor.indexOf(elemForEdit[0])
+        state.competencesDeMentor.splice(indexElemForEdit, 1)
+        return{
+          ...state,
+          competencesDeMentor: [
+            ...state.competencesDeMentor.slice(0, indexElemForEdit),
+            action.payload,
+            ...state.competencesDeMentor.slice(indexElemForEdit + 1, state.competencesDeMentor.length),
+          ]
+        }
+      case "DELETE_COMPETENCE_MENTOR":
+        let elemFORDelete = state.competencesDeMentor.filter(elem => elem.id_competence === parseInt(action.payload))
+        let index = state.competencesDeMentor.indexOf(elemFORDelete[0])
+        return{
+          ...state,
+          competencesDeMentor: [
+            ...state.competencesDeMentor.slice(0, index),
+            ...state.competencesDeMentor.slice(index + 1, state.competencesDeMentor.length),
+          ]
+        }
 
     default:
       return state // when we want to add presistStore, it bettre to return the state like this

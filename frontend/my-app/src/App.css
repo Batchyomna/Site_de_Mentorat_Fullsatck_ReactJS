@@ -183,7 +183,11 @@ h2{
   color: #875959;
   border-radius: 5px;
 }
-
+/* ----FormEditComp */
+.editInfo{
+  font-style: normal;
+  color: #003557 !important;
+}
 
 
 
