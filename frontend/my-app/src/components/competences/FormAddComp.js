@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
-import { fillCompetenceMentor } from '../../store/actions/mentor'
+import { fillCompetenceMentor, signOutMentor } from '../../store/actions/mentor'
 import emptyValue from '../functions/emptyValue'
 import detectAttack from '../functions/detectAttack'
 
@@ -60,22 +60,11 @@ class FormAddComp extends Component {
                     dureeAutre:'',
                     frequenceAutre:'',
                 })
-            }else{
-                that.setState({
-                titre:'',
-                domaine:'',
-                duree:'',
-                frequence:'',
-                premiere_date:'',
-                description:'',
-                message: 'vous devez réessayer encore une fois',
-                error: true,
-                dureeAutre:'',
-                frequenceAutre:'',
-                })
             }
             }).catch((error)=>{
                 console.log(error);
+                alert('vous devez vous connecter à nouveau, jwt expired')
+                this.props.signOutMentor()
             })
         }
     }
@@ -190,6 +179,7 @@ const mapStateToProps = (state) => ({
 
 })
 const mapDispatchToProps={
-    fillCompetenceMentor
+    fillCompetenceMentor,
+    signOutMentor
 }
 export default connect(mapStateToProps, mapDispatchToProps)(FormAddComp) ;

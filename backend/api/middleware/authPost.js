@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
     try{
         const decodedToken = jwt.verify(req.headers.authorization, 'MY_TOKEN_SECRET');
         if (decodedToken){
-            console.log('im in post next');
             next();
         }else{
             res.status(401).end('Mouvaise requête')

@@ -54,7 +54,7 @@ router.get('/mentor/statut/:id', async (req, res) => {
     }
 });
 //-------delete competence
-router.delete('/mentor/delete/competence/:idComp',authDelete, (req, res) => {
+router.delete('/mentor/delete/competence/:idComp',authDelete, (req, res) => { //delete ses compétences
     try {
       connection.query(`DELETE FROM competence WHERE id_competence ='${req.params.idComp}'`, function (err, result) {
         if (err) throw err

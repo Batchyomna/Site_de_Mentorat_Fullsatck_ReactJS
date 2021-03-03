@@ -13,6 +13,8 @@ import SignIn from './components/pages/SignIn'
 import SignUp from './components/pages/SignUp'
 import Competence from './components/competences/Competence'
 import FormEditComp from "./components/competences/FormEditComp";
+import NosApprentis from './components/profils/NosApprentis'
+import NosMentors from './components/profils/NosMentors'
 
 class App extends Component {
   render() {
@@ -28,6 +30,8 @@ class App extends Component {
             <Route exact={true}  path="/nos-competences/:id" ><Competence/> </Route>
             <Route exact={true}  path="/edit/one-competence/:id" ><FormEditComp/> </Route>
             <Route exact={true} path="/" component={Home} />
+            <Route exact={true} path="/all-mentors"><NosMentors/></Route>
+            <Route exact={true} path="/all-apprentis"><NosApprentis/></Route>
             <Route exact={true} path="/se-connecter/sign-in" component={SignIn} />
             <Route exact={true} path="/se-connecter/sign-up" component={SignUp} />
             <Route path="*" component={Home} />

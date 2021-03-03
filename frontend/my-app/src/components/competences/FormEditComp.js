@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
-import { editCompetenceMentor } from '../../store/actions/mentor'
+import { editCompetenceMentor, signOutMentor } from '../../store/actions/mentor'
 import emptyValue from '../functions/emptyValue'
 import detectAttack from '../functions/detectAttack'
 
@@ -72,14 +72,11 @@ class FormEditComp extends Component {
                     message: 'vous avez bien modifié cette compétence',
                     error: false,
                 })
-            }else{
-                that.setState({
-                message: 'vous devez réessayer encore une fois',
-                error: true,
-                })
             }
             }).catch((error)=>{
                 console.log(error);
+                alert('vous devez vous connecter à nouveau, jwt expired')
+                this.props.signOutMentor()
             })
         }
     }
@@ -196,6 +193,7 @@ const mapStateToProps = (state) => ({
 
 })
 const mapDispatchToProps={
-    editCompetenceMentor
+    editCompetenceMentor,
+    signOutMentor
 }
 export default connect(mapStateToProps, mapDispatchToProps)(FormEditComp) ;

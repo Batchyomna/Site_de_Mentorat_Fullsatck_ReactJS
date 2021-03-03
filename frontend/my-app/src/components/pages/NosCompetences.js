@@ -11,6 +11,21 @@ class NosCompetences extends Component {
             id_Comp: null
         }
     }
+    async componentDidMount() {
+        try {
+            let result = await axios.get('http://localhost:8000/all/competences')
+            if (result.status === 200) {
+                this.setState({ allCompetences: result.data })
+            }
+            let resutDomaine = await axios.get('http://localhost:8000/all/domaines')
+            if(resutDomaine.status === 200){
+                this.setState({ allDomaine: resutDomaine.data});
+            }
+        } catch (err) {
+            console.error(err)
+        }
+
+    }
     render() {
         return (
             <div className="container">
@@ -54,22 +69,6 @@ class NosCompetences extends Component {
                 </div>
             </div>
         )
-    }
-
-    async componentDidMount() {
-        try {
-            let result = await axios.get('http://localhost:8000/all/competences')
-            if (result.status === 200) {
-                this.setState({ allCompetences: result.data })
-            }
-            let resutDomaine = await axios.get('http://localhost:8000/all/domaines')
-            if(resutDomaine.status === 200){
-                this.setState({ allDomaine: resutDomaine.data});
-            }
-        } catch (err) {
-            console.error(err)
-        }
-
     }
     setChange(event) {
         this.setState({

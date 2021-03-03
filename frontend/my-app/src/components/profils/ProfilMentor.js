@@ -42,7 +42,6 @@ class ProfilMentor extends Component {
                 <h1> Bonjour {this.props.prenom_mentor}</h1>
                 <section className="information">
                     <span  className={this.state.error ? "redMessage" : "greenMessage"} >{this.state.message}</span>
-
                     <h2>Vous voulez changer vos informations personnelles?</h2>
                     <Form>
                         <Row>
@@ -91,7 +90,7 @@ class ProfilMentor extends Component {
                  <h5  className="redMessage"> Pour ajouter une compétence, vous devez attendre l'autorisation administratif</h5>
                 }
                 <div className="myButtons">
-                    <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer votre compte</Button>
+                    <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer mon compte</Button>
                 </div>
                 
             </div>
@@ -160,7 +159,7 @@ class ProfilMentor extends Component {
                 }
         }catch(err){
             console.log(err);
-            alert('vous devez vous connecter à nouveau')
+            alert('vous devez vous connecter à nouveau, jwt expired')
             this.props.signOutMentor()// ou redirecte pq TokenExpiredError: jwt expired
         }
     }
@@ -180,7 +179,7 @@ class ProfilMentor extends Component {
                }
         }catch(err){
             console.log(err);
-            alert('vous devez vous connecter à nouveau')
+            alert('vous devez vous connecter à nouveau, jwt expired')
             this.props.signOutMentor() // jwt expired
         }
     }

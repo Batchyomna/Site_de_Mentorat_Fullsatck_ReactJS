@@ -74,7 +74,7 @@ class ProfilApprenti extends Component {
                     }
                 </section>
                 <div className="myButtons">
-                    <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer votre compte</Button>
+                    <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer mon compte</Button>
                 </div>
             </div>
         )

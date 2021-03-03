@@ -69,30 +69,7 @@ router.post('/admin/new-admin',authPost, (req, res) => {
   }
 })
 
-//-------------3.API/delete/admin/non-valid/:idMentor
-router.delete('/admin/non-valid/:idMentor',authDelete, (req, res) => {
-  try {
-    connection.query(`DELETE FROM mentor WHERE id_mentor ='${req.params.idMentor}'`, function (err, result) {
-      if (err) throw err
-      res.status(400).send('Il y a une erreur');
-      console.log("Number of records deleted: " + result.affectedRows);
-      res.status(200).send("Le mentor est bien supprimé")
-    })
-  } catch (err) {
-    console.log(err);
-  }
-})
-//----------------3.API/put/admin/valid/:idMentor
-router.put('/admin/valid/:idMentor', authPut, (req, res) => {
-  try {
-    connection.query(`UPDATE mentor SET statut_mentor = true WHERE id_mentor = '${req.params.idMentor}'`, function (err, result) {
-      if(err) throw res.status(205).json({msg: 'there is un error connection with DB'})
-      res.status(200).json({msg:"Le mentor est valid maintentant"});
-    });
-  } catch (error) {
-    console.log(error);
-  }
-})
+
 //------------3. API/PUT/user/apprenti/edit-data
 router.put('/user/apprenti/edit-data/:id',authPut, (req, res) => {
   try {
@@ -151,50 +128,7 @@ router.put('/user/apprenti/edit-data/:id',authPut, (req, res) => {
   }
 })
 
-//-------------------API/PUT/admin
-router.put('/user/admin/edit-data/:id', authPut, (req,res)=>{
-  try{
-      if (req.body.mdp) {
-        bcrypt.hash(req.body.mdp, saltRounds).then(function (hashPW) {
-          if (req.body.mail){ 
-            connection.query(`UPDATE admin SET mdp_admin = '${hashPW}', mail_admin = '${req.body.mail}' WHERE id_admin = ${req.params.id}`, (error, fresult)=>{
-            if (error) throw error
-            console.log(fresult);
-          })
-          }else{
-            connection.query(`UPDATE admin SET mdp_admin = '${hashPW}' WHERE id_admin = ${req.params.id}`, (err, sresult)=>{
-              if (err) throw err
-              console.log(sresult);
-            })
-          }
-        })
-        connection.query(`SELECT * FROM admin WHERE id_admin = '${req.params.id}'`, (error, tresult) => {
-          if(error) throw error
-          res.status(200).json({id_admin: tresult[0].id_admin, token_admin: generateAccessToken(tresult[0].id_admin, tresult[0].mail_admin), mail_admin: tresult[0].mail_admin })
-        })             
-      }else if (req.body.mail){
-          connection.query(`UPDATE admin SET mail_admin = '${req.body.mail}' WHERE id_admin = ${req.params.id}`, (error, foresult)=>{
-              if (error) throw error
-              console.log(foresult);
-            })
-          connection.query(`SELECT * FROM admin WHERE id_admin = '${req.params.id}'`, (error, ffresult) => {
-            if(error) throw error
-            res.status(200).json({id_admin: ffresult[0].id_admin, token_admin: generateAccessToken(ffresult[0].id_admin, ffresult[0].mail_admin), mail_admin: ffresult[0].mail_admin })
-          })
-      } else{
-        res.status(205).json({msg: 'vous avez rien envoyé'})
-      }
-  }catch(err){
-    console.log(err);
-  }
-})
-//--------------3.API/GET/apprenti
-router.get('/all/apprentis', (req, res) => {
-  connection.query("SELECT * FROM apprenti", function (err, result, fields) {
-    if (err) throw err;
-    res.status(200).json(result);
-  });
-});
+
 
 
 // ------------3.API/get/all/competences
@@ -274,14 +208,7 @@ router.delete('/user/apprenti/delete-compte/:id',authDelete, (req, res) => {
     })
 });
 
-//---------------------------3.API/delete/compte/
-router.delete('/user/admin/delete-compte/:id',authDelete, (req, res) => {
-  connection.query(`DELETE FROM admin WHERE id_admin = '${req.params.id}'`, function (err, result) {
-    if (err) throw res.status(400).send('there is an error');
-    console.log("Number of admins deleted: " + result.affectedRows);
-    res.status(200).send("Cet admin est bien supprimé")
-  })
-})
+
 //---------3.API/get/competence-et-session(pour le mentor on peut ajouter AND b.reserve = true)
 router.get('/competence-et-session', (req, res) => {
   try {

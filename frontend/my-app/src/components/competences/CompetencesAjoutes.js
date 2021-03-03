@@ -70,14 +70,10 @@ class CompetencesAjoutes extends Component {
                     //     error: false
                     // })
                     alert('votre compétence est bien supprimée')
-                }else{
-                    alert('vous devez vous connecter à nouveau')
-                      that.props.signOutMentor()
                 }
-
             })
             .catch((err) =>{
-                alert('vous devez vous connecter à nouveau')
+                alert('vous devez vous connecter à nouveau, jwt expired')
                 that.props.signOutMentor()
                 console.log(err);
             })
