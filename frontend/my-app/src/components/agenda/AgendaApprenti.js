@@ -1,51 +1,90 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-class ApprentiCompetences extends Component {
+import futureDate from '../functions/futureDate'
+import Table from 'react-bootstrap/Table'
+import agendaPhoto from './assets/img/agenda2.jpg'
+class AgendaApprenti extends Component {
     constructor(){
         super()
-        this.state ={
-            items:[]
+        this.state = {
+            message: '',
+            messageError: '',
+            futureSession: []
         }
+    }
+    componentDidMount() {
+        let that = this
+        axios.get(`http://localhost:8000/apprenti/session-competences/${this.props.id_apprenti}`)
+            .then((response) => {
+                let x = response.data.filter((elemFromAPI) => {
+                    if (futureDate(elemFromAPI.date_session)) {
+                        return true
+                    } else {
+                        return false
+                    }
+                })
+                for (let i = 0; i < x.length; i++) {
+                    if (that.state.length === 0 || that.state.futureSession.findIndex((elmState) => (elmState.id_competence === x[i].id_competence)) < 0) {
+                        that.setState({
+                            futureSession: [...that.state.futureSession, x[i]]
+                        })
+                    }
+                }
+
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
     render() {
         return (
             <div className="container">
-                 <section className="history">
-                <p className="smallMessage">Les compétences que vous êtes en train de suivre</p>
-                {
-                    this.state.items.length > 0 ?
-                     (this.state.items.map(item=>(
-                         <div key={item.id_competence} className='profilOneCompetence'>
-                             <h6><b>Titre:</b> {item.titre}</h6>
-                             <p><b>Domaine:</b> {item.domaine}</p>
-                             <p><b>Prochaine session:</b> {item.date_session}</p>
-                         </div>
-                     ))
-                    )
-                    :<div>Vous n'avez pas des compétences</div>
-                }
+                   <h1>Apprenti {this.props.prenom_apprenti}</h1>
+                   <h2> Vous allez trouver ici vos prochaines sessions</h2>
+                <section >
+                    <img src={agendaPhoto} alt="agenda" id="agendaPhoto"/>
                 </section>
+                <section className="history">
+                 <p/>
+                    <Table responsive="sm">
+                            <thead>
+                                <tr className="headTable">
+                                    <th>Titre</th>
+                                    <th>Domaine</th>
+                                    <th>Date</th>
+                                    <th>Fini</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {this.state.futureSession.length > 0 ?
+                            
+                                this.state.futureSession.map(item => (
+                                    <tr key={item.id_session} className="agendaTable">
+                                        <td>{item.titre}</td>
+                                        <td>{item.domaine}</td>
+                                        <td>{item.date_session}</td>
+                                        <td><a className="lire" href={`/session-competences/done/${item.id_competence}`} alt="détails">Done</a></td>
+                                    </tr>
+                                ))
+                             :
+                              <tr><td><span className="smallMessage">Vous n'avez aucune session dans l'avenir </span></td></tr>   
+                             }
+                             </tbody>
+                        </Table>
+                   
+
+                </section>
+
             </div>
         );
     }
-    async componentDidMount(){
-        try{
-          let result = await axios.get(`http://localhost:8000/apprenti/all-competences/${this.props.id_apprenti}`)
-          if(result.status === 200){
-              this.setState({
-                  items: result.data
-              })
-            console.log(result);
-          }
-        }catch(err){
-            console.log(err);
-        }
-    }
+   
 }
 const mapStateToProps = (state) => ({
     id_apprenti: state.apprentiReducer.id_apprenti,
+    prenom_apprenti: state.apprentiReducer.prenom_apprenti
 
 })
 
-export default connect(mapStateToProps)(ApprentiCompetences);
+export default connect(mapStateToProps)(AgendaApprenti);

@@ -6,7 +6,7 @@ import futureDate from '../functions/futureDate'
 import Table from 'react-bootstrap/Table'
 import agendaPhoto from './assets/img/agenda2.jpg'
 
-class MentorCompetences extends Component {
+class AgendaMentor extends Component {
     constructor() {
         super()
         this.state = {
@@ -88,4 +88,4 @@ const mapStateToProps = (state) => ({
 
 })
 
-export default connect(mapStateToProps)(MentorCompetences);
+export default connect(mapStateToProps)(AgendaMentor);

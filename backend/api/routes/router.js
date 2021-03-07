@@ -244,8 +244,8 @@ router.post('/contact', (req, res) => {
   const mailOptions = {
     from: req.body.mail,
     to: 'kh.yomna@gmail.com',
-    subject: `${req.body.sujet} || ${req.body.nom} `,
-    text: `${req.body.message} ||...Vous devrez utiliser ce mail ( ${req.body.mail} ) pour répondre. `
+    subject: `${req.body.sujet} FROM ${req.body.nom.toUpperCase()} `,
+    text: `${req.body.message} ||...cliquez ici ( ${req.body.mail} ) pour répondre. `
   };
   transporter.sendMail(mailOptions, function (error, data) {
     if (error) {

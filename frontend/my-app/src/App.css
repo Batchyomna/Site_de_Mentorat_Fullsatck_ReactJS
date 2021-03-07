@@ -102,6 +102,9 @@ h2{
 .errorClasse{
   border: 2px solid red !important;
 }
+Form.Control:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
 /* ---------------------NosCompetences */
 #imageNosCopms{  
   background-color: #003557;

@@ -30,21 +30,17 @@ router.post('/sign-up',authSingUp, function (req, res) {
     try {
       bcrypt.hash(req.body.mdp, saltRounds).then((hashPW) =>{
         if (req.body.statut === 'mentor') {
-            console.log('in signup mentor');
-          var values = [[`${req.body.nom}`, `${req.body.prenom}`, `${req.body.mail}`, `${hashPW}` ,`${req.body.photo}`, `${req.body.nom_SIREN}`, false]]
-          const sql = `INSERT INTO mentor (nom_mentor, prenom_mentor, mail_mentor, mdp_mentor, photo_mentor, nom_SIREN, statut_mentor) VALUES ?`;
+          let values = [[`${req.body.nom}`, `${req.body.prenom}`, `${req.body.mail}`, `${hashPW}` ,`${req.body.photo}`, `${req.body.nom_SIREN}`, false]]
+          const sql =`INSERT INTO mentor (nom_mentor, prenom_mentor, mail_mentor, mdp_mentor, photo_mentor, nom_SIREN, statut_mentor) VALUES ?`;
           connection.query(sql,[values],(err, result) => {
             if (err) throw err
-            console.log(result);
             res.status(201).send('vos coordonnées comme mentor sont inscrits')
         })    
         } else if (req.body.statut === 'apprenti') {
-            console.log('sign in apprenti');
-          var values = [[`${req.body.nom}`, `${req.body.prenom}`, `${req.body.mail}`, `${hashPW}` ,`${req.body.photo}`] ]
+          let values = [[`${req.body.nom}`, `${req.body.prenom}`, `${req.body.mail}`, `${hashPW}` ,`${req.body.photo}`] ]
           const sql = `INSERT INTO apprenti (nom_apprenti, prenom_apprenti, mail_apprenti, mdp_apprenti, photo_apprenti) VALUES ?`;
           connection.query(sql,[values],(err, result) => {
             if (err) throw err
-            console.log(result);
             res.status(201).send('vos coordonnées comme apprenti sont inscrits')
         }) 
         }

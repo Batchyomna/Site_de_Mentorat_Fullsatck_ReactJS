@@ -4,9 +4,9 @@ function detectAttack(object){
     const regexXSS = /((\%3C)|<)((\%2F)|\/)*[a-z0-9\%]+((\%3E)|>)|((\%3C)|<)((\%69)|i|(\%49))((\%6D)|m|(\%4D))((\%67)|g|(\%47))[^\n]+((\%3E)|>)|((\%3C)|<)[^\n]+((\%3E)|>)/i
     let counter = 0;
     for (let key in object) {
-        if (!!object[key].match(regexSQL) || !!object[key].match(regexXSS)){  // !! To cast JavaScript variables to boolean && str.match(regexp)
+        if (!!object[key].match(regexSQL) || !!object[key].match(regexXSS) ){  // !! To cast JavaScript variables to boolean && str.match(regexp)
          counter += 1;
-         console.log('detect attack');
+         console.log('detect attack', object[key]);
         }
     }
     
