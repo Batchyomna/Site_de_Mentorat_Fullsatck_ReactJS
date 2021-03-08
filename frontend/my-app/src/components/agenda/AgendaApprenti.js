@@ -8,8 +8,6 @@ class AgendaApprenti extends Component {
     constructor(){
         super()
         this.state = {
-            message: '',
-            messageError: '',
             futureSession: []
         }
     }
@@ -53,7 +51,7 @@ class AgendaApprenti extends Component {
                                     <th>Titre</th>
                                     <th>Domaine</th>
                                     <th>Date</th>
-                                    <th>Fini</th>
+                                    <th>Contact</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,7 +62,7 @@ class AgendaApprenti extends Component {
                                         <td>{item.titre}</td>
                                         <td>{item.domaine}</td>
                                         <td>{item.date_session}</td>
-                                        <td><a className="lire" href={`/session-competences/done/${item.id_competence}`} alt="détails">Done</a></td>
+                                        <td><a className="lire" href={`/contact-mentor/${item.nom_mentor}/${item.mail_mentor}`} alt="contacter le mentor">contcter le mentor</a></td>
                                     </tr>
                                 ))
                              :

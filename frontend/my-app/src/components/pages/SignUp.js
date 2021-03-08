@@ -87,7 +87,7 @@ class SignUp extends Component {
                                 <Row>
                                     <Col sm={12}>
                                         <Form.Label className="float-left label">Votre numéro de SIREN *</Form.Label>
-                                        <Form.Control  type="number"  maxlength="9" value={this.state.nom_SIREN} onChange={this.setChange.bind(this)} name="nom_SIREN" placeholder="Saisissez votre numéro SIREN qui comprend 9 chiffres" className="inTheLabel" />
+                                        <Form.Control  type="number"  value={this.state.nom_SIREN} onChange={this.setChange.bind(this)} name="nom_SIREN" placeholder="Saisissez votre numéro SIREN qui comprend 9 chiffres" className="inTheLabel" />
                                     </Col>
                                 </Row>
                             )

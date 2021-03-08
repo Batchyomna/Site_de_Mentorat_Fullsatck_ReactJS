@@ -102,8 +102,11 @@ h2{
 .errorClasse{
   border: 2px solid red !important;
 }
-Form.Control:invalid {
+.inTheLabel .form-control:invalid {
   box-shadow: 0 0 5px 1px red;
+}
+.inTheLabel .form-control:valid {
+  box-shadow: 0 0 5px 1px green;
 }
 /* ---------------------NosCompetences */
 #imageNosCopms{  

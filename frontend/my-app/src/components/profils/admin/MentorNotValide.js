@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table'
 import axios from 'axios'
 import { Button } from 'react-bootstrap'
 
-import { signOutAdmin } from '../../store/actions/admin'
+import { signOutAdmin } from '../../../store/actions/admin'
 
 class MentorNotValide extends Component {
     constructor(){

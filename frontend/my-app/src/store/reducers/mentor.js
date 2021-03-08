@@ -37,7 +37,6 @@ const mentorReducer = (state = initialStates, action) => {
           photo_mentor : action.payload.photo_mentor,
           mail_mentor: action.payload.mail_mentor,
           id_mentor: action.payload.id_mentor,
-          token_mentor: action.payload.token_mentor, 
         }
       case "FILL_M_COMPETENCES":
         return{

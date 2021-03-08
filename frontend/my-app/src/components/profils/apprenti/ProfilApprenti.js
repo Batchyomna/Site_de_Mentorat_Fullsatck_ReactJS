@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
+import Table from 'react-bootstrap/Table'
 import axios from 'axios'
-import { changeDataApprenti, signOutApprenti } from '../../store/actions/apprenti'
-import deleteEmptyValue from '../functions/deleteEmptyValueApprenti'
+import { changeDataApprenti, signOutApprenti } from '../../../store/actions/apprenti'
+import deleteEmptyValue from '../../functions/deleteEmptyValueApprenti'
+import testMail from '../../functions/testMail'
+import detectAttack from '../../functions/detectAttack'
+
 
 class ProfilApprenti extends Component {
     constructor() {
@@ -24,7 +28,7 @@ class ProfilApprenti extends Component {
                 <h1> Bonjour {this.props.prenom_apprenti}</h1>
                 <section className="information">
                     <span className={this.state.error ? "redMessage" : "greenMessage"}>{this.state.message}</span>
-                    <h2 className="smallMessage">Vous voulez changer vos informations personnelles?</h2>
+                    <h2>Vous voulez changer vos informations personnelles?</h2>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -58,20 +62,31 @@ class ProfilApprenti extends Component {
                     </Form>
                 </section>
                 <section className="history">
-                    <h2 className="smallMessage">Les compétences que vous avez déjà acquises: </h2>
+                    <h2>Les compétences que vous avez déjà acquises: </h2>
+                    <Table responsive="sm">
+                <thead>
+                    <tr className="headTable">
+                        <th>Titre</th>
+                        <th>Domaine</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {
                         this.props.competencesDePasse.length > 0 ?
                             (this.props.competencesDePasse.map(item => (
-                                <div key={item.id_competence} className="profilOneCompetence">
-                                    <h5>{item.titre}</h5>
-                                    <p>Dans le domaine: {item.domaine}</p>
-                                    <a className="lire" href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a>
-                                </div>
+                                <tr key={item.id_competence} className="oneCompetence">
+                                    <td>{item.titre}</td>
+                                    <td>{item.domaine}</td>
+                                   <td><a className="lire" href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour voir plus</a></td> 
+                                </tr>
                             ))
                             )
                             :
-                            <span className="message">Vous n'avez encore suivi aucune compétence </span>
-                    }
+                            <tr><td><span className="smallMessage">Vous n'avez encore suivi aucune compétence</span></td></tr>   
+                        }
+                    </tbody>
+                    </Table>
                 </section>
                 <div className="myButtons">
                     <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer mon compte</Button>
@@ -91,28 +106,35 @@ class ProfilApprenti extends Component {
         e.preventDefault();
         try {
             let allStateData = deleteEmptyValue(this.state);
-
-            if (Object.keys(allStateData).length > 0) {
+            if(detectAttack(allStateData)){
+                this.setState({
+                    message: 'Réessayez, car vous avez utilisé des caractères spéciaux.', error: true
+                })
+            }else if (this.state.mail_apprenti && !testMail(this.state.mail_apprenti)){
+                this.setState({
+                    error: true, message: 'vous devez utiliser un mail valide'
+                })
+            }else if(Object.keys(allStateData).length > 0){
                 let updateRresult = await axios.put(`http://localhost:8000/user/apprenti/edit-data/${this.props.id_apprenti}`, allStateData,{
                     headers: {'Authorization': `${this.props.token_apprenti}`}
                   })
                 if (updateRresult.status === 200) {
-                    this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, token_apprenti: updateRresult.data.token_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
+                    this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
                     this.setState({
                         prenom_apprenti: '',
                         nom_apprenti: '',
                         mail_apprenti: '',
                         mdp_apprenti: '',
                         photo_apprenti: '',
-                        message: 'Vos coordonnées sont bien changées'
+                        message: 'Vos informations sont bien changées'
                     })
                 } else {
                     this.setState({
-                        prenom_mentor: '',
-                        nom_mentor: '',
-                        mail_mentor: '',
-                        mdp_mentor: '',
-                        photo_mentor: '',
+                        prenom_apprenti: '',
+                        nom_apprenti: '',
+                        mail_apprenti: '',
+                        mdp_apprenti: '',
+                        photo_apprenti: '',
                         error:true,
                         message: 'Excusez-nous, mais vous devrez ressayer'
                     })
@@ -120,7 +142,7 @@ class ProfilApprenti extends Component {
             } else {
                 this.setState({
                     error: true,
-                    message: 'vous devez remplir au moins un champ pour changer ves coordonnées'
+                    message: 'vous devez remplir au moins un champ'
                 })
             }
         } catch (err) {
@@ -133,18 +155,19 @@ class ProfilApprenti extends Component {
     async deleteAccount(e) {
         e.preventDefault();
         try {
+            let confirmerSuppression = window.confirm("Êtes-vous sûr de vouloir supprimer votre compte?");
+            if (confirmerSuppression) {
             let deletResult = await axios.delete(`http://localhost:8000/user/apprenti/delete-compte/${this.props.id_apprenti}`,
-            {
-                headers: {'Authorization': `${this.props.token_apprenti}`}
-              })
+                {
+                 headers: {'Authorization': `${this.props.token_apprenti}`}
+                })
             if (deletResult.status === 200) {
-                console.log(deletResult);
-                alert('vous devez vous connecter à nouveau')
                 this.props.signOutApprenti()
             }
+        }
         } catch (err) {
             console.log(err);
-            alert('vous devez vous connecter à nouveau')
+            alert('vous devez vous connecter à nouveau, jwt expired')
             this.props.signOutApprenti()// jwt expired
         }
     }

@@ -120,11 +120,10 @@ class ProfilMentor extends Component {
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData, {
                     headers: {'authorization': `${this.props.token_mentor}`}
                   })
-                  this.componentDidMount();
+                //   this.componentDidMount();
                 if(updateResult.status === 200){
                     this.props.changeDataMentor({
                         id_mentor: updateResult.data.id_mentor,
-                        token_mentor: updateResult.data.token_mentor,
                         mail_mentor: updateResult.data.mail_mentor,
                         photo_mentor: updateResult.data.photo_mentor,
                         prenom_mentor: updateResult.data.prenom_mentor
@@ -136,24 +135,24 @@ class ProfilMentor extends Component {
                         mdp_mentor: '',
                         photo_mentor: '',
                         error: false,
-                        message: 'Vos coodonnées sont bien changées'
+                        message: 'Vos informations sont bien changées'
                     })
-                } else if(updateResult.status=== 405) {
+                } else {
                     this.setState({
-                        prenom_mentor: '',
-                        nom_mentor: '',
-                        mail_mentor: '',
-                        mdp_mentor: '',
-                        photo_mentor: '',
-                        error: true,
-                        message: "vous devez vous connecter à nouveau" //TokenExpiredError: jwt expired
+                        prenom_apprenti: '',
+                        nom_apprenti: '',
+                        mail_apprenti: '',
+                        mdp_apprenti: '',
+                        photo_apprenti: '',
+                        error:true,
+                        message: 'Excusez-nous, mais vous devrez ressayer'
                     })
                 }
             }else{
-               this.componentDidMount();
+            //    this.componentDidMount();
                     this.setState({
                         error: true,
-                        message: 'vous devez remplir au moins un champ pour changer vos coordonnées',
+                        message: 'vous devez remplir au moins un champ',
                        
                     })
                 }
@@ -169,14 +168,14 @@ class ProfilMentor extends Component {
         try{
             let confirmerSuppression = window.confirm("Êtes-vous sûr de vouloir supprimer votre compte?");
             if (confirmerSuppression) {
-                 let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`,
-            {
-                headers: {'Authorization': `${this.props.token_mentor}`}
-              })
-            if(deletResult.status === 200){
-               this.props.signOutMentor()
+                let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`,
+                    {
+                    headers: {'Authorization': `${this.props.token_mentor}`}
+                    })
+                if(deletResult.status === 200){
+                    this.props.signOutMentor()
+                }
             }
-               }
         }catch(err){
             console.log(err);
             alert('vous devez vous connecter à nouveau, jwt expired')

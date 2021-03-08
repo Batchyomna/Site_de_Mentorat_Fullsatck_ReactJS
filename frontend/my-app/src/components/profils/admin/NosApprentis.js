@@ -3,7 +3,7 @@ import {connect } from  'react-redux'
 import axios from 'axios'
 import Table from 'react-bootstrap/Table'
 import { Button } from 'react-bootstrap'
-import {signOutAdmin} from '../../store/actions/admin'
+import {signOutAdmin} from '../../../store/actions/admin'
 
 
 

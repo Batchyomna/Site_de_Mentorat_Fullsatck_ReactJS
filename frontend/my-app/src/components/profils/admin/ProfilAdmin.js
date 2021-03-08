@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
-import { changeDataAdmin, signOutAdmin } from '../../store/actions/admin'
-import testMail from '../functions/testMail';
-import detectAttack from '../functions/detectAttack';
-import deleteEmptyValueAdmin from '../functions/deleteEmptyValueAdmin'
+import { changeDataAdmin, signOutAdmin } from '../../../store/actions/admin'
+import testMail from '../../functions/testMail';
+import detectAttack from '../../functions/detectAttack';
+import deleteEmptyValueAdmin from '../../functions/deleteEmptyValueAdmin'
 import MentorNotValide from './MentorNotValide';
 
 class ProfilAdmin extends Component {

@@ -9,9 +9,8 @@ function authPut(req, res, next){
             } else {
                 res.status(405).send('vous devez vous reconncter, jwt expired')
             }
-        });
-      
-    }
+    });
+}
    
 
 module.exports = authPut

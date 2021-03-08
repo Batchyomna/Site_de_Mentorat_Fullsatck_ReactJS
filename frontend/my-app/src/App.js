@@ -13,8 +13,9 @@ import SignIn from './components/pages/SignIn'
 import SignUp from './components/pages/SignUp'
 import Competence from './components/competences/Competence'
 import FormEditComp from "./components/competences/FormEditComp";
-import NosApprentis from './components/profils/NosApprentis'
-import NosMentors from './components/profils/NosMentors'
+import NosApprentis from './components/profils/admin/NosApprentis'
+import NosMentors from './components/profils/admin/NosMentors'
+import ContactMentor from './components/profils/apprenti/ContactMentor'
 
 class App extends Component {
   render() {
@@ -32,6 +33,7 @@ class App extends Component {
             <Route exact={true} path="/" component={Home} />
             <Route exact={true} path="/all-mentors"><NosMentors/></Route>
             <Route exact={true} path="/all-apprentis"><NosApprentis/></Route>
+            <Route exact={true} path="/contact-mentor/:nom/:mail">{this.props.token_apprenti ? <ContactMentor/> :  <Redirect to="/"/>} </Route>
             <Route exact={true} path="/se-connecter/sign-in" component={SignIn} />
             <Route exact={true} path="/se-connecter/sign-up" component={SignUp} />
             <Route path="*" component={Home} />
