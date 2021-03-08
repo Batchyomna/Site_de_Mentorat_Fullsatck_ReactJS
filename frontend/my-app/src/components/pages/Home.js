@@ -7,7 +7,7 @@ class Home extends Component {
             <div className="homePage">
 
                 <div className="container">
-                    <h1>Bienvenue sur notre platform de MENTORAT</h1>
+                    <h1>Bienvenue sur notre plateforme de MENTORAT</h1>
                     <h2>VOIR PLUS CLAIR</h2>
                     <div className='intro'>
                         <p>

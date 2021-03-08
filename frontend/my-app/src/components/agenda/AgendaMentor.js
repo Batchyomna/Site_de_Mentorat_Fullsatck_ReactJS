@@ -54,6 +54,7 @@ class AgendaMentor extends Component {
                                 <tr className="headTable">
                                     <th>Titre</th>
                                     <th>Domaine</th>
+                                    <th>Nom apprenti</th>
                                     <th>Date</th>
                                     <th>Fini</th>
                                 </tr>
@@ -65,6 +66,7 @@ class AgendaMentor extends Component {
                                     <tr key={item.id_session} className="agendaTable">
                                         <td>{item.titre}</td>
                                         <td>{item.domaine}</td>
+                                        <td>{item.nom_apprenti.toUpperCase()}</td>
                                         <td>{item.date_session}</td>
                                         <td><a className="lire" href={`/session-competences/done/${item.id_competence}`} alt="détails">Done</a></td>
                                     </tr>

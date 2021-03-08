@@ -4,7 +4,7 @@ import { Form, Row, Col, Button } from 'react-bootstrap'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios'
 import { changeDataApprenti, signOutApprenti } from '../../../store/actions/apprenti'
-import deleteEmptyValue from '../../functions/deleteEmptyValueApprenti'
+import deleteEmptyValueApprenti from '../../functions/deleteEmptyValueApprenti'
 import testMail from '../../functions/testMail'
 import detectAttack from '../../functions/detectAttack'
 
@@ -105,7 +105,8 @@ class ProfilApprenti extends Component {
     async editData(e) {
         e.preventDefault();
         try {
-            let allStateData = deleteEmptyValue(this.state);
+            console.log({nom_apprenti: this.state.nom_apprenti, prenom_apprenti: this.state.prenom_apprenti, mail_apprenti: this.state.mail_apprenti, mdp_apprenti: this.state.mdp_apprenti, photo_apprenti: this.state.photo_apprenti});
+            let allStateData = deleteEmptyValueApprenti({nom_apprenti: this.state.nom_apprenti, prenom_apprenti: this.state.prenom_apprenti, mail_apprenti: this.state.mail_apprenti, mdp_apprenti: this.state.mdp_apprenti, photo_apprenti: this.state.photo_apprenti});
             if(detectAttack(allStateData)){
                 this.setState({
                     message: 'Réessayez, car vous avez utilisé des caractères spéciaux.', error: true
@@ -121,20 +122,10 @@ class ProfilApprenti extends Component {
                 if (updateRresult.status === 200) {
                     this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
                     this.setState({
-                        prenom_apprenti: '',
-                        nom_apprenti: '',
-                        mail_apprenti: '',
-                        mdp_apprenti: '',
-                        photo_apprenti: '',
                         message: 'Vos informations sont bien changées'
                     })
                 } else {
                     this.setState({
-                        prenom_apprenti: '',
-                        nom_apprenti: '',
-                        mail_apprenti: '',
-                        mdp_apprenti: '',
-                        photo_apprenti: '',
                         error:true,
                         message: 'Excusez-nous, mais vous devrez ressayer'
                     })
@@ -147,7 +138,7 @@ class ProfilApprenti extends Component {
             }
         } catch (err) {
             console.log(err);
-             alert('vous devez vous connecter à nouveau')
+             alert('vous devez vous connecter à nouveau, jwt expired')
             this.props.signOutApprenti()// jwt expired
            
         }

@@ -24,7 +24,7 @@ class ContactMentor extends Component {
                 <Form>
                     <Row>
                         <Col sm={4}>
-                            <Form.Label className="float-left label">Nom *</Form.Label>
+                            <Form.Label className="float-left label">Votre nom *</Form.Label>
                             <Form.Control value={this.state.nom} onChange={this.setChange.bind(this)} name="nom" placeholder="Saisissez votre nom" className="inTheLabel" />
                         </Col>
                         <Col sm={4}>

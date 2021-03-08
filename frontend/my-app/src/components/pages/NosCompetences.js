@@ -35,7 +35,7 @@ class NosCompetences extends Component {
                 <Form>
                     <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaineSelected" className="inTheLabel" onClick={this.selectDomaine.bind(this)} value={this.state.domaineSelected}>
                         <option value="" className="inTheLabel">All domaines</option>
-                        <option value="HTML" className="inTheLabel">HTML,CSS</option>
+                        <option value="HTML, CSS" className="inTheLabel">HTML, CSS</option>
                         <option value="JS" className="inTheLabel">JS</option>
                         <option value="PHP" className="inTheLabel">PHP</option>
                         <option value="SQL" className="inTheLabel">SQL</option>

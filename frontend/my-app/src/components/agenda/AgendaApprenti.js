@@ -50,6 +50,7 @@ class AgendaApprenti extends Component {
                                 <tr className="headTable">
                                     <th>Titre</th>
                                     <th>Domaine</th>
+                                    <th>Nom mentor</th>
                                     <th>Date</th>
                                     <th>Contact</th>
                                 </tr>
@@ -61,6 +62,7 @@ class AgendaApprenti extends Component {
                                     <tr key={item.id_session} className="agendaTable">
                                         <td>{item.titre}</td>
                                         <td>{item.domaine}</td>
+                                        <td>{item.nom_mentor.toUpperCase()}</td>
                                         <td>{item.date_session}</td>
                                         <td><a className="lire" href={`/contact-mentor/${item.nom_mentor}/${item.mail_mentor}`} alt="contacter le mentor">contcter le mentor</a></td>
                                     </tr>

@@ -11,6 +11,7 @@
   justify-content: space-between;
   font-size: 24px;
   font-style: italic;
+  
 }
 .logo {
   color:#ED6663 ;
@@ -20,17 +21,19 @@
   font-size: 60px;
   cursor: pointer;
 }
+
 .menu{
   flex: 80%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  
 }
 .menu :hover{
-  color: #ED6663;
+  color: white
 }
 
-.active {
+.menu a {
   color: #ED6663;
 }
 .container{
@@ -49,8 +52,6 @@ h2{
 /* ------------Home */
 .homePage{
   min-height: 70vh;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.603), rgba(255, 163, 114, 1),rgba(237, 102, 99, 1), rgba(0, 0, 255, 0.5), rgba(255, 255, 255, 0.603) );
-  background-repeat: no-repeat;
 }
 /*---------------- SignUp, SignIn */
 .label{
@@ -257,7 +258,9 @@ h2{
   justify-content:space-between
   }
   .container{
-    margin: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 10%;
   }
   .allComps{
   flex-direction: column;
@@ -279,21 +282,25 @@ h2{
     display: none;
   }
   h2{
-    font-size: 1rem !important;
+    font-size: 1.2rem !important;
+    margin-top: 50px !important;
   }
   h1{
     font-size: 2rem !important;
+  }
+  h4{
+    font-size: 1.1rem !important;
   }
 }
 
 @media screen and (min-width: 576px) and (max-width: 991px){
   .header{
     height: auto;
-    font-size: 15px;
+   
   }
   .logo {
-    font-size: 30px;
-    flex:22%;
+    font-size: 2.5rem;
+    flex:21%;
   }
   .menu{
     flex: 60%;
@@ -314,16 +321,27 @@ h2{
     padding:0;
   }
   .container{
-    margin: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 10%;
   }
   #agendaPhoto{
    width:70%;
   }
-  h2{
-    font-size: 1.5rem !important;
-  }
+  
   h1{
     font-size: 2.5rem !important;
+  }
+  h2{
+    font-size: 1.8rem !important;
+    margin-top: 50px !important;
+  }
+  h4{
+    font-size: 1.5rem !important;
+  }
+  p{
+    font-size: 1.4rem !important;
+
   }
 }
 

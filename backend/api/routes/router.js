@@ -1,21 +1,15 @@
 const express = require('express')
 const router = express.Router();
 const connection = require('../database/connectionDB')
-
-//--- pour envoyer des mails
-const nodemailer = require('nodemailer');
-
-// parse application/x-www-form-urlencoded
-const bodyParser = require('body-parser');
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
-//------------CORS
 var cors = require('cors')
 router.use(cors())
 router.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');  //is a node.js package for providing a Connect/Express middleware 
   next();                                          //that can be used to enable CORS with various options.
-});                                               // it is put here where we connect with the database and NOT in the API file
+});
+
+//--- pour envoyer des mails
+const nodemailer = require('nodemailer');
 
 // ------------3.API/get/all/competences
 router.get('/all/competences', async (req, res) => {
@@ -28,8 +22,6 @@ router.get('/all/competences', async (req, res) => {
     console.log(err);
   }
 });
-
-
 // ------------3.API/get/domaine/:domaine
 router.get('/domaine/:domaine', async (req, res) => {
   try {
@@ -69,7 +61,7 @@ router.post('/contact', (req, res) => {
     from: req.body.mail,
     to: 'kh.yomna@gmail.com',
     subject: `${req.body.sujet}`,
-    text: `NOM: ${req.body.nom.toUpperCase()} \nMAIL: ${req.body.mail} \n ${req.body.message}.`
+    text: `NOM: ${req.body.nom.toUpperCase().bold()} \nMAIL: ${req.body.mail.bold()} \n ${req.body.message}.`
   };
   transporter.sendMail(mailOptions, function (error, data) {
     if (error) {

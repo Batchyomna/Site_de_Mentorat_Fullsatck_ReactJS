@@ -11,17 +11,12 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10   // cost factor, The cost factor controls how much time is needed to calculate a single BCrypt hash. 
 const jwt = require("jsonwebtoken");
 
-// parse application/x-www-form-urlencoded
-const bodyParser = require('body-parser');
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
-//------------CORS
 var cors = require('cors')
 router.use(cors())
 router.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');  //is a node.js package for providing a Connect/Express middleware 
   next();                                          //that can be used to enable CORS with various options.
-});     
+});
 //-----déclare des fonctions
 function generateAccessToken(id, mail) {
     return jwt.sign({
@@ -150,7 +145,7 @@ router.get('/mentor/:id', async (req, res) => {
 // ------------3.API/get/apprenti/all-competences
 router.get('/mentor/session-competences/:id', async (req, res) => {
     try {
-      connection.query(`SELECT a.*, b.date_session, b.id_session FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence WHERE id_mentor = ${req.params.id} AND reserve = true`, function (err, result) {
+      connection.query(`SELECT a.*, b.date_session, b.id_session, c.nom_apprenti, c.mail_apprenti FROM competence as a LEFT JOIN session as b ON a.id_competence = b.id_competence LEFT JOIN apprenti as c ON a.id_apprenti = c.id_apprenti  WHERE id_mentor = ${req.params.id} AND reserve = true`, function (err, result) {
         if (err) throw err    
         res.status(200).json(result);
       })

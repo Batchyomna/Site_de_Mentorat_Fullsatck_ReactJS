@@ -1,28 +1,21 @@
 const express = require('express')
 const router = express.Router();
+var cors = require('cors')
+router.use(cors())
+router.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');  //is a node.js package for providing a Connect/Express middleware 
+  next();                                          //that can be used to enable CORS with various options.
+});
 
 const connection = require('../database/connectionDB')
 const authPost = require('../middleware/authPost')
 const authDelete = require('../middleware/authDelete')
 const authPut = require('../middleware/authPut')
-//const authChangeMail = require('../middleware/authChangeMail')
 
 //pour securiser les password:
 const bcrypt = require('bcrypt');
 const saltRounds = 10   // cost factor, The cost factor controls how much time is needed to calculate a single BCrypt hash. 
 const jwt = require("jsonwebtoken");
-
-// parse application/x-www-form-urlencoded
-const bodyParser = require('body-parser');
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
-//------------CORS
-var cors = require('cors')
-router.use(cors())
-router.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');  //is a node.js package for providing a Connect/Express middleware 
-    next();                                          //that can be used to enable CORS with various options.
-});                                               // it is put here where we connect with the database and NOT in the API file
 
 //-----déclare des fonctions
 function generateAccessToken(id, mail) {

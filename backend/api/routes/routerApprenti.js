@@ -1,5 +1,11 @@
 const express = require('express')
 const router = express.Router();
+var cors = require('cors')
+router.use(cors())
+router.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');  //is a node.js package for providing a Connect/Express middleware 
+  next();                                          //that can be used to enable CORS with various options.
+});
 
 const connection = require('../database/connectionDB')
 const authPost = require('../middleware/authPost')
@@ -13,17 +19,6 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10   // cost factor, The cost factor controls how much time is needed to calculate a single BCrypt hash. 
 const jwt = require("jsonwebtoken");
 
-// parse application/x-www-form-urlencoded
-const bodyParser = require('body-parser');
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
-//------------CORS
-var cors = require('cors')
-router.use(cors())
-router.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');  //is a node.js package for providing a Connect/Express middleware 
-  next();                                          //that can be used to enable CORS with various options.
-});
 //-----déclare des fonctions
 function generateAccessToken(id, mail) {
   return jwt.sign({
@@ -43,8 +38,6 @@ router.get('/apprenti/:id', async (req, res) => {
     console.log(err);
   }
 });
-
-
 //------------3. API/PUT/user/apprenti/edit-data
 router.put('/user/apprenti/edit-data/:id', authPut, (req, res) => {
   try {
@@ -65,7 +58,7 @@ router.put('/user/apprenti/edit-data/:id', authPut, (req, res) => {
             }
           }
           query += ` WHERE id_apprenti = ${req.params.id}`;
-          console.log('avec mdp==>', query);
+          console.log('avec mdp ==>', query);
           connection.query(query, function (err, result) {
             if (err) throw err;
             connection.query(`SELECT * FROM apprenti WHERE id_apprenti = '${req.params.id}'`, (error, result) => {
@@ -158,7 +151,7 @@ router.post('/apprenti/contact-mentor', authPost,(req, res)=>{
     from: 'kh.yomna@gmail.com',
     to: `${req.body.mail_mentor}, kh.yomna@gmail.com`,
     subject: `${req.body.sujet}`,
-    text: `Madame, Monsieur ${req.body.nom_mentor.toUpperCase()} \nVous avez reçu un mail de NOM: ${req.body.nom.toUpperCase()}\nCOMPETENCE: ${req.body.titre}\nMESSAGE:\n ${req.body.message}.`
+    text: `Madame, Monsieur ${req.body.nom_mentor.bold()} \nVous avez reçu un mail de l'apprenant: ${req.body.nom.bold()}\nCOMPETENCE: ${req.body.titre.bold()}\nMESSAGE:\n ${req.body.message}.`
   };
   transporter.sendMail(mailOptions, function (error, data) {
     if (error) {
