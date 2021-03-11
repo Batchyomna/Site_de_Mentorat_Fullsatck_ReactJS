@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const connection = require('../database/connectionDB')
+
 var cors = require('cors')
 router.use(cors())
 router.use((req, res, next) => {

@@ -9,4 +9,5 @@
 }
 .description{
     text-align: left;
+    flex-wrap: wrap;
 }

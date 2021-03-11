@@ -34,7 +34,6 @@ const apprentiReducer = (state = initialStates, action) => {
           ...state,
           prenom_apprenti:action.payload.prenom_apprenti,
           photo_apprenti : action.payload.photo_apprenti,
-          mail_apprenti: action.payload.mail_apprenti,
           id_apprenti:action.payload.id_apprenti,
         }
       case "FILL_A_COMPETENCES":

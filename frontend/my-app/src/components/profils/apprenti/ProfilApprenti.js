@@ -120,10 +120,15 @@ class ProfilApprenti extends Component {
                     headers: {'Authorization': `${this.props.token_apprenti}`}
                   })
                 if (updateRresult.status === 200) {
-                    this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, mail_apprenti: updateRresult.data.mail_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
-                    this.setState({
-                        message: 'Vos informations sont bien changées'
-                    })
+                    if(this.props.mail_apprenti !== updateRresult.data.mail_apprenti){
+                        alert('Vos informations sont bien changées, vous devez vous connecter avec le nouveau mail')
+                        this.props.signOutApprenti()
+                    }else{
+                        this.props.changeDataApprenti({id_apprenti: updateRresult.data.id_apprenti, photo_apprenti: updateRresult.data.photo_apprenti, prenom_apprenti: updateRresult.data.prenom_apprenti })
+                        this.setState({
+                            message: 'Vos informations sont bien changées'
+                        })
+                    }
                 } else {
                     this.setState({
                         error:true,
@@ -168,7 +173,8 @@ const mapStateToProps = (state) => ({
     photo_apprenti: state.apprentiReducer.photo_apprenti,
     id_apprenti: state.apprentiReducer.id_apprenti,
     competencesDePasse: state.apprentiReducer.competencesDePasse,
-    token_apprenti: state.apprentiReducer.token_apprenti
+    token_apprenti: state.apprentiReducer.token_apprenti,
+    mail_apprenti: state.apprentiReducer.mail_apprenti
 
 })
 const mapDispatchToProps = {

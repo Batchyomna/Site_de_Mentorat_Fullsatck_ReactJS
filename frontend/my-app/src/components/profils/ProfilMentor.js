@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
 import {changeDataMentor, signOutMentor} from '../../store/actions/mentor'
@@ -79,11 +80,24 @@ class ProfilMentor extends Component {
                 <>
                  <section className="information">
                     <h2> Pour ajouter une nouvelle compétence, veuillez remplir tous les champs:</h2>
-                    <FormAddComp />
+                   
+                    {
+                         this.props.token_mentor ?
+                         <FormAddComp />
+                         :
+                         <Redirect to='/'/>
+
+                     }
                  </section>
                  <section className="history">
                      <h2>Les compétences que vous avez ajoutées: </h2>
-                     <CompetencesAjoutes/>
+                     {
+                         this.props.token_mentor ?
+                         <CompetencesAjoutes/>
+                         :
+                         <Redirect to='/'/>
+
+                     }
                  </section>
                  </>
                  :
@@ -120,11 +134,14 @@ class ProfilMentor extends Component {
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData, {
                     headers: {'authorization': `${this.props.token_mentor}`}
                   })
-                //   this.componentDidMount();
+                 this.componentDidMount(); // pour garder le statut_mentor = 1
                 if(updateResult.status === 200){
-                    this.props.changeDataMentor({
+                    if(this.props.mail_mentor !== updateResult.data.mail_mentor){
+                        alert('Vos informations sont bien changées, vous devez vous connecter avec le nouveau mail')
+                        this.props.signOutMentor()
+                    }else{
+                         this.props.changeDataMentor({
                         id_mentor: updateResult.data.id_mentor,
-                        mail_mentor: updateResult.data.mail_mentor,
                         photo_mentor: updateResult.data.photo_mentor,
                         prenom_mentor: updateResult.data.prenom_mentor
                     })
@@ -137,6 +154,8 @@ class ProfilMentor extends Component {
                         error: false,
                         message: 'Vos informations sont bien changées'
                     })
+                    }
+                   
                 } else {
                     this.setState({
                         prenom_apprenti: '',
@@ -149,7 +168,7 @@ class ProfilMentor extends Component {
                     })
                 }
             }else{
-            //    this.componentDidMount();
+                this.componentDidMount();
                     this.setState({
                         error: true,
                         message: 'vous devez remplir au moins un champ',
@@ -187,7 +206,8 @@ const mapStateToProps = (state)=> ({
     prenom_mentor: state.mentorReducer.prenom_mentor,
     photo_mentor: state.mentorReducer.photo_mentor,
     id_mentor: state.mentorReducer.id_mentor,
-    token_mentor: state.mentorReducer.token_mentor
+    token_mentor: state.mentorReducer.token_mentor,
+    mail_mentor : state.mentorReducer.mail_mentor
 
 })
 const mapDispatchToProps ={

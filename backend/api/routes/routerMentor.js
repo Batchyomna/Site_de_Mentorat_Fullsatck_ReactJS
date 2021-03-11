@@ -85,8 +85,7 @@ router.put('/user/mentor/edit-data/:id',authPut, (req, res) => {
               if (err) throw err;
               connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
                 if (error) throw error
-                const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
-                res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor });
+                res.status(200).json({ id_mentor: result[0].id_mentor, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor });
               })
             })
           })
@@ -105,8 +104,7 @@ router.put('/user/mentor/edit-data/:id',authPut, (req, res) => {
             if (err) throw err;
             connection.query(`SELECT * FROM mentor WHERE id_mentor = '${req.params.id}'`, (error, result) => {
               if (error) throw error
-              const token = generateAccessToken(result[0].id_mentor, result[0].mail_mentor);
-              res.status(200).json({ id_mentor: result[0].id_mentor, token_mentor: token, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor});
+              res.status(200).json({ id_mentor: result[0].id_mentor, prenom_mentor: result[0].prenom_mentor, mail_mentor: result[0].mail_mentor, photo_mentor: result[0].photo_mentor});
             })
           })
         }
