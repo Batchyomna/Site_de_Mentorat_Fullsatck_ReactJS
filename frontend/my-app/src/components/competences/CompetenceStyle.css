@@ -1,0 +1,13 @@
+.oneCompetence{
+    padding: 1%;
+    border-radius: 5px;
+    border: 1px solid #FFA372;
+}
+.headTable{
+      background-color: #FFA372;
+      border-radius: 5px;
+}
+.description{
+    text-align: left;
+    flex-wrap: wrap;
+}

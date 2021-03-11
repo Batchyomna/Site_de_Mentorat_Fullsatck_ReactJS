@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import ProfilApprenti from './ProfilApprenti'
+import ProfilApprenti from './apprenti/ProfilApprenti'
 import ProfilMentor from './ProfilMentor'
-import ProfilAdmin from './ProfilAdmin'
+import ProfilAdmin from './admin/ProfilAdmin'
 import { Redirect } from 'react-router';
 
 

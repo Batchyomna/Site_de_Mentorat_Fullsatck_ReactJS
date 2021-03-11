@@ -11,47 +11,6 @@ class NosCompetences extends Component {
             id_Comp: null
         }
     }
-    render() {
-        return (
-            <div className="container">
-                <div id="imageNosCopms">
-                    <img src="https://images.unsplash.com/photo-1589828994379-7a8869c4f519?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8cGFwZXIlMjBhcnJvd3xlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="mentor" width="40%" />
-                </div>
-                <Form>
-                    <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaineSelected" className="inTheLabel" onClick={this.selectDomaine.bind(this)}>
-                        <option value="" className="inTheLabel">Choisissez un domaine</option>
-                        {this.state.allDomaine.length !== 0 ?
-                            this.state.allDomaine.map((elem) => {
-                            return <option value={elem.domaine} className="inTheLabel" key={elem.id_competence}>{elem.domaine}</option>
-                        })
-                        : null}
-                    </Form.Control>
-                </Form>
-                <h2>Nos Compétences</h2>
-
-                <div className="allComps">
-                    {this.state.allCompetences.length > 0 ? this.state.allCompetences.map((item) => {
-                        return (
-                            <div key={item.id_competence} className="oneComp">
-                                {item.reserve ?
-                                    <b className="token">indisponsible</b>
-                                    :
-                                    <b className="nontoken">disponsible</b>
-                                    }
-                                <h4>{item.titre}</h4>
-                                <b>Domaine:</b> <p className="smallMessage">{item.domaine}</p>
-                                <b>Durée: </b><p className="smallMessage">{item.duree}</p>
-                                <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt=" cliquez ici pour plus de détails">Lire plus</a>
-                            </div>
-                        )
-                    })
-                    :<div> Il n'a y pas des compétences </div>
-                    }
-                </div>
-            </div>
-        )
-    }
-
     async componentDidMount() {
         try {
             let result = await axios.get('http://localhost:8000/all/competences')
@@ -67,16 +26,54 @@ class NosCompetences extends Component {
         }
 
     }
+    render() {
+        return (
+            <div className="container">
+                <div id="imageNosCopms">
+                    <img src="https://images.unsplash.com/photo-1589828994379-7a8869c4f519?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8cGFwZXIlMjBhcnJvd3xlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="mentor" width="40%" />
+                </div>
+                <Form>
+                    <Form.Control as="select" onChange={this.setChange.bind(this)} name="domaineSelected" className="inTheLabel" onClick={this.selectDomaine.bind(this)} value={this.state.domaineSelected}>
+                        <option value="" className="inTheLabel">All domaines</option>
+                        <option value="HTML, CSS" className="inTheLabel">HTML, CSS</option>
+                        <option value="JS" className="inTheLabel">JS</option>
+                        <option value="PHP" className="inTheLabel">PHP</option>
+                        <option value="SQL" className="inTheLabel">SQL</option>
+                        <option value="JAVA" className="inTheLabel">JAVA</option>
+                        <option value="Python" className="inTheLabel">Python</option>
+                        <option value="CMS" className="inTheLabel">CMS</option>
+                        <option value="Autre" className="inTheLabel">Autre</option>
+                        
+                    </Form.Control>
+                </Form>
+                <h2>Nos Compétences</h2>
+                <div className="allComps">
+                    {this.state.allCompetences.length > 0 ? this.state.allCompetences.map((item) => {
+                        return (
+                            <div key={item.id_competence} className="oneComp">
+                                {item.reserve ?
+                                    <b className="token">indisponsible</b>
+                                    :
+                                    <b className="nontoken">disponsible</b>
+                                    }
+                                    <br/>
+                                <h4>{item.titre}</h4>
+                                <b>Domaine:</b> <p className="smallMessage">{item.domaine}</p>
+                                <b>Durée: </b><p className="smallMessage">{item.duree}</p>
+                                <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt=" cliquez ici pour plus de détails">Lire plus</a>
+                            </div>
+                        )
+                    })
+                    :<div> Il n'a y pas des compétences </div>
+                    }
+                </div>
+            </div>
+        )
+    }
     setChange(event) {
         this.setState({
             [event.target.name]: event.target.value
         });
-    }
-    readMore(id) {
-        this.setState({
-            flagOneComp: true,
-            id_Comp: id
-        })
     }
   async  selectDomaine(event){
         if(event.target.value===''){

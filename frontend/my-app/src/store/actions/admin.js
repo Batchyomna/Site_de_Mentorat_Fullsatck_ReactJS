@@ -12,3 +12,8 @@ export const signOutAdmin = () => ({
     token_admin: null,
 })
 
+export const changeDataAdmin = (data) => ({
+    type: "CHANGE_DATA_ADMIN",
+    payload : data
+   
+})

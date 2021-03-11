@@ -1,17 +1,16 @@
 const jwt = require("jsonwebtoken");
 
- function authPut(req, res, next){
-    try{
-        const decodedToken = jwt.verify(req.headers.authorization, 'MY_TOKEN_SECRET');
-        if (decodedToken){
-            console.log('im in put next');
-            next();
-        }else{
-            res.status(401).end('Mouvaise requête')
-        } 
-    }catch(err){
-        res.status(402).send('il y a des erreurs')
-    }
+function authPut(req, res, next){
+   jwt.verify(req.headers.authorization,'MY_TOKEN_SECRET', function(err, decodedToken) {
+            if (err) throw err;
+            if (decodedToken) {
+                console.log('dans le next de put');
+                next()
+            } else {
+                res.status(405).send('vous devez vous reconncter, jwt expired')
+            }
+    });
+}
    
-};
+
 module.exports = authPut

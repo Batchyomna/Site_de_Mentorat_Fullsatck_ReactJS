@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import { Form, Row, Col, Button} from 'react-bootstrap'
 import axios from 'axios'
 import {changeDataMentor, signOutMentor} from '../../store/actions/mentor'
+import FormAddComp from '../competences/FormAddComp'
+import deleteEmptyValueMentor from '../functions/deleteEmptyValueMentor'
+import testMail from '../functions/testMail'
+import detectAttack from '../functions/detectAttack'
+import CompetencesAjoutes from '../competences/CompetencesAjoutes';
 
 class ProfilMentor extends Component {
     constructor(){
@@ -14,17 +20,30 @@ class ProfilMentor extends Component {
             mdp_mentor: '',
             photo_mentor: '',
             message: '',
-            messageError:''
+            error: false,
+            statut_mentor: null
+        
         }
+    }
+    componentDidMount(){
+        let that = this
+        axios.get(`http://localhost:8000/mentor/statut/${this.props.id_mentor}`)
+        .then(response =>{
+         that.setState({
+            statut_mentor: response.data.statut_mentor
+         })
+        })
+        .catch(err =>{
+            console.log(err);
+        })
     }
     render() {
         return(
         <div className="container">
-                <h2> Bonjour {this.props.prenom_mentor}</h2>
+                <h1> Bonjour {this.props.prenom_mentor}</h1>
                 <section className="information">
-                    <span className="greenMessage">{this.state.message}</span>
-                    <span className="redMessage">{this.state.messageError}</span> 
-                    <p className="smallMessage">Vous voulez changer vos coordonnées?</p>
+                    <span  className={this.state.error ? "redMessage" : "greenMessage"} >{this.state.message}</span>
+                    <h2>Vous voulez changer vos informations personnelles?</h2>
                     <Form>
                         <Row>
                             <Col sm={6}>
@@ -39,7 +58,7 @@ class ProfilMentor extends Component {
                         <Row>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Adresse mail</Form.Label>
-                                <Form.Control value={this.state.mail_mentor} onChange={this.setChange.bind(this)} name="mail_mentor" placeholder="Saisissez votre mail" className="inTheLabel"/>
+                                <Form.Control value={this.state.mail_mentor} onChange={this.setChange.bind(this)} name="mail_mentor" placeholder="email@exemple.com" className="inTheLabel"/>
                             </Col>
                             <Col sm={6}>
                                 <Form.Label className="float-left label">Mot de passe</Form.Label>
@@ -57,64 +76,72 @@ class ProfilMentor extends Component {
                         </div>
                     </Form>
                 </section>
-                <section className="history">
-                <p className="smallMessage">Les compétences que vous avez ajoutées: </p>
-                {
-                    this.props.competencesDeMentor.length > 0 ?
-                     ( this.props.competencesDeMentor.map(item=>(
-                         <div key={item.id_competence} className="profilOneCompetence">
-                             <h5>{item.titre}</h5>
-                             <p>Dans le domaine: {item.domaine}</p>
-                             <a className="lire"  href={`/nos-competences/${item.id_competence}`} alt="Cliquez ici pour plus de détails">Pour modifier</a>
-                         </div>
-                     ))
-                    )
-                    :
-                    <span className="message">Vous n'avez pas ajouté encore aucune compétence </span>
+                {this.state.statut_mentor === 1 ?
+                <>
+                 <section className="information">
+                    <h2> Pour ajouter une nouvelle compétence, veuillez remplir tous les champs:</h2>
+                   
+                    {
+                         this.props.token_mentor ?
+                         <FormAddComp />
+                         :
+                         <Redirect to='/'/>
+
+                     }
+                 </section>
+                 <section className="history">
+                     <h2>Les compétences que vous avez ajoutées: </h2>
+                     {
+                         this.props.token_mentor ?
+                         <CompetencesAjoutes/>
+                         :
+                         <Redirect to='/'/>
+
+                     }
+                 </section>
+                 </>
+                 :
+                 <h5  className="redMessage"> Pour ajouter une compétence, vous devez attendre l'autorisation administratif</h5>
                 }
-                </section>
                 <div className="myButtons">
-                    <Button className="oneButton" type="submit" onClick={this.deleteAcount.bind(this)}>Supprimer votre compte</Button>
+                    <Button className="deleteButton oneButton" type="submit" onClick={this.deleteAccount.bind(this)}>Supprimer mon compte</Button>
                 </div>
+                
             </div>
+
         )
     }
     setChange(event) {
         this.setState({
+            error: false,
+            message:'',
             [event.target.name]: event.target.value
         });
     }
-    // async componentDidMount(){
-    //     try{
-    //       let result = await axios.get(`http://localhost:8000/mentor/${this.props.id_mentor}`)
-    //       if(result.status === 200){
-    //           this.setState({
-    //               items: result.data
-    //           })
-    //       }
-    //     }catch(err){
-    //         console.log(err);
-    //     }
-    // }
-   
     async editData(e){
         e.preventDefault();
         try{
-            let allStateData = this.state;
-            for (let key in allStateData) {
-              if (key === 'message' || key === 'messageError' || allStateData[key] === '') {
-               delete allStateData[key]
-              }
-            }
-            if(Object.keys(allStateData).length > 0){
+            let allStateData = deleteEmptyValueMentor(this.state);
+            if(detectAttack(allStateData)){
+                this.setState({
+                    message: 'Réessayez, car vous avez utilisé des caractères spéciaux.', error: true
+                })
+            }else if (this.state.mail_mentor && !testMail(this.state.mail_mentor)){
+                this.setState({
+                    error: true, message: 'vous devez utiliser un mail valide'
+                })
+            }else if(Object.keys(allStateData).length > 0){
                 let updateResult = await axios.put(`http://localhost:8000/user/mentor/edit-data/${this.props.id_mentor}`, allStateData, {
-                    headers: {'Authorization': `${this.props.token_mentor}`}
+                    headers: {'authorization': `${this.props.token_mentor}`}
                   })
+                 this.componentDidMount(); // pour garder le statut_mentor = 1
                 if(updateResult.status === 200){
-                    this.props.changeDataMentor({
+                    if(this.props.mail_mentor !== updateResult.data.mail_mentor){
+                        alert('Vos informations sont bien changées, vous devez vous connecter avec le nouveau mail')
+                        this.props.signOutMentor()
+                    }else{
+                         this.props.changeDataMentor({
                         id_mentor: updateResult.data.id_mentor,
-                        token_mentor: updateResult.data.token_mentor,
-                        mail_mentor: updateResult.data.mail_mentor,
                         photo_mentor: updateResult.data.photo_mentor,
                         prenom_mentor: updateResult.data.prenom_mentor
                     })
@@ -124,41 +151,54 @@ class ProfilMentor extends Component {
                         mail_mentor: '',
                         mdp_mentor: '',
                         photo_mentor: '',
-                        message: 'Vos coodonnées sont bien changées'
+                        error: false,
+                        message: 'Vos informations sont bien changées'
                     })
+                    }
+                   
                 } else {
                     this.setState({
-                        prenom_mentor: '',
-                        nom_mentor: '',
-                        mail_mentor: '',
-                        mdp_mentor: '',
-                        photo_mentor: '',
-                        messageError: 'Excusez-nous, mais vous devrez ressayer'
+                        prenom_apprenti: '',
+                        nom_apprenti: '',
+                        mail_apprenti: '',
+                        mdp_apprenti: '',
+                        photo_apprenti: '',
+                        error:true,
+                        message: 'Excusez-nous, mais vous devrez ressayer'
                     })
                 }
             }else{
-                this.setState({
-                    messageError: 'vous devez remplir au moins un champ pour changer vos coordonnées'
-                })
-            }
+                this.componentDidMount();
+                    this.setState({
+                        error: true,
+                        message: 'vous devez remplir au moins un champ',
+                       
+                    })
+                }
         }catch(err){
             console.log(err);
+            alert('vous devez vous connecter à nouveau, jwt expired')
+            this.props.signOutMentor()// ou redirecte pq TokenExpiredError: jwt expired
         }
     }
  
-    async deleteAcount(e){
+    async deleteAccount(e){
         e.preventDefault()
         try{
-            let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`,
-            {
-                headers: {'Authorization': `${this.props.token_mentor}`}
-              })
-            if(deletResult.status === 200){
-               console.log('Account deleted', deletResult);
-               this.props.signOutMentor()
+            let confirmerSuppression = window.confirm("Êtes-vous sûr de vouloir supprimer votre compte?");
+            if (confirmerSuppression) {
+                let deletResult = await axios.delete(`http://localhost:8000/user/mentor/delete-compte/${this.props.id_mentor}`,
+                    {
+                    headers: {'Authorization': `${this.props.token_mentor}`}
+                    })
+                if(deletResult.status === 200){
+                    this.props.signOutMentor()
+                }
             }
         }catch(err){
             console.log(err);
+            alert('vous devez vous connecter à nouveau, jwt expired')
+            this.props.signOutMentor() // jwt expired
         }
     }
 }
@@ -166,8 +206,8 @@ const mapStateToProps = (state)=> ({
     prenom_mentor: state.mentorReducer.prenom_mentor,
     photo_mentor: state.mentorReducer.photo_mentor,
     id_mentor: state.mentorReducer.id_mentor,
-    competencesDeMentor : state.mentorReducer.competencesDeMentor,
-    token_mentor: state.mentorReducer.token_mentor
+    token_mentor: state.mentorReducer.token_mentor,
+    mail_mentor : state.mentorReducer.mail_mentor
 
 })
 const mapDispatchToProps ={

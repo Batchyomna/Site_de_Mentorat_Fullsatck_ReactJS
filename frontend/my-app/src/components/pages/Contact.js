@@ -72,7 +72,6 @@ class Contact extends Component {
             message:'', 
             response : "Excusez-nous, mais nous avons des problèmes, S'il vous plaît ressayer", // marche pas à cause d'actulisation de la page
         })
-           console.log(result.data.mesg);
        }
     }
 }

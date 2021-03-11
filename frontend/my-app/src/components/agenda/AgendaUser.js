@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux'
 
-import ApprentiCompetences from './ApprentiCompetences';
-import MentorCompetences from './MentorCompetences'
+import AgendaApprenti from './AgendaApprenti';
+import AgendaMentor from './AgendaMentor'
 
 class VosCompetences extends Component {
     render() {
@@ -11,11 +11,11 @@ class VosCompetences extends Component {
             <div>
                   {this.props.token_apprenti ? 
                 ( 
-                    <ApprentiCompetences/>
+                    <AgendaApprenti/>
                 )
                 : this.props.token_mentor ?
                 (
-                    <MentorCompetences/>
+                    <AgendaMentor/>
                 )
                 : 
                 <Redirect to="/"/>

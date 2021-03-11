@@ -24,3 +24,11 @@ export const changeDataMentor = (data) => ({
     type: "CHANGE_DATA_MENTOR",
     payload : data
 })
+export const editCompetenceMentor = (data) => ({
+    type: "EDIT_COMPETENCE_MENTOR",
+    payload : data
+})
+export const deleteCompetenceMentor = (idComp) => ({
+    type: "DELETE_COMPETENCE_MENTOR",
+    payload : idComp
+})

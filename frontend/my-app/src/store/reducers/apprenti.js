@@ -34,9 +34,7 @@ const apprentiReducer = (state = initialStates, action) => {
           ...state,
           prenom_apprenti:action.payload.prenom_apprenti,
           photo_apprenti : action.payload.photo_apprenti,
-          mail_apprenti: action.payload.mail_apprenti,
           id_apprenti:action.payload.id_apprenti,
-          token_apprenti: action.payload.token_apprenti, 
         }
       case "FILL_A_COMPETENCES":
         return {
@@ -44,7 +42,6 @@ const apprentiReducer = (state = initialStates, action) => {
           competencesDePasse: [...state.competencesDePasse, action.payload]
 
         }
-
     default:
       return state// when we want to add presistStore, it bettre to return the state like this
                    // note return { ...state} like when we do usually
